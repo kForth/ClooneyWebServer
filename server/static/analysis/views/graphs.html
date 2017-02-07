@@ -1,0 +1,23 @@
+<div class="info-holder">
+    <div class="info-block">
+        <div class="event-name" ng-cloak>
+            {{ event.name }}
+            <small class="event-key">{{ event.key }}</small>
+        </div>
+    </div>
+</div>
+
+<div class="col-xs-12 col-md-6 col-lg-4 info-holder">
+    <div class="info-block" ng-controller="AnalysisController">
+        <div class="cell-bar">
+            Select Data:
+            <select id="key1-select" ng-model="primary" ng-change="updateData()">
+                <option ng-repeat="key in primary_keys">{{ key }}</option>
+            </select>
+            <select id="key2-select" ng-model="second" ng-change="updateData()">
+                <option ng-repeat="key in secondary_keys[primary]">{{ key }}</option>
+            </select>
+        </div>
+        <canvas class="cell-bar chart chart-bar" chart-data="data" chart-labels="labels" chart-options="options"></canvas>
+    </div>
+</div>

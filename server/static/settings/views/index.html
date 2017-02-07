@@ -1,0 +1,61 @@
+<html lang="en" ng-app="settingsApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../static/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../static/css/main.css">
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                Clooney
+            </a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/settings/#">Settings</a></li>
+            <li><a href="/#">Events</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="sidebar" ng-controller="SidebarController">
+    <div class="sidebar-block" uib-dropdown>
+        <div class="row" id="event-select" uib-dropdown-toggle>
+            <div class="col-xs-2 event-select-label">Event:</div>
+            <div class="col-xs-10 event-select-event">{{ getSelectedEvent() }}<span class="caret"></span></div>
+        </div>
+        <ul class="dropdown-menu event-select-dropdown" uib-dropdown-menu role="menu" aria-labelledby="event-select">
+            <li role="menuitem" ng-repeat="event in events" ng-click="selectEvent(event)"><a>{{ event.name }}</a></li>
+        </ul>
+    </div>
+    <ul class="sidebar-list">
+        <li class="sidebar-item" ng-class="{ active: isActive('/e') }"><a href="#/e">Edit Expressions</a></li>
+        <li class="sidebar-item" ng-class="{ active: isActive('/h') }"><a href="#/h">Edit Headers</a></li>
+    </ul>
+    <div class="sidebar-block" id="header-select" uib-dropdown ng-class="{ hidden: !isActive('/h') }">
+        <div class="row" uib-dropdown-toggle>
+            <div class="col-xs-6 event-select-label">Header Group:</div>
+            <div class="col-xs-6 event-select-event">{{ getSelectedHeaders() }}<span class="caret"></span></div>
+        </div>
+        <ul class="dropdown-menu event-select-dropdown" uib-dropdown-menu role="menu" aria-labelledby="header-select">
+            <li role="menuitem" ng-repeat="headerGroup in headerGroups" ng-click="selectHeaders(headerGroup)"><a>{{ headerGroup }}</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="content" ng-view>
+</div>
+
+
+<script src="../../../static/bower_components/angular/angular.js"></script>
+<script src="../../../static/bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="../../../static/bower_components/angular-route/angular-route.js"></script>
+<script src="../../../static/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+<script src="../../../static/settings/controllers/app.js"></script>
+</body>
+</html>

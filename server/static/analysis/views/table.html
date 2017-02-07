@@ -1,0 +1,27 @@
+<div class="info-holder">
+    <div class="info-block">
+        <div class="event-name" ng-cloak>
+            {{ event.name }}
+            <small class="event-key">{{ event.key }}</small>
+        </div>
+    </div>
+</div>
+
+<div class="info-holder info-table">
+    <table id="table" class="table info-block" sortable-table fixed-header ng-cloak>
+        <thead>
+        <tr>
+            <th ng-repeat="header in headers" ng-click="sortList(header.key)" class="data-header {{ header.class }}">
+                {{ header.title }}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="elem in data">
+            <td ng-repeat="header in headers" class="data-box {{ header.data_class }}">
+                <span id="{{ getId(header.ids, elem) }}" ng-bind="getData(elem, header.key)"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

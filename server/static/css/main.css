@@ -1,0 +1,311 @@
+.content {
+    margin-top: 50px;
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    height: calc(100% - 51px);
+    padding-top: 2px;
+}
+
+.show-list {
+    width: calc(100% - 500px);
+}
+
+.sidebar {
+    position: fixed;
+    width: 250px;
+    height: 100%;
+    background: #eee;
+    padding: 0;
+    border-right: 1px solid #ccc;
+}
+
+.sidebar-right {
+    margin-left: -250px;
+    left: 100%;
+    border-right: none;
+    border-left: 1px solid #ccc;
+}
+
+.sidebar-block, .sidebar-item a {
+    padding: 5px 10px;
+    margin: 2px 0;
+    background: #e0e0e0;
+    color: #111;
+    width: 100%;
+    display: block;
+}
+
+.sidebar-block-bottom {
+    float: bottom;
+}
+
+.sidebar-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-item a:hover {
+    background: #bbb;
+}
+
+.sidebar-list a:hover {
+    text-decoration: none;
+    color: #111
+}
+
+.sidebar-list a:visited {
+    text-decoration: none;
+    color: #111;
+}
+
+.active a {
+    background: #ccc;
+}
+.active {
+    background: #ccc;
+}
+
+.event-select-label {
+
+}
+
+.event-select-event {
+    text-align: right;
+}
+
+.event-select-dropdown {
+    width: 250px;
+    border: none;
+    border-radius: 0;
+}
+
+.picklist-hidden {
+    display: none;
+}
+
+.picklist-shown {
+    display: block;
+}
+
+.picklist-title, .picklist-title:hover {
+    margin: 0;
+    padding: 2px 0 0;
+    float: left;
+    color: #111;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.picklist-header {
+    margin: 0;
+    padding: 5px;
+    height: 30px;
+}
+
+.picklist-footer {
+. picklist-header;
+    left: 100%;
+    position: fixed;
+    top: 100%;
+    margin-top: -30px;
+    margin-left: -250px;
+}
+
+.picklist-icons {
+    list-style-type: none;
+    float: right;
+}
+
+.picklist-icon {
+    display: inline;
+    padding: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    border-radius: 2px;
+    border: 1px solid #aaa;
+    background: #eee;
+}
+
+.picklist-icon a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.picklist-holder {
+    position: absolute;
+    top: 30px;
+    margin: 0 5px;
+    width: 240px;
+    height: calc(100% - 85px);
+}
+
+.picklist-text {
+    font-size: 14px;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border-radius: 2px;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+.info-holder {
+    margin: 5px 0;
+    padding: 0 5px;
+}
+
+.info-block {
+    background: #eee;
+    padding: 5px;
+    border: 1px solid #ddd;
+}
+
+.event-accuracy {
+    font-size: 18px;
+    text-align: right;
+    padding-top: 4px;
+    font-weight: 400;
+}
+
+.event-name {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.event-key {
+    font-weight: normal;
+    color: #888;
+}
+
+#table {
+    font-size: 14px;
+    border: none;
+    height: calc(100%);
+    padding-bottom: 31px;
+}
+
+.info-table {
+    height: calc(100% - 60px);
+    overflow-y: hidden;
+}
+
+.data-header {
+    text-align: center;
+    font-weight: 500;
+}
+
+.data-box {
+    text-align: center;
+}
+
+.data-box.uppercase {
+    text-transform: uppercase;
+}
+
+.data-box-left {
+    text-align: left;
+}
+
+.data-box-right {
+    text-align: right;
+}
+
+tr:nth-child(even) {
+    background: #dddddd;
+}
+
+tr:nth-child(odd) {
+    background: #eeeeee;
+}
+
+tr:nth-child(even) .red-alliance {
+    background: #eccccc;
+}
+
+tr:nth-child(odd) .red-alliance {
+    background: #fcdddd;
+}
+
+tr:nth-child(even) .blue-alliance {
+    background: #ccccec;
+}
+
+tr:nth-child(odd) .blue-alliance {
+    background: #ddddfc;
+}
+
+tr:nth-child(odd) .highlight {
+    background: #cceccc;
+}
+
+th {
+    color: #0f9c00;
+}
+
+.bold-data {
+    font-weight: 500;
+}
+
+.header-row {
+    width: 100%;
+    padding: 5px 5px 0 5px;
+}
+
+.header-entry {
+    background-color: #ddd;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.header-title-row {
+    background-color: #aaa;
+}
+
+.form-control {
+    width: 100%;
+}
+
+.header-edit-button-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 8px 0 8px 5px ;
+    vertical-align: middle;
+}
+
+.header-edit-button {
+    display: inline;
+    margin: 0;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.glyphicon {
+    font-size: 13px;
+}
+
+.glyphicon-chevron-down, .glyphicon-chevron-up {
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.glyphicon-menu-hamburger {
+    cursor: move;
+}
+
+.glyphicon-duplicate {
+    cursor: pointer;
+}
+
+.glyphicon-remove {
+    cursor: pointer;
+    color: #c00;
+}
+
+.glyphicon-plus {
+. clickable;
+    color: #0c0;
+}
