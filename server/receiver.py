@@ -1,5 +1,6 @@
-from flask import make_response, jsonify, request, abort
 import json
+
+from flask import abort, jsonify, make_response, request
 
 from server.db import Database
 from updaters import AverageCalculator

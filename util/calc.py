@@ -1,5 +1,5 @@
-import math
 import statistics
+
 
 class Calc(object):
     def __init__(self):
