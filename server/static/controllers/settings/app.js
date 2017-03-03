@@ -185,11 +185,11 @@ app.controller('SidebarController', function ($scope, $location, $cookies, $http
 app.config(function ($routeProvider) {
     $routeProvider
         .when('/h', {
-            templateUrl: '../../../../static/settings/views/edit_table.html',
+            templateUrl: '../../../../static/views/settings/edit_table.html',
             controller: 'HeaderEditController'
         })
         .when('/e', {
-            templateUrl: '../../../../static/settings/views/edit_table.html',
+            templateUrl: '../../../../static/views/settings/edit_table.html',
             controller: 'ExpressionEditController'
         })
         .otherwise({redirectTo: '/h'});

@@ -118,35 +118,35 @@ app.controller("AnalysisController", function ($scope, $http, $cookies) {
 app.config(function ($routeProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: '../../../../static/analysis/views/home.html',
+            templateUrl: '../../../../static/views/analysis/home.html',
             controller: 'HomeController'
         })
         .when('/m', {
-            templateUrl: '../../../../static/analysis/views/table.html',
+            templateUrl: '../../../../static/views/analysis/table.html',
             controller: 'MatchesController'
         })
         .when('/m/:level', {
-            templateUrl: '../../../../static/analysis/views/table.html',
+            templateUrl: '../../../../static/views/analysis/table.html',
             controller: 'MatchesController'
         })
         .when('/t', {
-            templateUrl: '../../../../static/analysis/views/table.html',
+            templateUrl: '../../../../static/views/analysis/table.html',
             controller: 'TeamsController'
         })
         .when('/s', {
-            templateUrl: '../../../../static/analysis/views/table.html',
+            templateUrl: '../../../../static/views/analysis/table.html',
             controller: 'StatsController'
         })
         .when('/r', {
-            templateUrl: '../../../../static/analysis/views/table.html',
+            templateUrl: '../../../../static/views/analysis/table.html',
             controller: 'RawController'
         })
         .when('/p', {
-            templateUrl: '../../../../static/analysis/views/table.html',
+            templateUrl: '../../../../static/views/analysis/table.html',
             controller: 'PredictionController'
         })
         .when('/a', {
-            templateUrl: '../../../../static/analysis/views/graphs.html',
+            templateUrl: '../../../../static/views/analysis/graphs.html',
             controller: 'HomeController'
         })
         .otherwise({redirectTo: '/'});

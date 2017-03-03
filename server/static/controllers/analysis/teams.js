@@ -11,13 +11,7 @@ app.controller('TeamsController', function ($scope, $cookies, $http, $sce) {
             $scope.headers = response.data;
         });
 
-    var apiUrl = "https://www.thebluealliance.com/api/v2";
-    var header = {
-        headers: {
-            'X-TBA-App-Id': 'kestin_goforth:Clooney:v1.0'
-        }
-    };
-    $http.get(apiUrl + '/event/' + $cookies.get('selected-event-id') + '/teams', header)
+    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/teams')
         .then(function (response) {
             $scope.data = response.data;
             if (response.data.length < 1) {
