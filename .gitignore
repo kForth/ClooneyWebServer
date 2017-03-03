@@ -2,3 +2,6 @@
 venv/
 db/
 tba.json
+*.pyc
+*/__pycache__/
+clooney/
