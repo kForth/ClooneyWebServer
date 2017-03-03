@@ -4,12 +4,14 @@ from flask import abort, jsonify, make_response, request
 
 from server.db import Database
 from updaters import AverageCalculator
+from tba_py import BlueAllianceAPI
 
 
 class ReceiverServer(object):
-    def __init__(self, add: classmethod, db: Database, url_prefix=""):
+    def __init__(self, add: classmethod, tba: BlueAllianceAPI, db: Database, url_prefix=""):
         self._add = lambda *args, **kwarg: add(*args, **kwarg, url_prefix=url_prefix)
         self.db = db
+        self.tba = tba
         self._register_views()
 
     def __update_event(self, event_id):

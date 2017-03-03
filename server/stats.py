@@ -4,10 +4,13 @@ from glob import glob
 from flask import jsonify, make_response, request
 from tba_py import BlueAllianceAPI
 from tinydb import TinyDB
+from server.db import Database
+
 
 class StatsServer(object):
-    def __init__(self, add: classmethod, tba: BlueAllianceAPI, url_prefix=""):
+    def __init__(self, add: classmethod, db: Database, tba: BlueAllianceAPI, url_prefix=""):
         self._add = lambda *x, **y: add(*x, **y, url_prefix=url_prefix)
+        self.db = db
         self.tba = tba
         self._register_views()
 
@@ -15,8 +18,6 @@ class StatsServer(object):
         return TinyDB("db/events/{}.json".format(event))
 
     def _register_views(self):
-        self._add('/events', self.get_available_events)
-        self._add('/events/<int:year>', self.get_available_events)
         self._add('/event/<event_id>/info', self.get_event_info)
         self._add('/event/<event>/matches/<level>', self.get_matches)
         self._add('/event/<event>/matches', self.get_matches)
@@ -44,16 +45,6 @@ class StatsServer(object):
 
     def get_team_info(self, team_number):
         return make_response(jsonify(self.tba.get_team(team_number)))
-
-    def get_available_events(self, year=2016):
-        events = []
-        for event in glob("clooney/data/{}*".format(year)):
-            event = event.split("/")[-1]
-            events.append({
-                "id": event,
-                "name": event
-            })
-        return make_response(jsonify(events))
 
     def get_matches(self, event, level=None):
         matches = []
@@ -91,7 +82,6 @@ class StatsServer(object):
         if event_id == "undefined":
             return []
         return json.load(open("clooney/data/{}/calculated.json".format(event_id)))
-
 
     def __get_pit_scouting(self, event_id):
         if event_id == "undefined":
