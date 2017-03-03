@@ -6,6 +6,7 @@ class Runner(object):
     """
     Runs a function in a separate thread.
     """
+
     def __init__(self, target: classmethod, name="Runner"):
         self.__target = target
         self.name = name
@@ -25,7 +26,8 @@ class Runner(object):
         if self.__thread is not None:
             self.__thread.join()
 
-    def sleep(self, delay: float, tick: float):
+    @staticmethod
+    def sleep(delay: float, tick: float):
         sleep(delay - (time() - tick))
 
 
@@ -33,6 +35,7 @@ class RepeatingRunner(Runner):
     """
     A Runner that automatically restarts itself after it's done.
     """
+
     def __init__(self, target: classmethod):
         Runner.__init__(self, self.work)
         self.target = target
@@ -67,6 +70,7 @@ class PeriodicRunner(Runner):
     """
     A Runner that automatically restarts itself after the specified delay.
     """
+
     def __init__(self, target: classmethod, delay=30.0, auto_start=True):
         Runner.__init__(self, self.work)
         self.delay = delay
@@ -97,6 +101,7 @@ class PeriodicRunner(Runner):
     """
     Thread liveliness is checked at 100Hz.
     """
+
     def join(self):
         while self.is_running():
             sleep(0.01)
@@ -115,6 +120,7 @@ class RunnerQueue(Runner):
 
     Not to be confused with a ResettingQueueRunner.
     """
+
     def __init__(self, *runners):
         Runner.__init__(self, self.work)
         self.runners = list(runners)
@@ -140,6 +146,7 @@ class ResettingQueueRunner(Runner):
 
     Not to be confused with a RunnerQueue
     """
+
     def __init__(self, target: classmethod):
         Runner.__init__(self, target)
         self.target = target
@@ -161,6 +168,7 @@ class ConcurrentRunner(RunnerQueue):
     Runs a series of functions at the same time and dies when they're all done.
     Sub-thread liveliness is checked at 100Hz.
     """
+
     def __init__(self, *runners):
         RunnerQueue.__init__(self, *runners)
 
