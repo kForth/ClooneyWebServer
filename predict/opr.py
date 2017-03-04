@@ -3,6 +3,7 @@ import numpy as np
 from scipy.optimize import minimize
 
 from server import Database
+import time
 
 tba_url = "http://thebluealliance.com/api/v2"
 headers = {'X-TBA-App-Id': "kestin_goforth:clooney_scouting_system:v01"}
@@ -93,11 +94,13 @@ class OprCalculator(object):
         return minimize(func, np.zeros(n), method='L-BFGS-B', bounds=[(0., None) for _ in range(n)])["x"]
 
     def get_event_oprs(self, event_id, minimize=True):
+        start_time = time.time()
+        solve_time_accum = 0
         matches = self.get_matches_from_tba(event_id)
         teams = self.get_team_list_from_matches(event_id, matches)
+        interactions = self.get_interaction_matrix(matches, teams)
         opr_list = {}
 
-        interactions = self.get_interaction_matrix(matches, teams)
         for score_type in matches[0][-1].keys():
             if len(matches) == 0:
                 continue
@@ -107,24 +110,28 @@ class OprCalculator(object):
                     temp_matches += [m[:-1] + [round(1.0 * float(m[-1][score_type]), 2)]]
             dump, scores = self.get_score_sums(matches, list(teams), score_type)
 
+            solve_start_time = time.time()
             if minimize:
                 oprs = self.minimize(interactions, scores)
             else:
                 oprs = self.solve(interactions, scores)
-
+            solve_time_accum += time.time() - solve_start_time
+            opr_dict = dict(zip(teams, oprs))
             for team in teams:
                 if team not in opr_list.keys():
-                    opr_list[str(team)] = {
+                    opr_list[team] = {
                         "team_number": int(team),
                         "oprs": {}
                     }
-                opr_list[str(team)]["oprs"][score_type] = round(oprs[teams.index(team)], 2)
+                opr_list[team]["oprs"][score_type] = round(opr_dict[team], 2)
 
+        print("Solving took {}s".format(round(solve_time_accum, 1)))
+        print("Overall time was {}s".format(round(time.time() - start_time, 1)))
         return list(opr_list.values())
 
 if __name__ == "__main__":
-    event_key = "2017flwp"
+    event_key = "2016cur"
     opr = OprCalculator(BlueAllianceAPI("Clooney", "Clooney", "2"))
     db = Database(dirpath="../db/")
-    team_oprs = opr.get_event_oprs(event_key)
+    team_oprs = opr.get_event_oprs(event_key, False)
     db.set_event_oprs(event_key, team_oprs)
