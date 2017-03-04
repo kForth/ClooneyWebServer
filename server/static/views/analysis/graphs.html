@@ -8,19 +8,46 @@
 </div>
 
 <div class="col-md-12 col-lg-6 info-holder">
-    <div class="info-block" ng-controller="AnalysisController">
+    <!--<div class="info-block" ng-controller="SingleAnalysisController">-->
+        <!--<div class="cell-bar">-->
+            <!--Select Data:-->
+            <!--<select id="key0-select" ng-model="source" ng-change="loadKeys()">-->
+                <!--<option ng-repeat="key in data_sources">{{ key }}</option>-->
+            <!--</select>-->
+            <!--<select id="key1-select" ng-model="primary" ng-change="updateData()">-->
+                <!--<option ng-repeat="key in primary_keys">{{ key }}</option>-->
+            <!--</select>-->
+            <!--<select id="key2-select" ng-model="second" ng-change="updateData()">-->
+                <!--<option ng-repeat="key in secondary_keys[primary]">{{ key }}</option>-->
+            <!--</select>-->
+        <!--</div>-->
+        <!--<canvas class="cell-bar chart chart-bar" chart-series="series" chart-data="data" chart-labels="labels" chart-options="options"></canvas>-->
+    <!--</div>-->
+    <div class="info-block" ng-controller="DoubleAnalysisController">
         <div class="cell-bar">
-            Select Data:
-            <select id="key0-select" ng-model="source" ng-change="loadKeys()">
+            Select X Data:
+            <select id="x-key0-select" ng-model="x_source" ng-change="loadXKeys()">
                 <option ng-repeat="key in data_sources">{{ key }}</option>
             </select>
-            <select id="key1-select" ng-model="primary" ng-change="updateData()">
-                <option ng-repeat="key in primary_keys">{{ key }}</option>
+            <select id="x-key1-select" ng-model="x_primary" ng-change="updateData()">
+                <option ng-repeat="key in x_primary_keys">{{ key }}</option>
             </select>
-            <select id="key2-select" ng-model="second" ng-change="updateData()">
-                <option ng-repeat="key in secondary_keys[primary]">{{ key }}</option>
+            <select id="x-key2-select" ng-model="x_second" ng-change="updateData()">
+                <option ng-repeat="key in x_secondary_keys[x_primary]">{{ key }}</option>
             </select>
         </div>
-        <canvas class="cell-bar chart chart-bar" chart-data="data" chart-labels="labels" chart-options="options"></canvas>
+        <div class="cell-bar">
+            Select Y Data:
+            <select id="y-key0-select" ng-model="y_source" ng-change="loadYKeys()">
+                <option ng-repeat="key in data_sources">{{ key }}</option>
+            </select>
+            <select id="y-key1-select" ng-model="y_primary" ng-change="updateData()">
+                <option ng-repeat="key in y_primary_keys">{{ key }}</option>
+            </select>
+            <select id="y-key2-select" ng-model="y_second" ng-change="updateData()">
+                <option ng-repeat="key in y_secondary_keys[y_primary]">{{ key }}</option>
+            </select>
+        </div>
+        <canvas class="cell-bar chart chart-bubble" chart-data="data" chart-labels="labels" chart-options="options"></canvas>
     </div>
 </div>
