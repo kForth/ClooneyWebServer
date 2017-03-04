@@ -29,8 +29,8 @@ app.directive('sortableTable', function () {
             if (key.includes(",")) {
                 var keys = key.split(",");
                 var val = elem;
-                keys.forEach(function(key){
-                   val = val[key.trim()];
+                keys.forEach(function (key) {
+                    val = val[key.trim()];
                 });
                 return val;
             }
@@ -39,6 +39,7 @@ app.directive('sortableTable', function () {
             }
         };
     }
+
     return {
         link: link,
         restrict: 'A'
