@@ -3,8 +3,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <link rel="stylesheet" type="text/css" href="../../bower_components/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../../css/main.css">
+    <link rel="stylesheet" type="text/css" href="../../../static/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../static/css/main.css">
 
 </head>
 <body>
@@ -18,7 +18,7 @@
         </div>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="/s/#">Settings</a></li>
-            <li><a href="/#">Events</a></li>
+            <li><a href="/e/#">Events</a></li>
         </ul>
     </div>
 </nav>
@@ -54,6 +54,7 @@
             <li class="sidebar-item" ng-class="{ active: isActive('/s') }"><a href="#/s">Team Stats</a></li>
             <li class="sidebar-item" ng-class="{ active: isActive('/r') }"><a href="#/r">Raw</a></li>
             <li class="sidebar-item" ng-class="{ active: isActive('/p') }"><a href="#/p">Predictions</a></li>
+            <li class="sidebar-item" ng-class="{ active: isActive('/o') }"><a href="#/o">OPRs</a></li>
             <li class="sidebar-item" ng-class="{ active: isActive('/a') }"><a href="#/a">Event Analysis</a></li>
         </ul>
 
@@ -82,21 +83,23 @@
 
 
 
-<script src="../../bower_components/angular/angular.js"></script>
-<script src="../../bower_components/angular-cookies/angular-cookies.js"></script>
-<script src="../../bower_components/angular-route/angular-route.js"></script>
-<script src="../../bower_components/angular-bootstrap/ui-bootstrap.js"></script>
-<script src="../../bower_components/angu-fixed-header-table/angu-fixed-header-table.js"></script>
-<script src="../../bower_components/chart.js/dist/Chart.min.js"></script>
-<script src="../../bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
-<script src="../../controllers/analysis/app.js"></script>
-<script src="../../controllers/analysis/sidebar.js"></script>
-<script src="../../controllers/analysis/picklist.js"></script>
-<script src="../../controllers/analysis/teams.js"></script>
-<script src="../../controllers/analysis/matches.js"></script>
-<script src="../../controllers/analysis/stats.js"></script>
-<script src="../../controllers/analysis/raw.js"></script>
-<script src="../../directives/sortable-table.js"></script>
-<script src="../../directives/data-filters.js"></script>
+<script src="../../../static/bower_components/angular/angular.js"></script>
+<script src="../../../static/bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="../../../static/bower_components/angular-route/angular-route.js"></script>
+<script src="../../../static/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+<script src="../../../static/bower_components/angu-fixed-header-table/angu-fixed-header-table.js"></script>
+<script src="../../../static/bower_components/chart.js/dist/Chart.min.js"></script>
+<script src="../../../static/bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
+<script src="../../../static/controllers/analysis/analysis.js"></script>
+<script src="../../../static/controllers/analysis/sidebar.js"></script>
+<script src="../../../static/controllers/analysis/picklist.js"></script>
+<script src="../../../static/controllers/analysis/teams.js"></script>
+<script src="../../../static/controllers/analysis/matches.js"></script>
+<script src="../../../static/controllers/analysis/stats.js"></script>
+<script src="../../../static/controllers/analysis/raw.js"></script>
+<script src="../../../static/controllers/analysis/oprs.js"></script>
+<script src="../../../static/directives/sortable-table.js"></script>
+<script src="../../../static/directives/data-filters.js"></script>
+<script src="../../../static/directives/analysis/team-link.js"></script>
 </body>
 </html>

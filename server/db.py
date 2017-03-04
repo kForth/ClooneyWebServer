@@ -3,8 +3,11 @@ from os import path
 
 
 class Database(object):
-    def __init__(self):
-        self.folder_path = "db/"
+    def __init__(self, dirpath="db/"):
+        self.folder_path = dirpath
+
+        self.event_info_fp = "events.json"
+        self.opr_fp = "oprs.json"
 
     def _load_file(self, filename: str, default="{}"):
         fp = self.folder_path + filename
@@ -27,21 +30,34 @@ class Database(object):
         self._dump_file(data, fp)
 
     def get_event_info(self, event_id: str):
-        return self.get_events()[event_id]
+        events = self._get_events()
+        return events[event_id] if event_id in events.keys() else {}
 
     def set_event_info(self, event_id: str, info: dict):
-        events = self.get_events()
+        events = self._get_events()
         events[event_id] = info
-        self.set_events(events)
+        self._set_events(events)
 
-    def get_events(self):
-        return self._load_file("events.json")
+    def _get_events(self):
+        return self._load_file(self.event_info_fp)
 
-    def set_events(self, data: list):
-        self._dump_file(data, "events.json")
+    def _set_events(self, data: list):
+        self._dump_file(data, self.event_info_fp)
 
     def add_event(self, key: str, info: dict):
-        d = self.get_events()
+        d = self._get_events()
         if key not in d.keys():
             d[key] = info
-        self.set_events(d)
+        self._set_events(d)
+
+    def get_event_oprs(self, event_id):
+        oprs = self._load_file(self.opr_fp)
+        if event_id in oprs:
+            return oprs[event_id]
+        else:
+            return {}
+
+    def set_event_oprs(self, event_id, opr_dict):
+        oprs = self._load_file(self.opr_fp)
+        oprs[event_id] = opr_dict
+        self._dump_file(oprs, self.opr_fp)

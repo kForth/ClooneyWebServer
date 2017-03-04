@@ -33,7 +33,8 @@ app.controller("AnalysisController", function ($scope, $http, $cookies) {
         key: $cookies.get('selected-event-id')
     };
 
-
+    $scope.target_data = [];
+    $scope.data_sources = ['avg_data', 'oprs'];
     $scope.keys = {};
     $scope.labels = [];
     $scope.type = "bar";
@@ -52,14 +53,16 @@ app.controller("AnalysisController", function ($scope, $http, $cookies) {
         }
     };
     $scope.updateData = function () {
-        if ($scope.second === undefined || $scope.secondary_keys[$scope.primary] === undefined) {
+        if ($scope.target_data === undefined || $scope.second === undefined || $scope.secondary_keys[$scope.primary] === undefined) {
             return;
         }
+        $cookies.put('data-primary', $scope.primary);
+        $cookies.put('data-second', $scope.second);
         var num_bins = 10;
         var key_set = $scope.primary + "," + $scope.second;
         var points = [];
-        for (var i in $scope.avg_data) {
-            var entry = $scope.avg_data[i];
+        for (var i in $scope.target_data) {
+            var entry = $scope.target_data[i];
             var value = getData(entry, key_set);
             points.push(value);
         }
@@ -71,7 +74,7 @@ app.controller("AnalysisController", function ($scope, $http, $cookies) {
         for (var i = 0; i < num_bins; i++) {
             var min_time = (i * delta + min);
             var max_time = (min_time + delta);
-            $scope.labels.push(min_time.toPrecision(2) + " - " + max_time.toPrecision(2));
+            $scope.labels.push(Number(min_time.toPrecision(2)) + " - " + Number(max_time.toPrecision(2)));
             bins[i] = 0.0;
         }
         for (var i in points) {
@@ -84,14 +87,22 @@ app.controller("AnalysisController", function ($scope, $http, $cookies) {
         $scope.data = [Object.values(bins)];
     };
 
-    function loadKeys() {
+    $scope.loadKeys = function () {
+        if ($scope.source === undefined) return;
+        $cookies.put('data-source', $scope.source);
         $scope.primary_keys = [];
         $scope.secondary_keys = {};
-        for (var key in $scope.avg_data[0]) {
-            $scope.primary_keys.push(key);
-            $scope.secondary_keys[key] = Object.keys($scope.avg_data[0][key]);
+        if ($scope.source === "avg_data")
+            $scope.target_data = $scope.avg_data;
+        if ($scope.source === "oprs")
+            $scope.target_data = $scope.opr_data;
+        for (var key in $scope.target_data[0]) {
+            if ($scope.target_data[0][key] instanceof Object) {
+                $scope.primary_keys.push(key);
+                $scope.secondary_keys[key] = Object.keys($scope.target_data[0][key]);
+            }
         }
-    }
+    };
 
     function getData(elem, key) {
         if (key.includes(",")) {
@@ -110,8 +121,22 @@ app.controller("AnalysisController", function ($scope, $http, $cookies) {
     $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/avg')
         .then(function (response) {
             $scope.avg_data = angular.copy(response.data);
-            loadKeys();
         });
+    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/oprs')
+        .then(function (response) {
+            $scope.opr_data = angular.copy(response.data);
+        })
+        .then(function (resp){
+            $scope.source = $cookies.get('data-source');
+            console.log($scope.source);
+            if($scope.source != undefined){
+                $scope.loadKeys();
+                $scope.primary = $cookies.get('data-primary');
+                $scope.second = $cookies.get('data-second');
+                if($scope.primary != undefined && $scope.second != undefined) $scope.updateData();
+            }
+        });
+
 
 });
 
@@ -144,6 +169,10 @@ app.config(function ($routeProvider) {
         .when('/p', {
             templateUrl: '../../../../static/views/analysis/table.html',
             controller: 'PredictionController'
+        })
+        .when('/o', {
+            templateUrl: '../../../../static/views/analysis/table.html',
+            controller: 'OprsController'
         })
         .when('/a', {
             templateUrl: '../../../../static/views/analysis/graphs.html',

@@ -7,10 +7,13 @@
     </div>
 </div>
 
-<div class="col-xs-12 col-md-6 col-lg-4 info-holder">
+<div class="col-md-12 col-lg-6 info-holder">
     <div class="info-block" ng-controller="AnalysisController">
         <div class="cell-bar">
             Select Data:
+            <select id="key0-select" ng-model="source" ng-change="loadKeys()">
+                <option ng-repeat="key in data_sources">{{ key }}</option>
+            </select>
             <select id="key1-select" ng-model="primary" ng-change="updateData()">
                 <option ng-repeat="key in primary_keys">{{ key }}</option>
             </select>

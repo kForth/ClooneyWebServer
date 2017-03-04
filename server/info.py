@@ -17,11 +17,31 @@ class InfoServer(object):
     def _register_views(self):
         self._add('/events', self.get_available_events)
         self._add('/events/<int:year>', self.get_available_events)
+        self._add('/event/<event_id>/info', self.get_event_info)
         self._add('/event/<event_id>/teams', self.get_event_teams)
+        self._add('/event/<event_id>/matches/<level>', self.get_matches)
+        self._add('/event/<event_id>/matches', self.get_matches)
         self._add('/setup/<event_id>', self.trigger_event_setup, methods=['POST'])
 
+    def get_event_info(self, event_id):
+        return make_response(jsonify(self.db.get_event_info(event_id)))
+
+    def get_matches(self, event_id, level=None):
+        matches = []
+        for match in self.tba.get_event_matches(event_id):
+            if level is None or level.lower() == match["comp_level"].lower():
+                for alli in ["red", "blue"]:
+                    teams = match['alliances'][alli]['teams']
+                    match['alliances'][alli]['teams'] = {}
+                    for i in range(len(teams)):
+                        match['alliances'][alli]['teams'][str(i + 1)] = int(teams[i][3:])
+                    if match not in matches:
+                        matches.append(match)
+        print(matches[0]["alliances"]["red"]["teams"]["1"])
+        return make_response(jsonify(matches))
+
     def get_available_events(self, year=None):
-        events = self.db.get_events()
+        events = self.db._get_events()
         event_list = []
         for key in events.keys():
             if year is not None and str(year) not in key:
@@ -57,7 +77,7 @@ class InfoServer(object):
         except:
             print("Updating Event: {}... Couldn't get TBA info.".format(event_id))
             pass
-        self.db.add_event("2017onto2", info)
+        self.db.add_event(event_id, info)
         self.setup_event_teams(event_id)
         print("Updating Event: {}... Done".format(event_id))
 
