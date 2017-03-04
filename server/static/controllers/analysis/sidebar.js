@@ -55,7 +55,7 @@ app.controller('SidebarController', function ($scope, $location, $cookies, $http
         }
     };
 
-    $http.get("/api/events/2017")
+    $http.get("/api/events")
         .then(function (response) {
             $scope.events = response.data;
         });
