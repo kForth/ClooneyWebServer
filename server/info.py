@@ -44,12 +44,14 @@ class InfoServer(object):
         events = self.db._get_events()
         event_list = []
         for key in events.keys():
-            if year is not None and str(year) not in key:
-                continue
-            event_list.append({
-                "id":   key,
-                "name": events[key]["tba"]["short_name"] if "tba" in events[key].keys() else key
-            })
+            if year is None or str(year) in key:
+                event_name = key
+                if "tba" in events[key].keys():
+                    event_name = "{0} {1}".format(key[:4], events[key]["tba"]["short_name"])
+                event_list.append({
+                    "id":   key,
+                    "name": event_name
+                })
         return make_response(jsonify(event_list))
 
     def get_event_teams(self, event_id):
