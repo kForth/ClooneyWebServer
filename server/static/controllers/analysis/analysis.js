@@ -1,25 +1,6 @@
 var app = angular.module('app');
 
-app.controller('AppController', function ($scope) {
-
-});
-
 app.controller('HomeController', function ($scope, $cookies) {
-    $scope.event = {
-        name: $cookies.get('selected-event-name'),
-        key: $cookies.get('selected-event-id')
-    };
-});
-
-app.controller('StatsController', function ($scope, $cookies) {
-    $scope.event = {
-        name: $cookies.get('selected-event-name'),
-        key: $cookies.get('selected-event-id')
-    };
-
-});
-
-app.controller('PredictionController', function ($scope, $cookies) {
     $scope.event = {
         name: $cookies.get('selected-event-name'),
         key: $cookies.get('selected-event-id')
@@ -133,11 +114,11 @@ app.controller("SingleAnalysisController", function ($scope, $http, $cookies) {
         }
     }
 
-    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/avg')
+    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/avg', { cache: true})
         .then(function (response) {
             $scope.avg_data = angular.copy(response.data);
         });
-    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/oprs')
+    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/oprs', { cache: true})
         .then(function (response) {
             $scope.opr_data = angular.copy(response.data);
         })
@@ -164,25 +145,21 @@ app.controller("DoubleAnalysisController", function ($scope, $http, $cookies) {
     $scope.data_sources = ['avg_data', 'oprs'];
     $scope.keys = {};
     $scope.labels = [];
+    $scope.series = [];
     $scope.options = {
         scales: {
             xAxes: [
                 {
                     type: 'linear',
                     display: true,
-                    ticks: {
-                        min: 0
-                    }
+                    position: 'bottom'
                 }
             ],
             yAxes: [
                 {
                     type: 'linear',
                     display: true,
-                    position: 'left',
-                    ticks: {
-                        min: 0
-                    }
+                    position: 'left'
                 }
             ]
         }
@@ -212,7 +189,6 @@ app.controller("DoubleAnalysisController", function ($scope, $http, $cookies) {
                 y: yValue,
                 r: 2
             });
-            console.log(xValue - yValue);
             if ($scope.x_source == "oprs") {
                 teams.push($scope.x_target_data[i]["team_number"]);
             }
@@ -292,70 +268,292 @@ app.controller("DoubleAnalysisController", function ($scope, $http, $cookies) {
         }
     }
 
-    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/avg')
+    var data_read = 0;
+    function updateKeys(){
+        if(++data_read >=2){
+            $scope.x_source = $cookies.get('data-x-source');
+            $scope.y_source = $cookies.get('data-y-source');
+            if ($scope.x_source != undefined) {
+                $scope.loadXKeys();
+                $scope.x_primary = $cookies.get('data-x-primary');
+                $scope.x_second = $cookies.get('data-x-second');
+            }
+            if ($scope.y_source != undefined) {
+                $scope.loadYKeys();
+                $scope.y_primary = $cookies.get('data-y-primary');
+                $scope.y_second = $cookies.get('data-y-second');
+            }
+            $scope.updateData();
+        }
+    }
+
+    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/avg', { cache: true})
         .then(function (response) {
             $scope.avg_data = response.data;
+            updateKeys()
+        });
+    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/oprs', { cache: true})
+        .then(function (response) {
+            $scope.opr_data = angular.copy(response.data);
+            updateKeys()
         })
-        .then($http.get('/api/event/' + $cookies.get('selected-event-id') + '/oprs')
-            .then(function (response) {
-                $scope.opr_data = angular.copy(response.data);
-            })
-            .then(function (resp) {
-                $scope.x_source = $cookies.get('data-x-source');
-                $scope.y_source = $cookies.get('data-y-source');
-                if ($scope.x_source != undefined) {
-                    $scope.loadXKeys();
-                    $scope.x_primary = $cookies.get('data-x-primary');
-                    $scope.x_second = $cookies.get('data-x-second');
-                }
-                if ($scope.y_source != undefined) {
-                    $scope.loadYKeys();
-                    $scope.y_primary = $cookies.get('data-y-primary');
-                    $scope.y_second = $cookies.get('data-y-second');
-                }
-                $scope.updateData();
-            }));
 
 
 });
 
-app.config(function ($routeProvider) {
-    $routeProvider
-        .when('/', {
-            templateUrl: '../../../../static/views/analysis/home.html',
-            controller: 'HomeController'
-        })
-        .when('/m', {
-            templateUrl: '../../../../static/views/analysis/table.html',
-            controller: 'MatchesController'
-        })
-        .when('/m/:level', {
-            templateUrl: '../../../../static/views/analysis/table.html',
-            controller: 'MatchesController'
-        })
-        .when('/t', {
-            templateUrl: '../../../../static/views/analysis/table.html',
-            controller: 'TeamsController'
-        })
-        .when('/s', {
-            templateUrl: '../../../../static/views/analysis/table.html',
-            controller: 'StatsController'
-        })
-        .when('/r', {
-            templateUrl: '../../../../static/views/analysis/table.html',
-            controller: 'RawController'
-        })
-        .when('/p', {
-            templateUrl: '../../../../static/views/analysis/table.html',
-            controller: 'PredictionController'
-        })
-        .when('/o', {
-            templateUrl: '../../../../static/views/analysis/table.html',
-            controller: 'OprsController'
-        })
-        .when('/a', {
-            templateUrl: '../../../../static/views/analysis/graphs.html',
-            controller: 'HomeController'
-        })
-        .otherwise({redirectTo: '/'});
+app.controller('MatchesController', function ($scope, $cookies, $http, $sce, $location, $routeParams) {
+    var httpSuffix = "";
+    if($routeParams.level != undefined){
+        if($routeParams.level != undefined) {
+            httpSuffix = "/" + $routeParams.level;
+            if($routeParams.team_number != undefined){
+                httpSuffix += "/" + $routeParams.team_number;
+            }
+        }
+    }
+
+    $scope.event = {
+        name: $cookies.get('selected-event-name'),
+        key: $cookies.get('selected-event-id')
+    };
+
+    $http.get("/api/headers/" + $scope.event.key + "/matches", { cache: true})
+        .then(function (response) {
+            $scope.headers = angular.copy(response.data);
+        });
+
+    $http.get('/api/event/' + $scope.event.key + '/matches' + httpSuffix, { cache: true})
+        .then(function (response) {
+            if (response.data.length < 1) {
+                angular.element(document.querySelector("#table"))[0].innerHTML = "No matches found.";
+            }
+            $scope.data = angular.copy(response.data);
+        });
+
+    $scope.sortId = $cookies.get('matches-sort-id');
+    $scope.sortReverse = $cookies.get('matches-sort-reverse');
+
+    $scope.sortData = function(key){
+        if($scope.sortReverse === undefined){
+            $scope.sortReverse = true;
+        }
+        if($scope.sortId === key){
+            $scope.sortReverse = !$scope.sortReverse;
+        }
+        else{
+            $scope.sortId = key;
+            $scope.sortReverse = true;
+        }
+
+        $cookies.put('matches-sort-id', $scope.sortId);
+        $cookies.put('matches-sort-reverse', $scope.sortReverse);
+    };
+
+});
+
+app.controller('OprsController', function ($scope, $cookies, $http) {
+    $scope.event = {
+        name: $cookies.get('selected-event-name'),
+        key: $cookies.get('selected-event-id')
+    };
+
+    $http.get("/api/headers/" + $scope.event.key + "/oprs", { cache: true})
+        .then(function (response) {
+            $scope.headers = response.data;
+        });
+
+    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/oprs', { cache: true})
+        .then(function (response) {
+            $scope.data = response.data;
+            if (response.data.length < 1) {
+                angular.element(document.querySelector("#table"))[0].innerHTML = "No OPRs found."
+            }
+        });
+
+    $scope.sortId = $cookies.get('opr-sort-id');
+    $scope.sortReverse = $cookies.get('opr-sort-reverse');
+
+    $scope.sortData = function(key){
+        if($scope.sortReverse === undefined){
+            $scope.sortReverse = true;
+        }
+        if($scope.sortId === key){
+            $scope.sortReverse = !$scope.sortReverse;
+        }
+        else{
+            $scope.sortId = key;
+            $scope.sortReverse = true;
+        }
+
+        $cookies.put('opr-sort-id', $scope.sortId);
+        $cookies.put('opr-sort-reverse', $scope.sortReverse);
+    };
+});
+
+app.controller('RawController', function ($scope, $cookies, $http, $sce) {
+    $scope.event = {
+        name: $cookies.get('selected-event-name'),
+        key: $cookies.get('selected-event-id')
+    };
+
+    $http.get("/api/headers/" + $scope.event.key + "/stats_raw", { cache: true})
+        .then(function (response) {
+            $scope.headers = response.data;
+        });
+
+    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/raw', { cache: true})
+        .then(function (response) {
+            $scope.data = response.data;
+            if (response.data.length < 1) {
+                angular.element(document.querySelector("#table"))[0].innerHTML = "No data available."
+            }
+        });
+
+    $scope.sortId = $cookies.get('raw-sort-id');
+    $scope.sortReverse = $cookies.get('raw-sort-reverse');
+
+    $scope.sortData = function(key){
+        if($scope.sortReverse === undefined){
+            $scope.sortReverse = true;
+        }
+        if($scope.sortId === key){
+            $scope.sortReverse = !$scope.sortReverse;
+        }
+        else{
+            $scope.sortId = key;
+            $scope.sortReverse = true;
+        }
+
+        $cookies.put('raw-sort-id', $scope.sortId);
+        $cookies.put('raw-sort-reverse', $scope.sortReverse);
+    };
+
+});
+
+app.controller('TeamsController', function ($scope, $cookies, $http) {
+    $scope.event = {
+        name: $cookies.get('selected-event-name'),
+        key: $cookies.get('selected-event-id')
+    };
+
+    $http.get("/api/headers/" + $scope.event.key + "/teams", { cache: true})
+        .then(function (response) {
+            $scope.headers = response.data;
+        });
+
+    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/teams', { cache: true})
+        .then(function (response) {
+            $scope.data = response.data;
+            if (response.data.length < 1) {
+                angular.element(document.querySelector("#table"))[0].innerHTML = "No teams registered.";
+            }
+        });
+
+    $scope.sortId = $cookies.get('teams-sort-id');
+    $scope.sortReverse = $cookies.get('teams-sort-reverse');
+
+    $scope.sortData = function(key){
+        if($scope.sortReverse === undefined){
+            $scope.sortReverse = true;
+        }
+        if($scope.sortId === key){
+            $scope.sortReverse = !$scope.sortReverse;
+        }
+        else{
+            $scope.sortId = key;
+            $scope.sortReverse = true;
+        }
+
+        $cookies.put('teams-sort-id', $scope.sortId);
+        $cookies.put('teams-sort-reverse', $scope.sortReverse);
+    };
+
+});
+
+app.controller('StatsController', function ($scope, $cookies, $http) {
+    $scope.event = {
+        name: $cookies.get('selected-event-name'),
+        key: $cookies.get('selected-event-id')
+    };
+
+    $http.get("/api/headers/" + $scope.event.key + "/stats_avg", { cache: true})
+        .then(function (response) {
+            $scope.headers = response.data;
+        });
+
+    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/avg', { cache: true})
+        .then(function (response) {
+            $scope.data = response.data;
+            if (response.data.length < 1) {
+                angular.element(document.querySelector("#table"))[0].innerHTML = "No stats available."
+            }
+        });
+
+    $scope.sortId = $cookies.get('stats-sort-id');
+    $scope.sortReverse = $cookies.get('stats-sort-reverse');
+
+    $scope.sortData = function(key){
+        if($scope.sortReverse === undefined){
+            $scope.sortReverse = true;
+        }
+        if($scope.sortId === key){
+            $scope.sortReverse = !$scope.sortReverse;
+        }
+        else{
+            $scope.sortId = key;
+            $scope.sortReverse = true;
+        }
+
+        $cookies.put('stats-sort-id', $scope.sortId);
+        $cookies.put('stats-sort-reverse', $scope.sortReverse);
+    };
+
+});
+
+app.directive('sortableTable', function () {
+    function link(scope) {
+        var lastSortKey;
+        var lastSortOrder;
+        scope.sortList = function (key) {
+            if (key === lastSortKey) {
+                lastSortOrder *= -1;
+            }
+            else {
+                lastSortOrder = 1;
+            }
+            lastSortKey = key;
+            scope.data.sort(function (a, b) {
+                var value = (scope.getData(a, key) > scope.getData(b, key) ? 1.0 : scope.getData(a, key) < scope.getData(b, key) ? -1 : 0);
+                return value * (lastSortOrder > 0 ? -1 : 1);
+            });
+        };
+
+        scope.getId = function (ids, elem) {
+            if (ids === undefined) {
+                return "";
+            }
+            return ids.map(function (obj) {
+                return elem[obj];
+            }).join("_");
+        };
+
+        scope.getData = function (elem, key) {
+            if (key.includes(",")) {
+                var keys = key.split(",");
+                var val = elem;
+                keys.forEach(function (key) {
+                    val = val[key.trim()];
+                });
+                return val;
+            }
+            else {
+                return elem[key];
+            }
+        };
+    }
+
+    return {
+        link: link,
+        restrict: 'A'
+    };
 });

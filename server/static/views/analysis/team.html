@@ -1,0 +1,89 @@
+<div ng-include="'../../../static/views/analysis/sidebar.html'"></div>
+
+<div class="inner-content">
+    <div class="info-holder">
+        <div class="info-block">
+            <div class="event-name" ng-cloak>
+                Pokédex | {{ team_info["team_number"] }}
+                <small>
+                    {{ team_info["nickname"] }}
+                    <a href="http://thebluealliance.com/team/{{ team_info['team_number'] }}" target="_blank">
+                        <span class="glyphicon glyphicon-link"></span>
+                    </a>
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-md-4 info-holder">
+        <div class="info-holder robot-img-container row" ng-cloak>
+            <div class="info-block">
+                <div uib-carousel active="active" interval="interval" no-wrap="noWrapSlides">
+                    <div uib-slide ng-repeat="slide in images track by slide.id" index="slide.id">
+                        <a href="{{ slide.image }}" target="_blank">
+                            <img ng-src="{{ slide.image }}" class="robot-img">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-holder row">
+            <table class="table info-block team-data-table" ng-cloak>
+                <tr ng-repeat="header in team_info_headers">
+                    <td>
+                        <b>{{ header.title }}</b>
+                    </td>
+                    <td>
+                        {{ getData(team_info, header.key) }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="info-holder row">
+            <table class="table info-block team-data-table" ng-cloak>
+                <tr ng-repeat="header in data_info_headers">
+                    <td>
+                        <b>{{ header.title }}</b>
+                    </td>
+                    <td>
+                        {{ getData(avg_data, header.key) }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="info-holder col-xs-12 col-md-8">
+            <div class="info-table info-block">
+                <table id="table" class="table team-data-table" ng-cloak>
+                    <thead>
+                    <tr>
+                        <th ng-repeat="header in data_headers" class="data-header clickable {{ header.class }}"
+                            ng-click="sortData(header.sort_id)">
+                            {{ header.title }}
+                            <span ng-show="sortId == header.sort_id && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                            <span ng-show="sortId == header.sort_id && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                            <span ng-show="sortId != header.sort_id" class="glyphicon glyphicon-none"></span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td ng-repeat="header in data_headers" class="data-box bold-data {{ header.data_class }}"
+                            ng-bind="getData(avg_data, header.key + ', value')">
+                        </td>
+                    </tr>
+                    <tr ng-repeat="elem in raw_data | orderBy:sortId:sortReverse">
+                        <td ng-repeat="header in data_headers" class="data-box {{ header.data_class }}"
+                            ng-bind="elem[header.sort_id]">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

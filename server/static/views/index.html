@@ -1,14 +1,14 @@
 <html lang="en" ng-app="app">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Clooney</title>
 
     <link rel="stylesheet" type="text/css" href="../../static/bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/main.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/start_page.css">
 
 </head>
-<body>
+<body ng-controller="ApplicationController">
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
@@ -18,21 +18,21 @@
             </a>
         </div>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="/s/#">Settings</a></li>
-            <li><a href="/a/#">Events</a></li>
+            <li><a href="#/event">Events</a></li>
         </ul>
     </div>
 </nav>
 
-<div class="content">
-    <h1>Clooney</h1>
-</div>
+<div class="content" ng-view ng-cloak></div>
 
-
-<script src="../../static/bower_components/angular/angular.js"></script>
-<script src="../../static/bower_components/angular-cookies/angular-cookies.js"></script>
-<script src="../../static/bower_components/angular-route/angular-route.js"></script>
-<script src="../../static/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+<script src="../../static/bower_components/angular/angular.min.js"></script>
+<script src="../../static/bower_components/angular-cookies/angular-cookies.min.js"></script>
+<script src="../../static/bower_components/angular-route/angular-route.min.js"></script>
+<script src="../../static/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="../../static/bower_components/angular-md5/angular-md5.min.js"></script>
 <script src="../../static/controllers/app.js"></script>
+<script src="../../static/controllers/settings/settings.js"></script>
+<script src="../../static/controllers/analysis/analysis.js"></script>
+<script src="../../static/controllers/analysis/sidebar.js"></script>
 </body>
 </html>

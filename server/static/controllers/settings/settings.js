@@ -1,5 +1,9 @@
 var app = angular.module('settingsApp', ['ngRoute', 'ui.bootstrap', 'ngCookies']);
 
+app.controller("SettingsHomeController", function(){
+
+});
+
 app.controller('HeaderEditController', function ($http, $scope, $location, $cookies) {
 
     $scope.add_message = "Add Header";
@@ -181,15 +185,15 @@ app.controller('SidebarController', function ($scope, $location, $cookies, $http
 
 });
 
-app.config(function ($routeProvider) {
-    $routeProvider
-        .when('/h', {
-            templateUrl: '../../../../static/views/settings/edit_table.html',
-            controller: 'HeaderEditController'
-        })
-        .when('/e', {
-            templateUrl: '../../../../static/views/settings/edit_table.html',
-            controller: 'ExpressionEditController'
-        })
-        .otherwise({redirectTo: '/h'});
-});
+// app.config(function ($routeProvider) {
+//     $routeProvider
+//         .when('/h', {
+//             templateUrl: '../../../../static/views/settings/edit_table.html',
+//             controller: 'HeaderEditController'
+//         })
+//         .when('/e', {
+//             templateUrl: '../../../../static/views/settings/edit_table.html',
+//             controller: 'ExpressionEditController'
+//         })
+//         .otherwise({redirectTo: '/h'});
+// });

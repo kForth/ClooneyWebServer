@@ -1,27 +1,41 @@
-<div class="info-holder">
-    <div class="info-block">
-        <div class="event-name" ng-cloak>
-            {{ event.name }}
-            <small class="event-key">{{ event.key }}</small>
+<div ng-include="'../../../static/views/analysis/sidebar.html'"></div>
+
+<div class="inner-content">
+    <div class="info-holder">
+        <div class="info-block">
+            <div class="event-name" ng-cloak>
+                {{ event.name }}
+                <small class="event-key">{{ event.key }}</small>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="info-holder info-table">
-    <table id="table" class="table info-block" sortable-table fixed-header ng-cloak>
-        <thead>
-        <tr>
-            <th ng-repeat="header in headers" ng-click="sortList(header.key)" class="data-header {{ header.class }}">
-                {{ header.title }}
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="elem in data">
-            <td ng-repeat="header in headers" class="data-box {{ header.data_class }}">
-                <span id="{{ getId(header.ids, elem) }}" ng-bind="getData(elem, header.key)"></span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="info-holder info-table">
+        <table id="table" class="table info-block" style="font-size: 14px" ng-cloak>
+            <thead>
+            <tr>
+                <th ng-repeat="header in headers" class="data-header clickable {{ header.class }}"
+                    ng-click="sortData(header.sort_id)">
+                    {{ header.title }}
+                    <span ng-show="sortId == header.sort_id && sortReverse"
+                          class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortId == header.sort_id && !sortReverse"
+                          class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortId != header.sort_id" class="glyphicon glyphicon-none"></span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="elem in data | orderBy:sortId:sortReverse">
+                <td ng-repeat="header in headers" class="data-box {{ header.data_class }}">
+                    <a ng-show="header.title === 'Team'" href="#/team/{{ elem[header.sort_id] }}"
+                       ng-bind="elem[header.sort_id]">
+                    </a>
+                    <span ng-show="header.title != 'Team'" ng-bind="elem[header.sort_id]"
+                          uib-tooltip="{{ elem[header.sort_id + 'tooltip'] }}" tooltip-placement="top"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

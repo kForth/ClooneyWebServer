@@ -1,0 +1,20 @@
+<link rel="stylesheet" type="text/css" href="../../../static/css/account.css">
+
+<div class="info-block col-xs-4 col-xs-offset-4">
+    <div class="info-header">
+        Login
+    </div>
+    <form name="loginForm" ng-controller="LoginController" ng-submit="login(credentials)" novalidate>
+        <label for="username">Username:</label>
+        <input class="form-control" type="text" ng-class="{'has-error': errors}" id="username"
+               ng-model="credentials.username">
+
+        <label for="password">Password:</label>
+        <input class="form-control" type="password" ng-class="{'has-error': errors}" id="password"
+               ng-model="credentials.password">
+
+        <button class="btn btn-success login-button" type="submit">Login</button>
+
+        <button class="btn btn-default login-button" type="submit">Register</button>
+    </form>
+</div>

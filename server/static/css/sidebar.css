@@ -1,0 +1,143 @@
+
+.sidebar {
+    position: fixed;
+    top: 50px;
+    width: 250px;
+    height: calc(100% - 50px);
+    background: #eee;
+    padding: 0;
+    border-right: 1px solid #ccc;
+}
+
+.sidebar-right {
+    margin-left: -250px;
+    left: 100%;
+    border-right: none;
+    border-left: 1px solid #ccc;
+}
+
+.sidebar-block, .sidebar-item a {
+    padding: 5px 10px;
+    margin: 2px 0;
+    background: #e0e0e0;
+    color: #111;
+    width: 100%;
+    display: block;
+}
+
+.sidebar-block-bottom {
+    float: bottom;
+}
+
+.sidebar-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+}
+
+.sidebar-item a:hover {
+    background: #bbb;
+}
+
+.sidebar-list a:hover {
+    text-decoration: none;
+    color: #111
+}
+
+.sidebar-list a:visited {
+    text-decoration: none;
+    color: #111;
+}
+
+.active a {
+    background: #ccc;
+}
+.active {
+    background: #ccc;
+}
+
+.event-select-label {
+
+}
+
+.event-select-event {
+    text-align: right;
+}
+
+.event-select-dropdown {
+    width: 250px;
+    border: none;
+    border-radius: 0;
+}
+
+.picklist-hidden {
+    display: none;
+}
+
+.picklist-shown {
+    display: block;
+}
+
+.picklist-title, .picklist-title:hover {
+    margin: 0;
+    padding: 2px 0 0;
+    float: left;
+    color: #111;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.picklist-header {
+    margin: 0;
+    padding: 5px;
+    height: 30px;
+}
+
+.picklist-footer {
+. picklist-header;
+    left: 100%;
+    position: fixed;
+    top: 100%;
+    margin-top: -30px;
+    margin-left: -250px;
+}
+
+.picklist-icons {
+    list-style-type: none;
+    float: right;
+}
+
+.picklist-icon {
+    display: inline;
+    padding: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    border-radius: 2px;
+    border: 1px solid #aaa;
+    background: #eee;
+}
+
+.picklist-icon a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.picklist-holder {
+    position: absolute;
+    top: 30px;
+    margin: 0 5px;
+    width: 240px;
+    height: calc(100% - 85px);
+}
+
+.picklist-text {
+    font-size: 14px;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border-radius: 2px;
+    border: 1px solid #ddd;
+    padding: 5px;
+}

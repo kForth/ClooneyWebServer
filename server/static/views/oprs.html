@@ -1,0 +1,80 @@
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" type="text/css" href="../../static/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/start_page.css">
+
+</head>
+<body ng-controller="ApplicationController">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                Clooney
+            </a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/s/#">Settings</a></li>
+            <li><a href="/a/#">Events</a></li>
+        </ul>
+    </div>
+</nav>
+
+    <div class="content" ng-controller="OprController">
+
+        <div class="sidebar">
+            <div class="sidebar-block">
+                <div class="col-xs-3" style="padding: 0">
+                    <label for="eventSelect">Event:</label>
+                </div>
+                <div class="col-xs-7" style="padding: 0">
+                    <input id="eventSelect" class="form-control" type="text" ng-model="selectedEvent"
+                           style="padding: 5px; margin: 0; width: 100%"
+                           uib-typeahead="ev for ev in events | filter:$viewValue | limitTo:8">
+                </div>
+                <div class="col-xs-2" style="padding: 0">
+                    <button class="btn btn-success"
+                            style="margin: 0; padding: auto; width: 100%;" ng-click="updateEvent()">
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-holder info-table">
+            <table id="table" class="table info-block" sortable-table fixed-header ng-cloak>
+                <thead>
+                <tr>
+                    <th ng-repeat="header in headers" ng-click="sortList(header.key)"
+                        class="data-header {{ header.class }}">
+                        {{ header.title }}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="elem in data">
+                    <td ng-repeat="header in headers" class="data-box {{ header.data_class }}">
+                        <span id="{{ getId(header.ids, elem) }}" ng-bind="getData(elem, header.key)"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+<script src="../../static/bower_components/angular/angular.js"></script>
+<script src="../../static/bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="../../static/bower_components/angular-route/angular-route.js"></script>
+<script src="../../static/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="../../static/bower_components/angu-fixed-header-table/angu-fixed-header-table.js"></script>
+<script src="../../static/bower_components/chart.js/dist/Chart.min.js"></script>
+<script src="../../static/bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
+<script src="../../static/controllers/app.js"></script>
+<script src="../../static/controllers/opr.js"></script>
+</body>
+</html>
