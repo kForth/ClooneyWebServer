@@ -20,6 +20,8 @@ class DataServer(object):
             elif key not in headers.keys():
                 return make_response(jsonify("Key not found."), 400)
             else:
+                for i in range(len(headers[key])):
+                    headers[key][i]['sort_id'] = chr(ord('a') + i)
                 return make_response(jsonify(headers[key]))
         if request.method == "POST":
             headers[key] = request.json

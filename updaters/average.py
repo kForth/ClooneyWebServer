@@ -2,13 +2,18 @@ import json
 import statistics
 from glob import glob
 
+from flask_sqlalchemy import SQLAlchemy
+
 from util.calc import Calc
 from util.runners import Runner
+from server.db import Database
 
 
 class AverageCalculator(Runner):
-    def __init__(self):
+    def __init__(self, db: Database, sql_db: SQLAlchemy):
         Runner.__init__(self, self._process)
+        self.db = db
+        self.sql_db = sql_db
 
     def _get_fp(self, folder, event):
         return "../clooney/{0}/{1}".format(folder, event)
@@ -19,14 +24,18 @@ class AverageCalculator(Runner):
     def _process(self, event=None):
         if event is None:
             return
-        raw = []
-        try:
-            data = json.load(open(self._get_fp('data', event) + "/raw_data.json"))
-            if type(data) is list:
-                raw = sorted(data, key=lambda x: x["team_number"])
-        except Exception as ex:
-            print(ex)
-            return
+        from server.models import ScoutingEntry, AnalysisEntry
+        entries = ScoutingEntry.query.filter_by(event=event).all()
+        raw = list(map(lambda x: x.to_dict()["data"], entries))
+
+        # raw = []
+        # try:
+        #     data = json.load(open(self._get_fp('data', event) + "/raw_data.json"))
+        #     if type(data) is list:
+        #         raw = sorted(data, key=lambda x: x["team_number"])
+        # except Exception as ex:
+        #     print(ex)
+        #     return
 
         sorted_data = {}
         for line in raw:
@@ -59,9 +68,12 @@ class AverageCalculator(Runner):
                         avg[key]["std_dev"] = round(statistics.pstdev(map(float, team_data[key])), 2)
                     elif field["method"] == "percent":
                         avg[key]["mean"] = statistics.mean(map(float, team_data[key]))
-                        avg[key]["value"] = str(int(avg[key]["mean"] * 100))
+                        avg[key]["value"] = int(avg[key]["mean"] * 100)
+                        avg[key]["percent"] = "{}%".format(avg[key]["value"])
                     elif field["method"] == "mode":
-                        avg[key]["value"] = self.calc_mode(team_data[key])
+                        mode = self.calc_mode(team_data[key])
+                        avg[key]["value"] = mode
+                        avg[key]["count_common"] = "{0} [{1}]".format(mode, team_data[key].count(mode))
                     elif field["method"] == "avg_col":
                         counts = {}
                         for entry in team_data[key]:
@@ -74,18 +86,27 @@ class AverageCalculator(Runner):
                                     counts[option] += 1
                         avg[key]["value"] = round(sum(map(lambda x: x[1], counts.items())) / len(team_data[key]), 2)
                         avg[key]["counts"] = counts
-            avg_data.append(avg)
-
+            # avg_data.append(avg)
+            entry_id = "{0}_{1}_{2}".format(event, "avg", team_number)
+            entry = AnalysisEntry.query.filter_by(id=entry_id).first()
+            if entry:
+                entry.data = json.dumps(avg)
+            else:
+                avg_entry = AnalysisEntry(entry_id, event, int(team_number), avg, "avg")
+                self.sql_db.session.add(avg_entry)
+        self.sql_db.session.commit()
         self.save_data(event, avg_data)
 
     def calculate_expressions(self, event):
+        from server.models import AnalysisEntry
         calculator = Calc()
         files = glob(self._get_fp('expressions', "*.json"))
         events = map(lambda x: ".".join(x.split("/")[-1].split(".")[:-1]), files)
         if event in events:
-            avg_data = json.load(open(self._get_fp('data', event) + "/avg_data.json"))
+            entries = AnalysisEntry.query.filter_by(event=event, key="avg").all()
+            avg_data = list(map(lambda x: x.to_dict()["data"], entries))
+            # json.load(open(self._get_fp('data', event) + "/avg_data.json"))
             expressions = json.load(open(self._get_fp('expressions', event) + ".json"))
-            calculated = dict(zip([x['team_number']['value'] for x in avg_data], [dict({})] * len(avg_data)))
             for team in avg_data:
                 team_number = team['team_number']["value"]
                 calculator.add_fields(avg=team)
@@ -102,31 +123,15 @@ class AverageCalculator(Runner):
                         print(eq)
                         raise ex
                 team['calculated'] = team_calc
+                entry_id = "{0}_{1}_{2}".format(event, "calc", team_number)
+                entry = AnalysisEntry.query.filter_by(id=entry_id)
+                if entry:
+                    entry.data = json.dumps(team_calc)
+                else:
+                    calc_entry = AnalysisEntry(entry_id, event, int(team_number), team_calc, "calc")
+                    self.sql_db.session.add(calc_entry)
+            self.sql_db.session.commit()
             json.dump(avg_data, open(self._get_fp('data', event) + "/avg_data.json", "w+"))
-
-            # calc = Calculator()
-            # files = glob("clooney/expressions/*.json")
-            # events = map(lambda x: ".".join(x.split("/")[-1].split(".")[:-1]), files)
-            # if event in events:
-            #     avg_data = json.load(open(self.fp + "/avg_data.json".format(event)))
-            #     expressions = json.load(open("clooney/expressions/{}.json".format(event)))
-            #     for team in avg_data:
-            #         team["calculated"] = {}
-            #         for expression in expressions:
-            #             eq = expression["expression"]
-            #             new_eq = ""
-            #             for seg in re.split('\[|\]', eq):
-            #                 if any([key in seg for key in team.keys()]):
-            #                     val = team
-            #                     for key in seg.replace(" ", "").split(","):
-            #                         val = val[key]
-            #                     if type(val) is str and "%" in val:
-            #                         val = float(val.replace("%", "")) / 100
-            #                     new_eq += str(val)
-            #                 else:
-            #                     new_eq += seg
-            #             team["calculated"][expression["key"]] = calc.solve(new_eq)
-            #     json.dump(avg_data, open(self.fp + "/avg_data.json".format(event), "w+"))
 
     def calc_mode(self, data):
         freq = {}
@@ -142,5 +147,7 @@ class AverageCalculator(Runner):
 
 
 if __name__ == "__main__":
-    ac = AverageCalculator()
-    ac.update("2016cur")
+    from server import sql_db
+    db = Database(path_prefix="../")
+    ac = AverageCalculator(db, sql_db)
+    ac.update("2017onto2")

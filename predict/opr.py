@@ -1,12 +1,12 @@
-from tba_py import BlueAllianceAPI
 import numpy as np
 from scipy.optimize import minimize
+from scipy.stats import percentileofscore
+from tba_py import BlueAllianceAPI
 
-from server import Database
+from flask_sqlalchemy import SQLAlchemy
+from server.models import OprEntry
+
 import time
-
-tba_url = "http://thebluealliance.com/api/v2"
-headers = {'X-TBA-App-Id': "kestin_goforth:clooney_scouting_system:v01"}
 
 IGNORE_ELIMS = True
 
@@ -93,7 +93,8 @@ class OprCalculator(object):
         func = lambda x: np.linalg.norm(np.dot(interactions, x) - scores)
         return minimize(func, np.zeros(n), method='L-BFGS-B', bounds=[(0., None) for _ in range(n)])["x"]
 
-    def get_event_oprs(self, event_id, minimize=True):
+    def get_event_oprs(self, event_id, minimize=False, db=None):
+        print("Working on: {}".format(event_id))
         start_time = time.time()
         solve_time_accum = 0
         matches = self.get_matches_from_tba(event_id)
@@ -102,7 +103,7 @@ class OprCalculator(object):
         opr_list = {}
 
         for score_type in matches[0][-1].keys():
-            if len(matches) == 0:
+            if len(matches) == 0 or score_type in ["tba_rpEarned"]:
                 continue
             temp_matches = []
             for m in matches:
@@ -118,20 +119,42 @@ class OprCalculator(object):
             solve_time_accum += time.time() - solve_start_time
             opr_dict = dict(zip(teams, oprs))
             for team in teams:
+                if db is not None and type(db) is SQLAlchemy:
+                    percentile = percentileofscore(oprs, opr_dict[team])
+                    entry_id = "_".join([str(team), event_id, score_type])
+                    entry = OprEntry.query.filter_by(id=entry_id).first()
+                    if entry:
+                        entry.value = float(opr_dict[team])
+                        entry.percentile = float(percentile)
+                    else:
+                        db.session.add(OprEntry(entry_id, int(team), event_id, score_type, float(opr_dict[team]), float(percentile)))
                 if team not in opr_list.keys():
                     opr_list[team] = {
                         "team_number": int(team),
-                        "oprs": {}
+                        "oprs":        {}
                     }
                 opr_list[team]["oprs"][score_type] = round(opr_dict[team], 2)
 
+        if db is not None and type(db) is SQLAlchemy:
+            db.session.commit()
+
+        print("Finished Event: {}".format(event_id))
         print("Solving took {}s".format(round(solve_time_accum, 1)))
         print("Overall time was {}s".format(round(time.time() - start_time, 1)))
         return list(opr_list.values())
 
 if __name__ == "__main__":
-    event_key = "2016cur"
-    opr = OprCalculator(BlueAllianceAPI("Clooney", "Clooney", "2"))
-    db = Database(dirpath="../db/")
-    team_oprs = opr.get_event_oprs(event_key, False)
-    db.set_event_oprs(event_key, team_oprs)
+    from server import sql_db
+    tba = BlueAllianceAPI("Clooney", "Clooney", "2")
+
+    events = tba.get_events("2017")
+    target_week = 2 #zero index
+    event_keys = []
+    for event in events:
+        if event["week"] is not None and event["week"] == target_week:
+            event_keys.append(event["key"])
+
+    opr = OprCalculator(tba)
+
+    for event_key in event_keys:
+        opr.get_event_oprs(event_key, db=sql_db)
