@@ -6,3 +6,4 @@ tba.json
 */__pycache__/
 clooney/
 server/static/bower_components/
+server/static/bower_components/*
