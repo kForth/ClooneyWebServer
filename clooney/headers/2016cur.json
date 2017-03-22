@@ -1,1 +1,382 @@
-{"matches": [{"title": "Level", "ids": [], "key": "comp_level", "data_class": "uppercase", "class": ""}, {"title": "#", "ids": ["comp_level", "match_number"], "key": "match_number", "data_class": "", "class": ""}, {"title": "Red 1", "ids": [], "key": "red1", "data_class": "red-alliance", "class": ""}, {"title": "Red 2", "ids": [], "key": "red2", "data_class": "red-alliance", "class": ""}, {"title": "Red 3", "ids": [], "key": "red3", "data_class": "red-alliance", "class": ""}, {"title": "Blue 1", "ids": [], "key": "blue1", "data_class": "blue-alliance", "class": ""}, {"title": "Blue 2", "ids": [], "key": "blue2", "data_class": "blue-alliance", "class": ""}, {"title": "Blue 3", "ids": [], "key": "blue3", "data_class": "blue-alliance", "class": ""}, {"title": "Red", "ids": [], "key": "red_score", "data_class": "red-alliance bold-data", "class": ""}, {"title": "Blue", "ids": [], "key": "blue_score", "data_class": "blue-alliance bold-data", "class": ""}], "stats_raw": [{"title": "Team", "key": "team_number", "data_class": "bold-data"}, {"title": "Auto High", "key": "auton_high", "data_class": ""}, {"title": "Auto Low", "key": "auton_low", "data_class": ""}, {"title": "Auto Cross", "key": "auto_crossed", "data_class": ""}, {"title": "Reached", "key": "reached"}, {"title": "TeleOp High", "key": "scored_high"}, {"title": "TeleOp Low", "key": "scored_low"}, {"title": "Shots Missed", "key": "shots_missed"}, {"title": "Challenge", "key": "challenged"}, {"title": "Scale", "key": "scale"}, {"title": "No Show", "key": "no_show"}, {"title": "Disabled", "key": "disabled"}], "meta": [{"title": "Title", "ids": [], "key": "title", "data_class": "col-md-2 col-lg-2", "class": "col-md-2 col-lg-2"}, {"title": "Key", "ids": [], "key": "key", "data_class": "col-md-2 col-lg-2", "class": "col-md-2 col-lg-2"}, {"title": "Data Class", "ids": [], "key": "data_class", "data_class": "col-md-2 col-lg-2", "class": "col-md-2 col-lg-2"}, {"title": "Class", "ids": [], "key": "class", "data_class": "col-md-2 col-lg-2", "class": "col-md-2 col-lg-2"}, {"title": "IDs", "ids": [], "key": "ids", "data_class": "col-md-2 col-lg-2", "class": "col-md-2 col-lg-2"}], "expressions": [{"title": "Key", "class": "col-md-2 col-lg-2", "data_class": "col-md-2 col-lg-2", "key": "key"}, {"title": "Expression", "class": "col-md-10 col-lg-10", "data_class": "col-md-10 col-lg-10", "key": "expression"}], "teams": [{"title": "Team", "ids": [], "key": "team_number", "data_class": "bold-data", "class": ""}, {"title": "Name", "ids": [], "key": "nickname", "data_class": "data-box-left", "class": "data-box-left"}, {"title": "Motto", "ids": [], "key": "motto", "data_class": "data-box-left", "class": "data-box-left"}, {"title": "Region", "ids": [], "key": "region", "data_class": "", "class": ""}, {"title": "Rookie Year", "ids": [], "key": "rookie_year", "data_class": "", "class": ""}], "stats_avg": [{"title": "Team", "key": "team_number, value", "data_class": "bold-data"}, {"title": "Auto High", "key": "auton_high, value", "data_class": ""}, {"title": "Auto Low", "key": "auton_low, value"}, {"title": "Auto Crossed", "key": "auto_crossed, value"}, {"title": "TeleOp High", "key": "scored_high, value"}, {"title": "TeleOp Low", "key": "scored_low, value"}, {"title": "TeleOp Miss", "key": "shots_missed, value"}, {"title": "# Crossed", "key": "crossed, value"}, {"title": "Challenge", "key": "challenged, value"}, {"title": "Scale", "key": "scale, value"}, {"title": "Disabled", "key": "disabled, value"}, {"title": "No Show", "key": "no_show, value"}, {"title": "*Total Points", "key": "calculated, total_points", "data_class": ""}, {"title": "*Num Balls", "key": "calculated, num_balls"}, {"title": "*Best Balls", "key": "calculated, best_balls"}, {"title": "*Balls", "key": "scored_high, raw"}]}
+{
+  "matches":     [
+    {
+      "title":      "Level",
+      "ids":        [],
+      "key":        "comp_level",
+      "data_class": "uppercase",
+      "class":      ""
+    },
+    {
+      "title":      "#",
+      "ids":        [
+        "comp_level",
+        "match_number"
+      ],
+      "key":        "match_number",
+      "data_class": "",
+      "class":      ""
+    },
+    {
+      "title":      "Red 1",
+      "ids":        [],
+      "key":        "red1",
+      "data_class": "red-alliance",
+      "class":      ""
+    },
+    {
+      "title":      "Red 2",
+      "ids":        [],
+      "key":        "red2",
+      "data_class": "red-alliance",
+      "class":      ""
+    },
+    {
+      "title":      "Red 3",
+      "ids":        [],
+      "key":        "red3",
+      "data_class": "red-alliance",
+      "class":      ""
+    },
+    {
+      "title":      "Blue 1",
+      "ids":        [],
+      "key":        "blue1",
+      "data_class": "blue-alliance",
+      "class":      ""
+    },
+    {
+      "title":      "Blue 2",
+      "ids":        [],
+      "key":        "blue2",
+      "data_class": "blue-alliance",
+      "class":      ""
+    },
+    {
+      "title":      "Blue 3",
+      "ids":        [],
+      "key":        "blue3",
+      "data_class": "blue-alliance",
+      "class":      ""
+    },
+    {
+      "title":      "Red",
+      "ids":        [],
+      "key":        "red_score",
+      "data_class": "red-alliance bold-data",
+      "class":      ""
+    },
+    {
+      "title":      "Blue",
+      "ids":        [],
+      "key":        "blue_score",
+      "data_class": "blue-alliance bold-data",
+      "class":      ""
+    }
+  ],
+  "stats_raw":   [
+    {
+      "title":      "Team",
+      "key":        "team_number",
+      "data_class": "bold-data"
+    },
+    {
+      "title":      "Auto High",
+      "key":        "auton_high",
+      "data_class": ""
+    },
+    {
+      "title":      "Auto Low",
+      "key":        "auton_low",
+      "data_class": ""
+    },
+    {
+      "title":      "Auto Cross",
+      "key":        "auto_crossed",
+      "data_class": ""
+    },
+    {
+      "title": "Reached",
+      "key":   "reached"
+    },
+    {
+      "title": "TeleOp High",
+      "key":   "scored_high"
+    },
+    {
+      "title": "TeleOp Low",
+      "key":   "scored_low"
+    },
+    {
+      "title": "Shots Missed",
+      "key":   "shots_missed"
+    },
+    {
+      "title": "Challenge",
+      "key":   "challenged"
+    },
+    {
+      "title": "Scale",
+      "key":   "scale"
+    },
+    {
+      "title": "No Show",
+      "key":   "no_show"
+    },
+    {
+      "title": "Disabled",
+      "key":   "disabled"
+    }
+  ],
+  "meta":        [
+    {
+      "title":      "Title",
+      "ids":        [],
+      "key":        "title",
+      "data_class": "col-md-2 col-lg-2",
+      "class":      "col-md-2 col-lg-2"
+    },
+    {
+      "title":      "Key",
+      "ids":        [],
+      "key":        "key",
+      "data_class": "col-md-2 col-lg-2",
+      "class":      "col-md-2 col-lg-2"
+    },
+    {
+      "title":      "Data Class",
+      "ids":        [],
+      "key":        "data_class",
+      "data_class": "col-md-2 col-lg-2",
+      "class":      "col-md-2 col-lg-2"
+    },
+    {
+      "title":      "Class",
+      "ids":        [],
+      "key":        "class",
+      "data_class": "col-md-2 col-lg-2",
+      "class":      "col-md-2 col-lg-2"
+    },
+    {
+      "title":      "IDs",
+      "ids":        [],
+      "key":        "ids",
+      "data_class": "col-md-2 col-lg-2",
+      "class":      "col-md-2 col-lg-2"
+    }
+  ],
+  "expressions": [
+    {
+      "title":      "Key",
+      "class":      "col-md-2 col-lg-2",
+      "data_class": "col-md-2 col-lg-2",
+      "key":        "key"
+    },
+    {
+      "title":      "Expression",
+      "class":      "col-md-10 col-lg-10",
+      "data_class": "col-md-10 col-lg-10",
+      "key":        "expression"
+    }
+  ],
+  "teams":       [
+    {
+      "title":      "Team",
+      "ids":        [],
+      "key":        "team_number",
+      "data_class": "bold-data",
+      "class":      ""
+    },
+    {
+      "title":      "Name",
+      "ids":        [],
+      "key":        "nickname",
+      "data_class": "data-box-left",
+      "class":      "data-box-left"
+    },
+    {
+      "title":      "Motto",
+      "ids":        [],
+      "key":        "motto",
+      "data_class": "data-box-left",
+      "class":      "data-box-left"
+    },
+    {
+      "title":      "Region",
+      "ids":        [],
+      "key":        "region",
+      "data_class": "",
+      "class":      ""
+    },
+    {
+      "title":      "Rookie Year",
+      "ids":        [],
+      "key":        "rookie_year",
+      "data_class": "",
+      "class":      ""
+    }
+  ],
+  "stats_avg":   [
+    {
+      "title":      "Team",
+      "key":        "team_number, value",
+      "data_class": "bold-data"
+    },
+    {
+      "title":      "Auto High",
+      "key":        "auton_high, value",
+      "data_class": ""
+    },
+    {
+      "title": "Auto Low",
+      "key":   "auton_low, value"
+    },
+    {
+      "title": "Auto Crossed",
+      "key":   "auto_crossed, value"
+    },
+    {
+      "title": "TeleOp High",
+      "key":   "scored_high, value"
+    },
+    {
+      "title": "TeleOp Low",
+      "key":   "scored_low, value"
+    },
+    {
+      "title": "TeleOp Miss",
+      "key":   "shots_missed, value"
+    },
+    {
+      "title": "# Crossed",
+      "key":   "crossed, value"
+    },
+    {
+      "title": "Challenge",
+      "key":   "challenged, value"
+    },
+    {
+      "title": "Scale",
+      "key":   "scale, value"
+    },
+    {
+      "title": "Disabled",
+      "key":   "disabled, value"
+    },
+    {
+      "title": "No Show",
+      "key":   "no_show, value"
+    },
+    {
+      "title":      "*Total Points",
+      "key":        "calculated, total_points",
+      "data_class": ""
+    },
+    {
+      "title": "*Num Balls",
+      "key":   "calculated, num_balls"
+    },
+    {
+      "title": "*Best Balls",
+      "key":   "calculated, best_balls"
+    },
+    {
+      "title": "*Balls",
+      "key":   "scored_high, raw"
+    }
+  ],
+  "teams":       [
+    {
+      "key":        "team_number",
+      "class":      "",
+      "title":      "Team",
+      "ids":        [],
+      "data_class": "bold-data"
+    },
+    {
+      "key":        "nickname",
+      "class":      "data-box-left",
+      "title":      "Name",
+      "ids":        [],
+      "data_class": "data-box-left"
+    },
+    {
+      "key":        "motto",
+      "class":      "data-box-left",
+      "title":      "Motto",
+      "ids":        [],
+      "data_class": "data-box-left"
+    },
+    {
+      "key":        "region",
+      "class":      "",
+      "title":      "Region",
+      "ids":        [],
+      "data_class": ""
+    },
+    {
+      "key":        "rookie_year",
+      "class":      "",
+      "title":      "Rookie Year",
+      "ids":        [],
+      "data_class": ""
+    }
+  ],
+  "expressions": [
+    {
+      "key":        "key",
+      "title":      "Key",
+      "data_class": "col-md-2 col-lg-2",
+      "class":      "col-md-2 col-lg-2"
+    },
+    {
+      "key":        "expression",
+      "title":      "Expression",
+      "data_class": "col-md-10 col-lg-10",
+      "class":      "col-md-10 col-lg-10"
+    }
+  ],
+  "oprs":        [
+    {
+      "data_class": "bold-data",
+      "key":        "team_number",
+      "title":      "Team Number"
+    },
+    {
+      "key":   "oprs, autoBouldersHigh",
+      "title": "Auto High"
+    },
+    {
+      "key":   "oprs, autoBouldersLow",
+      "title": "Auto Low"
+    },
+    {
+      "key":   "oprs, autoCrossingPoints",
+      "title": "Auto Cross Points"
+    },
+    {
+      "key":   "oprs, teleopBouldersHigh",
+      "title": "Scored High"
+    },
+    {
+      "key":   "oprs, teleopBouldersLow",
+      "title": "Scored Low"
+    },
+    {
+      "key":   "oprs, teleopCrossingPoints",
+      "title": "Crossing Points"
+    },
+    {
+      "key":   "oprs, teleopChallengePoints",
+      "title": "Challenge Points"
+    },
+    {
+      "key":   "oprs, teleopScalePoints",
+      "title": "Scale Points"
+    },
+    {
+      "key":   "oprs, totalPoints",
+      "title": "Total Points"
+    }
+  ]
+}
