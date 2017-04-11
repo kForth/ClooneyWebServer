@@ -25,12 +25,15 @@ class SqlServer(object):
     def add_scouting_entry(self):
         from server.models import ScoutingEntry
         data = request.json
-        print(request.json)
         data["data"] = json.dumps(data["data"])
-        entry = ScoutingEntry(**data)
-        self.db.session.add(entry)
+        try:
+            entry = ScoutingEntry.query.filter_by(id=data['id']).first()
+            if entry:
+                entry.update(**data)
+            else:
+                raise KeyError('ID Not found in DB')
+        except KeyError as _:
+            entry = ScoutingEntry(**data)
+            self.db.session.add(entry)
         self.db.session.commit()
-        return make_response(jsonify({}), 200)
-
-    def get_event_oprs(self, event_id):
-        return
+        return make_response(jsonify({'id': entry.id}), 200)
