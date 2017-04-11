@@ -1,9 +1,10 @@
 .idea/
 venv/
 db/
-tba.json
-*.pyc
 */__pycache__/
 clooney/
 server/static/bower_components/
-server/static/bower_components/*
+tba.json
+__pycache__/
+server/static/robot_pics/
+updaters/util/__pycache__/
