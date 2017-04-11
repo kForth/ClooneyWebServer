@@ -6,36 +6,24 @@ from flask_sqlalchemy import SQLAlchemy
 
 from util.calc import Calc
 from util.runners import Runner
-from server.db import Database
 
 
 class AverageCalculator(Runner):
-    def __init__(self, db: Database, sql_db: SQLAlchemy):
+    def __init__(self, sql_db: SQLAlchemy):
         Runner.__init__(self, self._process)
-        self.db = db
         self.sql_db = sql_db
 
     def _get_fp(self, folder, event):
-        return "../clooney/{0}/{1}".format(folder, event)
+        return "clooney/{0}/{1}".format(folder, event)
 
     def update(self, event):
         Runner.run(self, event)
 
-    def _process(self, event=None):
-        if event is None:
-            return
+    def _process(self, event):
+        print("Updating event: {}".format(event))
         from server.models import ScoutingEntry, AnalysisEntry
         entries = ScoutingEntry.query.filter_by(event=event).all()
         raw = list(map(lambda x: x.to_dict()["data"], entries))
-
-        # raw = []
-        # try:
-        #     data = json.load(open(self._get_fp('data', event) + "/raw_data.json"))
-        #     if type(data) is list:
-        #         raw = sorted(data, key=lambda x: x["team_number"])
-        # except Exception as ex:
-        #     print(ex)
-        #     return
 
         sorted_data = {}
         for line in raw:
@@ -49,7 +37,13 @@ class AverageCalculator(Runner):
 
         methods = json.load(open(self._get_fp('analysis', event) + ".json"))
         avg_data = []
+
+        from server.models import Event
+        teams = list(map(lambda x: x["team_number"], Event.query.filter_by(id=event).first().get_team_list()))
         for team_number, team_data in sorted_data.items():
+            if team_number not in teams:
+                print("Error entry for team {0}: {1}".format(team_number, team_data))
+                continue
             avg = {}
             for field in methods:
                 key = field["key"]
@@ -67,11 +61,11 @@ class AverageCalculator(Runner):
                         avg[key]["med_grp"] = round(statistics.median_grouped(map(float, team_data[key])), 2)
                         avg[key]["std_dev"] = round(statistics.pstdev(map(float, team_data[key])), 2)
                     elif field["method"] == "percent":
-                        avg[key]["mean"] = statistics.mean(map(float, team_data[key]))
+                        avg[key]["mean"] = statistics.mean(map(lambda x: float(x), team_data[key]))
                         avg[key]["value"] = int(avg[key]["mean"] * 100)
                         avg[key]["percent"] = "{}%".format(avg[key]["value"])
                     elif field["method"] == "mode":
-                        mode = self.calc_mode(team_data[key])
+                        mode = self._calc_mode(team_data[key])
                         avg[key]["value"] = mode
                         avg[key]["count_common"] = "{0} [{1}]".format(mode, team_data[key].count(mode))
                     elif field["method"] == "avg_col":
@@ -95,9 +89,9 @@ class AverageCalculator(Runner):
                 avg_entry = AnalysisEntry(entry_id, event, int(team_number), avg, "avg")
                 self.sql_db.session.add(avg_entry)
         self.sql_db.session.commit()
-        self.save_data(event, avg_data)
+        # self._save_data(event, avg_data)
 
-    def calculate_expressions(self, event):
+    def _calculate_expressions(self, event):
         from server.models import AnalysisEntry
         calculator = Calc()
         files = glob(self._get_fp('expressions', "*.json"))
@@ -133,7 +127,7 @@ class AverageCalculator(Runner):
             self.sql_db.session.commit()
             json.dump(avg_data, open(self._get_fp('data', event) + "/avg_data.json", "w+"))
 
-    def calc_mode(self, data):
+    def _calc_mode(self, data):
         freq = {}
         for entry in data:
             if entry not in freq.keys():
@@ -141,13 +135,12 @@ class AverageCalculator(Runner):
             freq[entry] += 1
         return sorted(freq.items(), key=lambda x: x[1])[-1][0]
 
-    def save_data(self, event, data):
+    def _save_data(self, event, data):
         json.dump(data, open(self._get_fp('data', event) + "/avg_data.json", "w+"))
-        self.calculate_expressions(event)
+        self._calculate_expressions(event)
 
 
 if __name__ == "__main__":
     from server import sql_db
-    db = Database(path_prefix="../")
-    ac = AverageCalculator(db, sql_db)
-    ac.update("2017onto2")
+    ac = AverageCalculator(sql_db)
+    ac.update("2017onbar")
