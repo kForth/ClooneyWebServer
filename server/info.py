@@ -1,19 +1,20 @@
 from tba_py import BlueAllianceAPI
 from flask import make_response, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
 
 from datetime import datetime
 from glob import glob
 from os import path
-import json
 
 from server.db import Database
 from util.runners import Runner
 
 
 class InfoServer(object):
-    def __init__(self, add: classmethod, db: Database, tba: BlueAllianceAPI, url_prefix=""):
+    def __init__(self, add: classmethod, db: Database, sql_db: SQLAlchemy, tba: BlueAllianceAPI, url_prefix=""):
         self._add = lambda *x, **y: add(*x, **y, url_prefix=url_prefix)
         self.db = db
+        self.sql_db = sql_db
         self.tba = tba
         self._register_views()
 
@@ -30,7 +31,8 @@ class InfoServer(object):
         self._add('/setup/<event_id>', self.trigger_event_setup, methods=['POST'])
 
     def get_team_info(self, event_id, team_number):
-        event_info = self.db.get_event_info(event_id)["teams"]
+        from server.models import Event
+        event_info = Event.query.filter_by(id=event_id).first().get_team_list()
         for line in event_info:
             if str(line["team_number"]) == str(team_number):
                 team_info = line
@@ -50,7 +52,9 @@ class InfoServer(object):
         return make_response(jsonify(images))
 
     def get_event_info(self, event_id):
-        return make_response(jsonify(self.db.get_event_info(event_id)))
+        from server.models import Event
+        event_info = Event.query.filter_by(id=event_id).first().get_tba_info()
+        return make_response(jsonify(event_info))
 
     def get_matches(self, event_id, level=None, team_number=None):
         headers = self.db.get_table_headers(event_id, 'matches')
@@ -68,14 +72,18 @@ class InfoServer(object):
                     lines.append(line)
         return make_response(jsonify(lines))
 
-    def get_available_events(self, year=None):
-        events = self.db.get_events()
+    @staticmethod
+    def get_available_events(year=None):
+        from server.models import Event
+        events = Event.query.all()
         event_list = []
-        for key in events.keys():
+        for e in events:
+            key = e.id
             if year is None or str(year) in key:
-                event_name = key
-                if "tba" in events[key].keys():
-                    event_name = "{0} {1}".format(key[:4], events[key]["tba"]["short_name"])
+                if e.get_tba_info() is not None:
+                    event_name = "{0} {1}".format(key[:4], e.get_tba_info()["short_name"])
+                else:
+                    event_name = key
                 event_list.append({
                     "id":   key,
                     "name": event_name
@@ -83,15 +91,16 @@ class InfoServer(object):
         return make_response(jsonify(event_list))
 
     def get_event_teams(self, event_id):
-        team_info = self.db.get_event_info(event_id)["teams"]
+        from server.models import Event
+        team_info = Event.query.filter_by(id=event_id).first().get_team_list()
         table_data = self._create_table_data(self.db.get_table_headers(event_id, "teams"), team_info)
         return make_response(jsonify(table_data), 200)
 
-    def setup_event_teams(self, event_id):
-        print("Updating Event: {}... Updating teams".format(event_id))
-        event_info = self.db.get_event_info(event_id)
-        team_list = self.tba.get_event_teams(event_id)
-        event_start_date = datetime.strptime(event_info["tba"]["start_date"], "%Y-%m-%d")
+    def get_teams_for_event(self, entry):
+        print("Updating Event: {}... Updating teams".format(entry.id))
+        event_info = entry.get_tba_info()
+        team_list = self.tba.get_event_teams(entry.id)
+        event_start_date = datetime.strptime(event_info["start_date"], "%Y-%m-%d")
         for team_info in team_list:
             events = self.tba.get_team_events(str(team_info["team_number"]), "2017")
             team_info["num_events"] = len(events)
@@ -99,24 +108,31 @@ class InfoServer(object):
             for event in events:
                 if datetime.strptime(event["start_date"], "%Y-%m-%d") < event_start_date:
                     team_info["prev_events"] += 1
-        event_info["teams"] = team_list
-        self.db.set_event_info(event_id, event_info)
+        entry.set_team_list(team_list)
+        self.sql_db.session.commit()
 
-    def setup_event(self, event_id, info):
+    def setup_event(self, event_id):
         print("Updating Event: {}".format(event_id))
-        try:
-            info["tba"] = self.tba.get_event(event_id)
-        except:
-            print("Updating Event: {}... Couldn't get TBA info.".format(event_id))
-            pass
-        self.db.add_event(event_id, info)
-        self.setup_event_teams(event_id)
+        from server.models import Event
+        tba_info = self.tba.get_event(event_id)
+
+        print(tba_info)
+
+        entry = Event.query.filter_by(id=event_id).first()
+        if entry:
+            entry.set_tba_info(tba_info)
+            self.sql_db.session.commit()
+        else:
+            entry = Event(event_id, tba_info, [])
+            self.sql_db.session.add(entry)
+            self.sql_db.session.commit()
+
+        self.get_teams_for_event(entry)
         print("Updating Event: {}... Done".format(event_id))
 
     def trigger_event_setup(self, event_id):
-        if len(event_id) > 0 and request.is_json:
-            info = request.json
-            Runner(lambda: self.setup_event(event_id, info)).run()
+        if len(event_id) > 0:
+            Runner(lambda: self.setup_event(event_id)).run()
         return make_response(jsonify(), 200)
 
     def _create_table_data(self, headers, data):
