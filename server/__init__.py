@@ -40,7 +40,7 @@ class ClooneyServer(object):
         self.info_server = InfoServer(self._add, self.db, self.sql_db, self.tba, "/api")
         self.sql_server = SqlServer(self._add, self.sql_db, "/api/sql")
         self.recv_server = ReceiverServer(self._add, self.tba, self.db, url_prefix="/api/data")
-        self.user_server = UsersServer(self._add, self.user_datastore, self.security)
+        self.user_server = UsersServer(self._add, url_prefix="/user")
 
         self.run = self.app.run
 

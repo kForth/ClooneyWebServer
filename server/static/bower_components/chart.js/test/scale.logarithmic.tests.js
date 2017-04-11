@@ -10,7 +10,7 @@ describe('Logarithmic Scale tests', function() {
 		expect(defaultConfig).toEqual({
 			display: true,
 			gridLines: {
-				color: "rgba(0, 0, 0, 0.1)",
+				color: 'rgba(0, 0, 0, 0.1)',
 				drawBorder: true,
 				drawOnChartArea: true,
 				drawTicks: true,
@@ -18,12 +18,12 @@ describe('Logarithmic Scale tests', function() {
 				lineWidth: 1,
 				offsetGridLines: false,
 				display: true,
-				zeroLineColor: "rgba(0,0,0,0.25)",
+				zeroLineColor: 'rgba(0,0,0,0.25)',
 				zeroLineWidth: 1,
 				borderDash: [],
 				borderDashOffset: 0.0
 			},
-			position: "left",
+			position: 'left',
 			scaleLabel: {
 				labelString: '',
 				display: false,
@@ -33,7 +33,7 @@ describe('Logarithmic Scale tests', function() {
 				minRotation: 0,
 				maxRotation: 50,
 				mirror: false,
-				padding: 10,
+				padding: 0,
 				reverse: false,
 				display: true,
 				callback: defaultConfig.ticks.callback, // make this nicer, then check explicitly below
@@ -77,12 +77,10 @@ describe('Logarithmic Scale tests', function() {
 					}, {
 						id: 'yScale1',
 						type: 'logarithmic'
-					},
-					{
+					}, {
 						id: 'yScale2',
 						type: 'logarithmic'
-					},
-					{
+					}, {
 						id: 'yScale3',
 						type: 'logarithmic'
 					}]
@@ -125,7 +123,7 @@ describe('Logarithmic Scale tests', function() {
 					data: ['20', '0', '150', '1800', '3040']
 				}, {
 					yAxisID: 'yScale3',
-					   data: ['67', '0.0004', '0', '820', '0.001']
+					data: ['67', '0.0004', '0', '820', '0.001']
 				}],
 				labels: ['a', 'b', 'c', 'd', 'e']
 			},
@@ -140,8 +138,7 @@ describe('Logarithmic Scale tests', function() {
 					}, {
 						id: 'yScale2',
 						type: 'logarithmic'
-					},
-					{
+					}, {
 						id: 'yScale3',
 						type: 'logarithmic'
 					}]
@@ -185,8 +182,8 @@ describe('Logarithmic Scale tests', function() {
 					data: [20, 0, 7400, 14, 291]
 				}, {
 					yAxisID: 'yScale2',
-					   data: [6, 0.0007, 9, 890, 60000],
-					   hidden: true
+					data: [6, 0.0007, 9, 890, 60000],
+					hidden: true
 				}],
 				labels: ['a', 'b', 'c', 'd', 'e']
 			},
@@ -224,7 +221,7 @@ describe('Logarithmic Scale tests', function() {
 					data: [undefined, 10, null, 5, 5000, NaN, 78, 450]
 				}, {
 					yAxisID: 'yScale0',
-					data: [undefined, 28, null, 1000, 500, NaN, 50, 42]
+					data: [undefined, 28, null, 1000, 500, NaN, 50, 42, Infinity, -Infinity]
 				}, {
 					yAxisID: 'yScale1',
 					data: [undefined, 30, null, 9400, 0, NaN, 54, 836]
@@ -232,7 +229,7 @@ describe('Logarithmic Scale tests', function() {
 					yAxisID: 'yScale1',
 					data: [undefined, 0, null, 800, 9, NaN, 894, 21]
 				}],
-				labels: ['a', 'b', 'c', 'd', 'e', 'f' ,'g']
+				labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
 			},
 			options: {
 				scales: {
@@ -269,10 +266,10 @@ describe('Logarithmic Scale tests', function() {
 			data: {
 				datasets: [{
 					data: [
-						{ x: 10, y: 100 },
-						{ x:  2, y:   6 },
-						{ x: 65, y: 121 },
-						{ x: 99, y:   7 }
+						{x: 10, y: 100},
+						{x: 2, y: 6},
+						{x: 65, y: 121},
+						{x: 99, y: 7}
 					]
 				}]
 			},
@@ -304,10 +301,10 @@ describe('Logarithmic Scale tests', function() {
 			data: {
 				datasets: [{
 					data: [
-						{ x: 7, y: 950 },
-						{ x: 289, y:   0 },
-						{ x: 0, y: 8 },
-						{ x: 23, y:  0.04 }
+						{x: 7, y: 950},
+						{x: 289, y: 0},
+						{x: 0, y: 8},
+						{x: 23, y: 0.04}
 					]
 				}]
 			},
@@ -343,7 +340,7 @@ describe('Logarithmic Scale tests', function() {
 					data: [10, 5, 1, 5, 78, 100]
 				}, {
 					yAxisID: 'yScale1',
-					data: [-1000, 1000],
+					data: [0, 1000],
 				}, {
 					type: 'bar',
 					yAxisID: 'yScale0',
@@ -383,7 +380,7 @@ describe('Logarithmic Scale tests', function() {
 					type: 'bar'
 				}, {
 					yAxisID: 'yScale1',
-					data: [-1000, 1000],
+					data: [0, 1000],
 					type: 'bar'
 				}, {
 					yAxisID: 'yScale0',
@@ -717,20 +714,20 @@ describe('Logarithmic Scale tests', function() {
 		});
 
 		var xScale = chart.scales.xScale;
-		expect(xScale.getPixelForValue(80, 0, 0)).toBeCloseToPixel(495);  // right - paddingRight
-		expect(xScale.getPixelForValue( 1, 0, 0)).toBeCloseToPixel(48);   // left + paddingLeft
-		expect(xScale.getPixelForValue(10, 0, 0)).toBeCloseToPixel(283);  // halfway
-		expect(xScale.getPixelForValue( 0, 0, 0)).toBeCloseToPixel(48);   // 0 is invalid, put it on the left.
+		expect(xScale.getPixelForValue(80, 0, 0)).toBeCloseToPixel(482);  // right - paddingRight
+		expect(xScale.getPixelForValue(1, 0, 0)).toBeCloseToPixel(37);   // left + paddingLeft
+		expect(xScale.getPixelForValue(10, 0, 0)).toBeCloseToPixel(270);  // halfway
+		expect(xScale.getPixelForValue(0, 0, 0)).toBeCloseToPixel(37);   // 0 is invalid, put it on the left.
 
-		expect(xScale.getValueForPixel(495)).toBeCloseTo(80, 1e-4);
+		expect(xScale.getValueForPixel(481.5)).toBeCloseToPixel(80);
 		expect(xScale.getValueForPixel(48)).toBeCloseTo(1, 1e-4);
-		expect(xScale.getValueForPixel(283)).toBeCloseTo(10, 1e-4);
+		expect(xScale.getValueForPixel(270)).toBeCloseTo(10, 1e-4);
 
 		var yScale = chart.scales.yScale;
 		expect(yScale.getPixelForValue(80, 0, 0)).toBeCloseToPixel(32);   // top + paddingTop
-		expect(yScale.getPixelForValue( 1, 0, 0)).toBeCloseToPixel(456);  // bottom - paddingBottom
+		expect(yScale.getPixelForValue(1, 0, 0)).toBeCloseToPixel(456);  // bottom - paddingBottom
 		expect(yScale.getPixelForValue(10, 0, 0)).toBeCloseToPixel(234);  // halfway
-		expect(yScale.getPixelForValue( 0, 0, 0)).toBeCloseToPixel(32);   // 0 is invalid. force it on top
+		expect(yScale.getPixelForValue(0, 0, 0)).toBeCloseToPixel(32);   // 0 is invalid. force it on top
 
 		expect(yScale.getValueForPixel(32)).toBeCloseTo(80, 1e-4);
 		expect(yScale.getValueForPixel(456)).toBeCloseTo(1, 1e-4);
