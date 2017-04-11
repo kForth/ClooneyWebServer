@@ -1,31 +1,44 @@
-from flask import jsonify, make_response, request, redirect
-
-from flask_security import SQLAlchemyUserDatastore, Security, logout_user
-from flask_security.utils import encrypt_password, verify_password
+from flask import jsonify, make_response, request, redirect, session
 
 
 class UsersServer(object):
-    def __init__(self, add: classmethod, user_datastore: SQLAlchemyUserDatastore, security: Security, url_prefix=""):
+    def __init__(self, add: classmethod, url_prefix=""):
         self._add = lambda *args, **kwarg: add(*args, **kwarg, url_prefix=url_prefix)
-        self.user_datastore = user_datastore
-        self.security = security
         self._register_views()
 
     def _register_views(self):
         self._add('/logout', self.log_out)
         self._add('/login', self.login, methods=['POST'])
+        self._add('/check_auth', self.check_auth)
+
+    def _logout(self):
+        session["logged_in"] = False
+        session["user_info"] = []
+
+    def _login(self, info):
+        session["logged_in"] = True
+        session["user_info"] = info
+
+    def check_auth(self):
+        try:
+            return make_response(jsonify({'user-level': session["user_info"]["user_level"]}), 200)
+        except:
+            return make_response(jsonify(), 401)
 
     def log_out(self):
-        logout_user()
+        self._logout()
         return redirect(request.args.get('next') or '/')
 
     def login(self):
-        # info = request.json
-        print("asdf")
-        return make_response(jsonify())
+        info = request.json
+        user = self.authenticate(info['username'], info['password'])
+        return make_response(jsonify(user))
 
     def authenticate(self, username, password):
-        user = self.user_datastore.find_user(email=username)
-        if user and username == user.email and verify_password(password, user.password):
-            return user
+        from server.models import User
+        user = User.query.filter_by(username=username, password=password).first()
+        if user:
+            self._login(user.to_dict())
+            return user.to_dict()
+        self._logout()
         return None

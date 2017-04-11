@@ -4,7 +4,7 @@
     <div class="info-header">
         Login
     </div>
-    <form name="loginForm" ng-controller="LoginController" ng-submit="login(credentials)" novalidate>
+    <div>
         <label for="username">Username:</label>
         <input class="form-control" type="text" ng-class="{'has-error': errors}" id="username"
                ng-model="credentials.username">
@@ -13,8 +13,8 @@
         <input class="form-control" type="password" ng-class="{'has-error': errors}" id="password"
                ng-model="credentials.password">
 
-        <button class="btn btn-success login-button" type="submit">Login</button>
+        <button class="btn btn-success login-button" ng-click="login(credentials)">Login</button>
 
-        <button class="btn btn-default login-button" type="submit">Register</button>
-    </form>
+        <button class="btn btn-default login-button">Register</button>
+    </div>
 </div>
