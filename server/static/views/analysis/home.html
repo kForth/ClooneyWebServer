@@ -1,6 +1,11 @@
-<div ng-include="'../../../static/views/analysis/sidebar.html'"></div>
+<div ng-controller="EventSidebarController" ng-include="'../../../static/views/analysis/sidebar.html'">
 
-<div class="inner-content">
+</div>
+
+<div class="inner-content" ng-class="{'shrink-left-sidebar': leftSidebarVisible && rightSidebarVisible,
+                                      'shrink-right-sidebar': !leftSidebarVisible && !rightSidebarVisible,
+                                      'shrink-left-right-sidebar': leftSidebarVisible && !rightSidebarVisible}"
+     ng-show="event.name != undefined">
     <div class="info-holder">
         <div class="info-block">
             <div class="event-name">
@@ -12,28 +17,147 @@
 
     <div class="col-md-4 info-holder">
         <div class="info-block">
-            Stuff
+            <h4 class="info-header">Avg Gears Scored</h4>
+            <table class="table team-data-table">
+                <thead>
+                    <tr>
+                        <td>Rank</td>
+                        <td>Team</td>
+                        <td>Value</td>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="elem in data | orderBy:'tele_gears_scored.value':true | limitTo:5">
+                    <tr>
+                        <td><b>{{ $index+1 }}</b></td>
+                        <td><a href="#/team/{{ elem.team_number.value }}" class="team-link">
+                            {{ elem.team_number.value }}
+                        </a></td>
+                        <td uib-tooltip="{{ elem.tele_gears_scored.raw }}" tooltip-placement="top-left">
+                            {{ elem.tele_gears_scored.value }}
+                        </td>
+                    </tr>
+            </table>
         </div>
     </div>
     <div class="col-md-4 info-holder">
         <div class="info-block">
-            Goes
+            <h4 class="info-header">Avg Auto Gears</h4>
+            <table class="table team-data-table">
+                <thead>
+                    <tr>
+                        <td>Rank</td>
+                        <td>Team</td>
+                        <td>Value</td>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="elem in data | orderBy:'auto_gears_scored.value':true | limitTo:5">
+                    <tr>
+                        <td><b>{{ $index+1 }}</b></td>
+                        <td><a href="#/team/{{ elem.team_number.value }}" class="team-link">
+                            {{ elem.team_number.value }}
+                        </a></td>
+                        <td uib-tooltip="{{ elem.auto_gears_scored.raw }}" tooltip-placement="top-left">
+                            {{ elem.auto_gears_scored.value }}
+                        </td>
+                    </tr>
+            </table>
         </div>
     </div>
     <div class="col-md-4 info-holder">
         <div class="info-block">
-            Here
+            <h4 class="info-header">Auto Scored High</h4>
+            <table class="table team-data-table">
+                <thead>
+                    <tr>
+                        <td>Rank</td>
+                        <td>Team</td>
+                        <td>Value</td>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="elem in data | orderBy:'auto_scored_high.value':true | limitTo:5">
+                    <tr>
+                        <td><b>{{ $index+1 }}</b></td>
+                        <td><a href="#/team/{{ elem.team_number.value }}" class="team-link">
+                            {{ elem.team_number.value }}
+                        </a></td>
+                        <td uib-tooltip="{{ elem.auto_scored_high.raw }}" tooltip-placement="top-left">
+                            {{ elem.auto_scored_high.value }}
+                        </td>
+                    </tr>
+            </table>
         </div>
     </div>
 
-    <div class="col-md-6 info-holder">
+    <div class="col-md-4 info-holder">
         <div class="info-block">
-            Or
+            <h4 class="info-header">Climb</h4>
+            <table class="table team-data-table">
+                <thead>
+                    <tr>
+                        <td>Rank</td>
+                        <td>Team</td>
+                        <td>Value</td>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="elem in data | orderBy:'tele_climbed.count_common':true | limitTo:5">
+                    <tr>
+                        <td><b>{{ $index+1 }}</b></td>
+                        <td><a href="#/team/{{ elem.team_number.value }}" class="team-link">
+                            {{ elem.team_number.value }}
+                        </a></td>
+                        <td uib-tooltip="{{ elem.tele_climbed.raw }}" tooltip-placement="top-left">
+                            {{ elem.tele_climbed.count_common }}
+                        </td>
+                    </tr>
+            </table>
         </div>
     </div>
-    <div class="col-md-6 info-holder">
+    <div class="col-md-4 info-holder">
         <div class="info-block">
-            Here
+            <h4 class="info-header">Auto Baseline</h4>
+            <table class="table team-data-table">
+                <thead>
+                    <tr>
+                        <td>Rank</td>
+                        <td>Team</td>
+                        <td>Value</td>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="elem in data | orderBy:'auto_reached_baseline.value':true | limitTo:5">
+                    <tr>
+                        <td><b>{{ $index+1 }}</b></td>
+                        <td><a href="#/team/{{ elem.team_number.value }}" class="team-link">
+                            {{ elem.team_number.value }}
+                        </a></td>
+                        <td uib-tooltip="{{ elem.auto_reached_baseline.raw }}" tooltip-placement="top-left">
+                            {{ elem.auto_reached_baseline.percent }}
+                        </td>
+                    </tr>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-4 info-holder">
+        <div class="info-block">
+            <h4 class="info-header">Disabled</h4>
+            <table class="table team-data-table">
+                <thead>
+                    <tr>
+                        <td>Rank</td>
+                        <td>Team</td>
+                        <td>Value</td>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="elem in data | orderBy:'disabled.value':true | limitTo:5">
+                    <tr>
+                        <td><b>{{ $index+1 }}</b></td>
+                        <td><a href="#/team/{{ elem.team_number.value }}" class="team-link">
+                            {{ elem.team_number.value }}
+                        </a></td>
+                        <td uib-tooltip="{{ elem.disabled.raw }}" tooltip-placement="top-left">
+                            {{ elem.disabled.value }}
+                        </td>
+                    </tr>
+            </table>
         </div>
     </div>
 </div>

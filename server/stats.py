@@ -5,7 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from tba_py import BlueAllianceAPI
 from tinydb import TinyDB
 
+from predict.opr import OprCalculator
 from server.db import Database
+from updaters import AverageCalculator
 
 
 class StatsServer(object):
@@ -15,18 +17,34 @@ class StatsServer(object):
         self.sql_db = sql_db
         self.tba = tba
         self._register_views()
+        self.avg_calc = AverageCalculator(sql_db)
+        self.opr_calc = OprCalculator(tba)
 
     def _get_event_db(self, event):
         return TinyDB("db/events/{}.json".format(event))
 
     def _register_views(self):
+        self._add('/event/<event_id>/stats/avg/best', self.get_event_stats_avg_best)
         self._add('/event/<event_id>/stats/avg', self.get_event_stats_avg)
+        self._add('/event/<event_id>/avg', self.get_event_avg)
         self._add('/event/<event_id>/stats/raw', self.get_event_stats_raw)
         self._add('/event/<event_id>/stats/avg/<int:team_number>', self.get_team_stats_avg)
         self._add('/event/<event_id>/stats/raw/<int:team_number>', self.get_team_stats_raw)
         self._add('/event/<event_id>/pit', self.get_event_pit_data)
         self._add('/event/<event_id>/oprs', self.get_best_oprs)
         self._add('/event/<event>/expressions', self.get_expressions, methods=['GET', 'POST'])
+        self._add('/event/<event>/update', self.update_event, methods=['GET'])
+
+    def update_event(self, event):
+        if request.is_json:
+            updates = request.json
+            if 'avg' in updates:
+                self.avg_calc.update(event)
+            if 'opr' in updates:
+                self.opr_calc.get_event_oprs(event, db=self.sql_db)
+        else:
+            self.avg_calc.update(event)
+        return make_response(jsonify())
 
     def get_best_oprs(self, event_id):
         from server.models import OprEntry
@@ -51,8 +69,15 @@ class StatsServer(object):
     def get_event_stats_avg(self, event_id):
         data = self.db.get_avg_data(event_id).values()
         table_data = self._create_table_data(self.db.get_table_headers(event_id, "stats_avg"), data, True)
-        print(table_data)
         return make_response(jsonify(table_data))
+
+    def get_event_avg(self, event_id):
+        data = list(self.db.get_avg_data(event_id).values())
+        return make_response(jsonify(data))
+
+    def get_event_stats_avg_best(self, event_id):
+        data = list(self.db.get_avg_data(event_id).values())
+        return make_response(jsonify(data))
 
     def get_event_stats_raw(self, event_id):
         from server.models import ScoutingEntry
