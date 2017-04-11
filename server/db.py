@@ -78,18 +78,28 @@ class Database(object):
             return headers[key]
 
     def get_raw_data(self, event_id):
-        fp = "clooney/data/{}/raw_data.json".format(event_id)
-        return self.__get_file(fp) if event_id != "undefined" else []
+        # fp = "clooney/data/{}/raw_data.json".format(event_id)
+        # return self.__get_file(fp) if event_id != "undefined" else []
+        from server.models import ScoutingEntry
+        entries = ScoutingEntry.query.filter_by(event=event_id).all()
+        return [elem.to_dict()["data"] for elem in entries]
 
     def get_avg_data(self, event_id):
-        fp = "clooney/data/{}/avg_data.json".format(event_id)
-        data = self.__get_file(fp) if event_id != "undefined" else []
-        return dict([(str(elem["team_number"]["value"]), elem) for elem in data])
+        # fp = "clooney/data/{}/avg_data.json".format(event_id)
+        # data = self.__get_file(fp) if event_id != "undefined" else []
+        # return dict([(str(elem["team_number"]["value"]), elem) for elem in data])
+        from server.models import AnalysisEntry
+        entries = AnalysisEntry.query.filter_by(event=event_id, key="avg").all()
+        return dict([(str(elem.team), elem.to_dict()["data"]) for elem in entries])
 
     def get_calculated_data(self, event_id):
-        fp = "clooney/data/{}/calculated.json".format(event_id)
-        return self.__get_file(fp) if event_id != "undefined" else []
+        # fp = "clooney/data/{}/calculated.json".format(event_id)
+        # return self.__get_file(fp) if event_id != "undefined" else []
+        from server.models import AnalysisEntry
+        entries = AnalysisEntry.query.filter_by(event=event_id, key="calc").all()
+        return dict([(str(elem.team), elem.to_dict()["data"]) for elem in entries])
 
     def get_pit_scouting(self, event_id):
-        fp = "clooney/data/{}/pit_scout.json".format(event_id)
-        return self.__get_file(fp) if event_id != "undefined" else []
+        from server.models import AnalysisEntry
+        entries = AnalysisEntry.query.filter_by(event=event_id, key="pit").all()
+        return dict([(str(elem.team), elem.to_dict()["data"]) for elem in entries])
