@@ -8,3 +8,7 @@ tba.json
 __pycache__/
 server/static/robot_pics/
 updaters/util/__pycache__/
+
+vic_park_2017.json
+
+bower.json
