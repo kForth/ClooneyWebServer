@@ -10,7 +10,6 @@ var app = angular.module('app')
 
         $http.get("/api/sql/opr/events")
             .then(function(response){
-                console.log(response.data);
                 $scope.events = response.data;
             });
 
@@ -39,7 +38,6 @@ var app = angular.module('app')
             };
             $http.get('/api/sql/oprs', data)
                 .then(function(response){
-                    console.log(response.data.objects);
                     // $scope.data = response.data;
                     if (response.data.objects.length < 1) {
                         angular.element(document.querySelector("#table"))[0].innerHTML = "No OPRs found."

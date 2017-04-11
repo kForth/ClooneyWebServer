@@ -1,6 +1,20 @@
 <link rel="stylesheet" type="text/css" href="../../../static/css/sidebar.css">
 
-<div class="sidebar" ng-controller="EventSidebarController">
+
+<div class="show-sidebar-button" ng-show="!leftSidebarVisible" ng-click="toggleLeftSidebar()">
+    Show Sidebar
+</div>
+<div class="toggle-picklist-button" ng-show="!leftSidebarVisible" ng-click="toggleRightSidebar()">
+    Toggle Picklist
+</div>
+
+<div class="sidebar" ng-show="$parent.leftSidebarVisible">
+    <div class="sidebar-block clickable" ng-click="toggleLeftSidebar()">
+        Hide Sidebar
+    </div>
+    <div class="sidebar-block clickable" ng-click="toggleRightSidebar()">
+        Toggle Picklist
+    </div>
     <div class="sidebar-block" uib-dropdown>
         <div class="row" id="event-select" uib-dropdown-toggle>
             <div class="col-xs-2 event-select-label">Event:</div>
@@ -21,7 +35,8 @@
                 <div class="col-xs-8 event-select-event">{{ getSelectedLevel() }}<span class="caret"></span>
                 </div>
             </div>
-            <ul class="dropdown-menu event-select-dropdown" uib-dropdown-menu role="menu" aria-labelledby="match-level-select">
+            <ul class="dropdown-menu event-select-dropdown" uib-dropdown-menu role="menu"
+                aria-labelledby="match-level-select">
                 <li role="menuitem" ng-repeat="level in match_levels" ng-click="">
                     <a style="background: #fff" href="#/matches/{{ level.link }}">{{ level.name }}</a>
                 </li>
@@ -31,27 +46,26 @@
         <li class="sidebar-item" ng-class="{ active: isActive('/raw') }"><a href="#/raw">Raw</a></li>
         <li class="sidebar-item" ng-class="{ active: isActive('/oprs') }"><a href="#/oprs">OPRs</a></li>
         <li class="sidebar-item" ng-class="{ active: isActive('/analysis') }"><a href="#/analysis">Graphs</a></li>
+        <li class="sidebar-item"><a ng-click="updateEvent()">Update Event</a></li>
     </ul>
 
-    <!--<div class="sidebar-block sidebar-block-bottom clickable" ng-click="toggleSidebar()">-->
-        <!--{{ toggleVerb }} Picklist-->
-    <!--</div>-->
 </div>
 
+<div id="picklist-sidebar" class="sidebar sidebar-right" ng-show="!$parent.rightSidebarVisible"
+     ng-controller="PicklistController" ng-cloak>
 
-<!--<div id="picklist-sidebar" class="sidebar sidebar-right"-->
-     <!--ng-class="{ 'picklist-hidden': !sidebarShown, 'picklist-shown': sidebarShown }">-->
-    <!--<div class="picklist-header">-->
-        <!--<ul class="picklist-icons">-->
-            <!--<li class="picklist-icon glyphicon glyphicon-zoom-in" ng-click="increaseFont()"></li>-->
-            <!--<li class="picklist-icon glyphicon glyphicon-zoom-out" ng-click="decreaseFont()"></li>-->
-            <!--<li class="picklist-icon glyphicon glyphicon-copy" ng-click="copyList()"></li>-->
-            <!--<li class="picklist-icon glyphicon glyphicon-floppy-save" ng-click="saveList()"></li>-->
-        <!--</ul>-->
-    <!--</div>-->
-    <!--<div class="picklist-holder">-->
-        <!--<textarea class="picklist-text" id="picklist" ng-keyup="updateList()"></textarea>-->
-    <!--</div>-->
-<!--</div>-->
+    <div class="picklist-header">
+        <b style="float:left">Picklist</b>
+        <ul class="picklist-icons">
+            <li class="picklist-icon glyphicon glyphicon-zoom-in" ng-click="increaseFont($event)"></li>
+            <li class="picklist-icon glyphicon glyphicon-zoom-out" ng-click="decreaseFont($event)"></li>
+            <li class="picklist-icon glyphicon glyphicon-copy" ng-click="copyList()"></li>
+            <li class="picklist-icon glyphicon glyphicon-floppy-save" ng-click="saveList()"></li>
+        </ul>
+    </div>
+    <div class="picklist-holder">
+        <textarea class="picklist-text" id="picklist" ng-keyup="updateList()"></textarea>
+    </div>
+</div>
 
 <!--<script src="../../../static/controllers/analysis/picklist.js"></script>-->

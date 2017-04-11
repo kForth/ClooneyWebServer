@@ -9,7 +9,30 @@
     border-right: 1px solid #ccc;
 }
 
+.show-sidebar-button {
+    position: fixed;
+    top: 50px;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    border-radius: 2px;
+    border: 1px solid #aaa;
+    background: #eee;
+}
+
+.toggle-picklist-button {
+    position: fixed;
+    top: 80px;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    border-radius: 2px;
+    border: 1px solid #aaa;
+    background: #eee;
+}
+
 .sidebar-right {
+    position: fixed;
     margin-left: -250px;
     left: 100%;
     border-right: none;
@@ -23,10 +46,14 @@
     color: #111;
     width: 100%;
     display: block;
+    text-align: left;
 }
 
 .sidebar-block-bottom {
-    float: bottom;
+    position: fixed;
+    margin-top: -30px;
+    width: 249px;
+    top: 100%;
 }
 
 .sidebar-list {
@@ -126,10 +153,10 @@
 
 .picklist-holder {
     position: absolute;
-    top: 30px;
+    top: 25px;
     margin: 0 5px;
     width: 240px;
-    height: calc(100% - 85px);
+    height: calc(100% - 30px);
 }
 
 .picklist-text {

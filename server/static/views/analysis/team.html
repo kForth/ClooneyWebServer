@@ -1,6 +1,9 @@
-<div ng-include="'../../../static/views/analysis/sidebar.html'"></div>
+<div ng-controller="EventSidebarController" ng-include="'../../../static/views/analysis/sidebar.html'"></div>
 
-<div class="inner-content">
+<div class="inner-content" ng-class="{'shrink-left-sidebar': leftSidebarVisible && rightSidebarVisible,
+                                      'shrink-right-sidebar': !leftSidebarVisible && !rightSidebarVisible,
+                                      'shrink-left-right-sidebar': leftSidebarVisible && !rightSidebarVisible}"
+     ng-show="event.name != undefined">
     <div class="info-holder">
         <div class="info-block">
             <div class="event-name" ng-cloak>
@@ -56,34 +59,37 @@
 
 
     <div class="info-holder col-xs-12 col-md-8">
-            <div class="info-table info-block">
-                <table id="table" class="table team-data-table" ng-cloak>
-                    <thead>
-                    <tr>
-                        <th ng-repeat="header in data_headers" class="data-header clickable {{ header.class }}"
-                            ng-click="sortData(header.sort_id)">
-                            {{ header.title }}
-                            <span ng-show="sortId == header.sort_id && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                            <span ng-show="sortId == header.sort_id && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                            <span ng-show="sortId != header.sort_id" class="glyphicon glyphicon-none"></span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td ng-repeat="header in data_headers" class="data-box bold-data {{ header.data_class }}"
-                            ng-bind="getData(avg_data, header.key + ', value')">
-                        </td>
-                    </tr>
-                    <tr ng-repeat="elem in raw_data | orderBy:sortId:sortReverse">
-                        <td ng-repeat="header in data_headers" class="data-box {{ header.data_class }}"
-                            ng-bind="elem[header.sort_id]">
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="info-table info-block">
+            <table id="table" class="table team-data-table" ng-show="raw_data.length > 0" multi-sort-table ng-cloak>
+                <thead>
+                <tr>
+                    <th ng-repeat="header in data_headers" class="data-header clickable {{ header.class }}"
+                        ng-click="sortData($event, header.sort_id)">
+                        {{ header.title }}
+                        <span ng-show="sorts.indexOf(header.sort_id) > -1"
+                              class="glyphicon glyphicon-chevron-up">{{ sorts.indexOf(header.sort_id)+1 }}</span>
+                        <span ng-show="sorts.indexOf('-' + header.sort_id) > -1"
+                              class="glyphicon glyphicon-chevron-down">{{ sorts.indexOf("-" + header.sort_id)+1 }}</span>
+                        <span ng-show="sorts.indexOf(header.sort_id) < 0 && sorts.indexOf(header.sort_id) < 0"
+                              class="glyphicon glyphicon-none"> </span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td ng-repeat="header in data_headers" class="data-box bold-data {{ header.data_class }}"
+                        ng-bind="getData(avg_data, header.key + ', value')">
+                    </td>
+                </tr>
+                <tr ng-repeat="elem in raw_data | orderBy:sorts">
+                    <td ng-repeat="header in data_headers" class="data-box {{ header.data_class }}"
+                        ng-bind="elem[header.sort_id]">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 
 </div>

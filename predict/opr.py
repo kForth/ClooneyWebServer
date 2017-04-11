@@ -4,7 +4,6 @@ from scipy.stats import percentileofscore
 from tba_py import BlueAllianceAPI
 
 from flask_sqlalchemy import SQLAlchemy
-from server.models import OprEntry
 
 import time
 
@@ -94,6 +93,7 @@ class OprCalculator(object):
         return minimize(func, np.zeros(n), method='L-BFGS-B', bounds=[(0., None) for _ in range(n)])["x"]
 
     def get_event_oprs(self, event_id, minimize=False, db=None):
+        from server.models import OprEntry
         print("Working on: {}".format(event_id))
         start_time = time.time()
         solve_time_accum = 0
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     tba = BlueAllianceAPI("Clooney", "Clooney", "2")
 
     events = tba.get_events("2017")
-    target_week = 2 #zero index
+    target_week = 3 #zero index
     event_keys = []
     for event in events:
         if event["week"] is not None and event["week"] == target_week:

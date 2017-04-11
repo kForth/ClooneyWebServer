@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angular-md5'])
+var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angular-md5', 'chart.js'])
     .config(function ($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(false).hashPrefix('');
         $routeProvider
@@ -40,11 +40,15 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             })
             .when('/analysis', {
                 templateUrl: '../../../static/views/analysis/graphs.html',
-                controller: 'HomeController'
+                controller: 'SingleAnalysisController'
             })
             .when('/login', {
                 templateUrl: '../../../static/views/account/login.html',
                 controller: 'LoginController'
+            })
+            .when('/logout', {
+                templateUrl: '../../../static/views/account/login.html',
+                controller: 'LogoutController'
             })
             .when('/', {
                 templateUrl: '../../../static/views/home.html',
@@ -86,22 +90,6 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             $scope.currentUser = user;
         };
     })
-    .controller("LoginController", function ($rootScope, $scope, $cookies, AUTH_EVENTS, AuthService) {
-        $scope.credentials = {
-            username: '',
-            password: ''
-        };
-        $scope.errors = false;
-        $scope.login = function (credentials) {
-            AuthService.login(credentials).then(function (user) {
-                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-                $scope.setCurrentUser(user);
-            }, function () {
-                $scope.errors = true;
-                $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-            });
-        };
-    })
     .factory('AuthService', function ($http, Session, md5) {
         var authService = {};
         authService.login = function (credentials) {
@@ -110,11 +98,10 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
                 password: md5.createHash(credentials.password)
             };
             return $http
-                .post('/login', user_pass)
+                .post('/user/login', user_pass)
                 .then(function (res) {
                     if (res.status === 200) {
-                        Session.create(res.data.id, res.data.user.id, res.data.user.role);
-                        return res.data.user;
+                        return true;
                     }
                     else {
                         return false;
@@ -122,16 +109,19 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
                 });
         };
 
-        authService.isAuthenticated = function () {
-            return !!Session.userId;
-        };
-
-        authService.isAuthorized = function (authorizedRoles) {
-            if (!angular.isArray(authorizedRoles)) {
-                authorizedRoles = [authorizedRoles];
-            }
-            return (authService.isAuthenticated() &&
-            authorizedRoles.indexOf(Session.userRole) !== -1);
+        authService.isAuthorized = function (minUserLevel) {
+            return $http.get('/user/check_auth').then(function (response) {
+                if (response)
+                    return {
+                        'allowed': response.data['user-level'] >= minUserLevel,
+                        'level': response.data['user-level']
+                    };
+                else
+                    return {
+                        'allowed': false,
+                        'level': 0
+                    };
+            });
         };
 
         return authService;
@@ -146,6 +136,22 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             this.id = null;
             this.userId = null;
             this.userRole = null;
+        };
+    })
+    .controller("LoginController", function ($rootScope, $scope, $cookies, AUTH_EVENTS, AuthService) {
+        $scope.credentials = {
+            username: '',
+            password: ''
+        };
+        $scope.errors = false;
+        $scope.login = function (credentials) {
+            AuthService.login(credentials).then(function (user) {
+                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+                $scope.setCurrentUser(user);
+            }, function () {
+                $scope.errors = true;
+                $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+            });
         };
     })
     .controller('SingleTeamController', function ($scope, $http, $location, $cookies) {
@@ -163,13 +169,12 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
         $http.get("/api/event/" + $scope.event.key + "/team/" + $scope.team_number + "/images")
             .then(function (response) {
                 var i = 0;
-                response.data.forEach(function(elem){
+                response.data.forEach(function (elem) {
                     $scope.images.push({
                         image: "../../../static/robot_pics/" + $scope.event.key + "/" + $scope.team_number + "/" + elem,
                         id: i++
                     });
                 });
-                console.log($scope.images);
             });
 
         $http.get("/api/event/" + $scope.event.key + "/team/" + $scope.team_number)
@@ -200,20 +205,19 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
         $http.get("/api/headers/" + $scope.event.key + "/single_team_data", {cache: true})
             .then(function (response) {
                 $scope.data_headers = response.data;
-                console.log($scope.data_headers)
             });
 
         $scope.sortId = $cookies.get('matches-sort-id');
         $scope.sortReverse = $cookies.get('matches-sort-reverse');
 
-        $scope.sortData = function(key){
-            if($scope.sortReverse === undefined){
+        $scope.sortData = function (key) {
+            if ($scope.sortReverse === undefined) {
                 $scope.sortReverse = true;
             }
-            if($scope.sortId === key){
+            if ($scope.sortId === key) {
                 $scope.sortReverse = !$scope.sortReverse;
             }
-            else{
+            else {
                 $scope.sortId = key;
                 $scope.sortReverse = true;
             }
@@ -229,8 +233,13 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             if (key.includes(",")) {
                 var keys = key.split(",");
                 var val = elem;
-                keys.forEach(function (key) {
-                    val = val[key.trim()];
+                keys.forEach(function (k) {
+                    if (val === undefined) {
+                        val = "";
+                    }
+                    else {
+                        val = val[k.trim()];
+                    }
                 });
                 return val;
             }
@@ -240,4 +249,16 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
         };
 
     });
+
+app.directive('fixedTableHeaders', ['$timeout', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            $timeout(function () {
+                var container = element.parentsUntil(attrs.fixedTableHeaders);
+                element.stickyTableHeaders({scrollableArea: container, "fixedOffset": 2});
+            }, 0);
+        }
+    }
+}]);
 
