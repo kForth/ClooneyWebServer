@@ -1,8 +1,45 @@
-from flask_security import RoleMixin, UserMixin
-
 import json
 
 from server import sql_db as db
+
+
+class Event(db.Model):
+    __tablename__ = "events"
+
+    id = db.Column(db.VARCHAR(32), primary_key=True)
+    tba_info = db.Column(db.TEXT, nullable=True)
+    team_list = db.Column(db.TEXT, nullable=True)
+
+    def __init__(self, id: str, tba_info: dict, team_list: list):
+        self.id = id
+        self.tba_info = tba_info
+        self.team_list = team_list
+        if type(self.tba_info) is dict:
+            self.tba_info = json.dumps(self.tba_info)
+        if type(self.team_list) is list:
+            self.team_list = json.dumps(self.team_list)
+
+    def set_tba_info(self, info: dict):
+        self.tba_info = json.dumps(info)
+
+    def set_team_list(self, teams: list):
+        self.team_list = json.dumps(teams)
+
+    def get_team_list(self):
+        return json.loads(self.team_list)
+
+    def get_tba_info(self):
+        return json.loads(self.tba_info)
+
+    def __repr__(self):
+        return '<Event {})>'.format(self.id)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "tba_info": json.loads(self.tba_info),
+            "team_list": json.loads(self.team_list)
+        }
 
 
 class ScoutingEntry(db.Model):
@@ -17,6 +54,9 @@ class ScoutingEntry(db.Model):
     filename = db.Column(db.VARCHAR(128), nullable=True)
 
     def __init__(self, event: str, team: int, match: int, pos: int, data: dict, filename=""):
+        self.update(event, team, match, pos, data, filename)
+
+    def update(self, event: str, team: int, match: int, pos: int, data: dict, filename=""):
         self.event = event
         self.team = team
         self.match = match
@@ -115,22 +155,22 @@ class OprEntry(db.Model):
         }
 
 
-roles_users = db.Table('roles_users',
-                       db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-                       db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
-
-
-class Role(db.Model, RoleMixin):
-    id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(80), unique=True)
-    description = db.Column(db.String(255))
-
-
-class User(db.Model, UserMixin):
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), unique=True)
-    password = db.Column(db.String(255))
-    active = db.Column(db.Boolean())
-    confirmed_at = db.Column(db.DateTime())
-    roles = db.relationship('Role', secondary=roles_users,
-                            backref=db.backref('users', lazy='dynamic'))
+    email = db.Column(db.VARCHAR(255), unique=True)
+    username = db.Column(db.VARCHAR(255))
+    password = db.Column(db.VARCHAR(255))
+    user_level = db.Column(db.INTEGER())
+
+    def __init__(self, email, username, password, user_level):
+        self.email = email
+        self.username = username
+        self.password = password
+        self.user_level = user_level
+
+    def to_dict(self):
+        return {
+            'username': self.username,
+            'email': self.email,
+            'user_level': self.user_level
+        }
