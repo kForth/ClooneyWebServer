@@ -121,16 +121,23 @@ class StatsServer(object):
             for header in headers:
                 line[header['sort_id']] = self._get_data(elem, header['key'])
                 if tooltip:
-                    line[header['sort_id'] + 'tooltip'] = ",".join(
+                    tooltip_str = ""
+                    tooltip_str += "\n Raw: " + ",".join(
                         map(str, self._get_data(elem, header['key'].split(",")[:-1] + ["raw"])))
+                    for key in self._get_data(elem, header['key'].split(",")[:-1]).keys():
+                        if key == "raw": continue
+                        tooltip_str += "\n" + key.title() + ": " + str(self._get_data(elem, header['key'].split(",")[:-1] + [key]))
+                    line[header['sort_id'] + 'tooltip'] = tooltip_str
             table_data.append(line)
         return table_data
 
     @staticmethod
-    def _get_data(data, key):
+    def _get_data(data, key, parent=False):
         if type(key) is str:
             key = key.split(",")
         val = data
         for k in key:
+            if parent and k is key[-1]:
+                return val
             val = val[k.strip()]
         return val
