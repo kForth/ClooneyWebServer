@@ -130,10 +130,11 @@ class AverageCalculator(Runner):
     def _calc_mode(self, data):
         freq = {}
         for entry in data:
-            if entry not in freq.keys():
-                freq[entry] = 0
-            freq[entry] += 1
-        return sorted(freq.items(), key=lambda x: x[1])[-1][0]
+            if entry:
+                if entry not in freq.keys():
+                    freq[entry] = 0
+                freq[entry] += 1
+        return sorted(list(freq.items()), key=lambda x: x[1])[-1][0] if len(freq) > 0 else ''
 
     def _save_data(self, event, data):
         json.dump(data, open(self._get_fp('data', event) + "/avg_data.json", "w+"))
