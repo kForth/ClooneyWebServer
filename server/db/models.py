@@ -1,11 +1,9 @@
-from sqlalchemy.dialects.postgresql import JSON
-
 from server.db import sql_db as db
 
 
 event_teams = db.Table('event_teams',
     db.Column('team_number', db.Integer, db.ForeignKey('team.number')),
-    db.Column('event_key', db.Integer, db.ForeignKey('event.key'))
+    db.Column('event_key', db.String(16), db.ForeignKey('event.key'))
 )
 
 match_teams = db.Table('match_teams',
@@ -15,8 +13,8 @@ match_teams = db.Table('match_teams',
 
 
 class Event(db.Model):
-    event_key = db.Column(db.String(16), primary_key=True)
-    info = db.Column(db.Text)
+    key = db.Column(db.String(16), primary_key=True)
+    info = db.Column(db.JSON)
     year = db.Column(db.Integer)
 
     matches = db.relationship('Match', backref='event', lazy='dynamic')
@@ -29,20 +27,21 @@ class Event(db.Model):
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    match_number = db.Column(db.Integer)
-    match_level = db.Column(db.String(16))
+    number = db.Column(db.Integer)
+    level = db.Column(db.String(16))
     event_key = db.Column(db.String(16), db.ForeignKey('event.key'))
+    info = db.Column(db.JSON)
 
     scouting_entries = db.relationship('ScoutingEntry', backref='match', lazy='dynamic')
     teams = db.relationship('Team', secondary=match_teams, backref=db.backref('match', lazy='dynamic'))
 
     def __repr__(self):
-        return "<Match {0}{1} @ {2}>".format(self.match_number, self.match_level, self.event.key)
+        return "<Match {0}{1} @ {2}>".format(self.number, self.level, self.event_key)
 
 
 class Team(db.Model):
     number = db.Column(db.Integer, primary_key=True)
-    info = db.Column(JSON)
+    info = db.Column(db.JSON)
 
     scouting_entries = db.relationship('ScoutingEntry', backref='team', lazy='dynamic')
     events = db.relationship('Event', secondary=event_teams, backref=db.backref('team', lazy='dynamic'))
@@ -56,9 +55,8 @@ class ScoutingEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     event = db.Column(db.String(16), db.ForeignKey('event.key'))
     team_number = db.Column(db.Integer, db.ForeignKey('team.number'))
-    match_number = db.Column(db.Integer, db.ForeignKey('match.match_number'))
     match_id = db.Column(db.Integer, db.ForeignKey('match.id'))
-    value = db.Column(JSON)
+    value = db.Column(db.JSON)
 
     def __repr__(self):
-        return '<ScoutingEntry {0}:{1} [{2}]>'.format(self.event, self.team.number, self.key)
+        return '<ScoutingEntry {0}:{1} [{2}]>'.format(self.event, self.team_number, self.key)
