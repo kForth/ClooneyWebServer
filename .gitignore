@@ -1,2 +1,4 @@
 env/
 .idea/
+server.cfg
+*.pyc
