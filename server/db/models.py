@@ -17,35 +17,35 @@ class Event(db.Model):
     info = db.Column(db.JSON)
     year = db.Column(db.Integer)
 
-    matches = db.relationship('Match', backref='event', lazy='dynamic')
-    scouting_entries = db.relationship('ScoutingEntry', backref='event', lazy='dynamic')
+    # matches = db.relationship('Match', backref='event', lazy='dynamic')
+    # scouting_entries = db.relationship('ScoutingEntry', backref='event', lazy='dynamic')
     teams = db.relationship('Team', secondary=event_teams, backref=db.backref('event', lazy='dynamic'))
 
     def __repr__(self):
-        return '<Event {}>'.format(self.id)
+        return '<Event {}>'.format(self.key)
 
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    number = db.Column(db.Integer)
-    level = db.Column(db.String(16))
+    match_number = db.Column(db.Integer)
+    match_level = db.Column(db.String(16))
     event_key = db.Column(db.String(16), db.ForeignKey('event.key'))
     info = db.Column(db.JSON)
 
-    scouting_entries = db.relationship('ScoutingEntry', backref='match', lazy='dynamic')
+    # scouting_entries = db.relationship('ScoutingEntry', backref='match', lazy='dynamic')
     teams = db.relationship('Team', secondary=match_teams, backref=db.backref('match', lazy='dynamic'))
 
     def __repr__(self):
-        return "<Match {0}{1} @ {2}>".format(self.number, self.level, self.event_key)
+        return "<Match {0}{1} @ {2}>".format(self.match_number, self.match_level, self.event_key)
 
 
 class Team(db.Model):
     number = db.Column(db.Integer, primary_key=True)
     info = db.Column(db.JSON)
 
-    scouting_entries = db.relationship('ScoutingEntry', backref='team', lazy='dynamic')
+    # scouting_entries = db.relationship('ScoutingEntry', backref='team', lazy='dynamic')
     events = db.relationship('Event', secondary=event_teams, backref=db.backref('team', lazy='dynamic'))
-    matches = db.relationship('Match', backref='team', lazy='dynamic')
+    # matches = db.relationship('Match', backref='team', lazy='dynamic')
 
     def __repr__(self):
         return '<Team {}>'.format(self.team_num)
