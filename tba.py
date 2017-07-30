@@ -99,11 +99,3 @@ class TBA(object):
 
 class BadResponseCodeException(Exception):
     pass
-
-
-if __name__ == '__main__':
-    from server import tba
-
-    print(tba.get_event('2017onham'))
-
-

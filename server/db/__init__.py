@@ -158,5 +158,3 @@ if __name__ == "__main__":
     # sql_db.create_all()
 
     db = DatabaseHelper()
-
-    db.setup_event_matches_from_tba('2017onham')
