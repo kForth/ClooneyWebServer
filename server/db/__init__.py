@@ -60,6 +60,21 @@ class DatabaseHelper:
             event = self.setup_event(event_key, update_tba_on_create)
         return event
 
+    def setup_event_matches_from_tba(self, event_key):
+        event = self.get_event(event_key)
+        matches = tba.get_event_matches(event_key)
+        for match_info in matches:
+            match_level = match_info['comp_level']
+            if match_level != 'qm':
+                match_level += str(match_info['set_number'])
+
+            match = self.get_match(event_key, match_level, match_info['match_number'],
+                                   update_tba_on_create=False)
+            match.info = match_info
+            for alliance in match_info['alliances'].keys():
+                for team in match_info['alliances'][alliance]['team_keys']:
+                    match.add_team(self.get_team(int(team[3:])).number)
+
         return event
 
     def get_all_events(self):
@@ -136,12 +151,12 @@ class DatabaseHelper:
         from server.db.models import ScoutingEntry
         return ScoutingEntry.query.filter_by(event=event_key).all()
 
+
 if __name__ == "__main__":
     # from server.db import sql_db
     # from server.db.models import *
     # sql_db.create_all()
 
     db = DatabaseHelper()
-    db.setup_scouting_entry("2017onham", 5406, 33, 'qm', {'a': 'a'})
-    db.setup_scouting_entry("2017onham", 1503, 33, 'qm', {'a': 'b'})
-    db.setup_scouting_entry("2017onham", 4618, 33, 'qm', {'a': 'c'})
+
+    db.setup_event_matches_from_tba('2017onham')
