@@ -4,4 +4,4 @@ from tba import TBA
 
 app = Flask(__name__, static_folder='../static')
 app.config.from_pyfile('../server.cfg')
-tba = TBA('KestinGoforth', 'Clooney', '3')
+tba = TBA(app.config['TBA_AUTH_KEY'])
