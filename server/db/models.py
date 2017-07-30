@@ -7,6 +7,13 @@ class Event(db.Model):
     key = db.Column(db.String(16), primary_key=True)
     info = db.Column(JSON)
     year = db.Column(db.Integer)
+    teams = db.Column(ARRAY(db.INTEGER, db.ForeignKey('team.number')))
+
+    def add_team(self, team):
+        if self.teams is None:
+            self.teams = []
+        if team not in self.teams:
+            self.teams = list(self.teams) + [team]
 
     def __repr__(self):
         return '<Event {}>'.format(self.key)
