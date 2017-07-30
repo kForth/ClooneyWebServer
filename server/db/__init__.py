@@ -1,10 +1,147 @@
 from flask_sqlalchemy import SQLAlchemy
 
-from server import app
+from server import app, tba
 
 sql_db = SQLAlchemy(app)
 
+
+class DatabaseHelper:
+    def __init__(self):
+        pass
+
+    # Team
+
+    def setup_team(self, number):
+        from server.db.models import Team
+        team = Team.query.filter_by(number=number).first()
+
+        if not team:
+            team = Team(number=number)
+            sql_db.session.add(team)
+
+        try:
+            team.info = tba.get_team(number)
+        except Exception as ex:
+            print(ex)
+            print("Couldn't get tba info for team {}".format(number))
+
+        sql_db.session.commit()
+        return team
+
+    def get_team(self, number, create_if_missing=True):
+        from server.db.models import Team
+        team = Team.query.filter_by(number=number).first()
+        if not team and create_if_missing:
+            team = self.setup_team(number)
+        return team
+
+    # Event
+
+    def setup_event(self, event_key):
+        from server.db.models import Event
+        event = Event.query.filter_by(key=event_key).first()
+
+        if not event:
+            event = Event(key=event_key, year=int(event_key[:4]))
+            sql_db.session.add(event)
+
+        try:
+            event.info = tba.get_event(event_key)
+        except Exception as ex:
+            print(ex)
+            print("Couldn't get tba info for event {}".format(event_key))
+
+        sql_db.session.commit()
+        return event
+
+    def get_event(self, event_key, create_if_missing=True):
+        from server.db.models import Event
+        event = Event.query.filter_by(key=event_key).first()
+        if not event and create_if_missing:
+            event = self.setup_event(event_key)
+        return event
+
+    def get_all_events(self):
+        from server.db.models import Event
+        return Event.query.all()
+
+    def get_events_for_year(self, year):
+        from server.db.models import Event
+        return Event.query.filter_by(year=year).all()
+
+    # Match
+
+    def setup_match(self, event_key, match_number, match_level):
+        from server.db.models import Match
+
+        match = Match.query.filter_by(event_key=event_key, match_number=match_number, match_level=match_level).first()
+
+        if not match:
+            match = Match(match_number=match_number, match_level=match_level, event_key=event_key)
+            sql_db.session.add(match)
+
+        try:
+            match.info = tba.get_single_match(match.get_tba_key())
+        except:
+            print("Couldn't get tba info for match {}".format(match.get_tba_key()))
+        sql_db.session.commit()
+        return match
+
+    def get_match(self, event_key, match_number, match_level, create_if_missing=True):
+        from server.db.models import Match
+        match = Match.query.filter_by(event_key=event_key, match_number=match_number, match_level=match_level).first()
+        if not match and create_if_missing:
+            match = self.setup_match(event_key, match_number, match_level)
+        return match
+
+    # Entry
+
+    def setup_scouting_entry(self, event_key, team_number, match_number, match_level, data):
+        from server.db.models import ScoutingEntry
+        event = self.get_event(event_key)  # Create if missing.
+        team = self.get_team(team_number)  # Create if missing.
+        match = self.get_match(event_key, match_number, match_level)
+        entry = self.get_scouting_entry(event_key, team_number, match_number, match_level)
+        if not entry:
+            entry = ScoutingEntry(event=event_key, team_number=team_number, match_id=match.id)
+            sql_db.session.add(entry)
+
+
+        if match.teams is None:  # TODO: JSON and ARRAY are immutable...
+            match.teams = []
+        match.teams = list(match.teams)
+        match.teams.append(team_number)
+
+        entry.value = data
+        sql_db.session.commit()
+        return entry
+
+    def get_scouting_entry(self, event_key, team_number, match_number, match_level):
+        from server.db.models import ScoutingEntry
+        match = self.get_match(event_key, match_number, match_level)
+        if match:
+            return ScoutingEntry.query.filter_by(event=event_key, team_number=team_number, match_id=match.id).first()
+        return None
+
+    def get_scouting_entries_for_team_at_event(self, event_key, team_number):
+        from server.db.models import ScoutingEntry
+        return ScoutingEntry.query.filter_by(event=event_key, team_number=team_number).all()
+
+    def get_scouting_entries_for_match(self, event_key, match_number, match_level):
+        from server.db.models import ScoutingEntry, Match
+        match = self.get_match(event_key, match_number, match_level)
+        return ScoutingEntry.query.filter_by(event=event_key, match_id=match.id).all()
+
+    def get_scouting_entries_for_event(self, event_key):
+        from server.db.models import ScoutingEntry
+        return ScoutingEntry.query.filter_by(event=event_key).all()
+
 if __name__ == "__main__":
     # from server.db import sql_db
-    from server.db.models import *
-    sql_db.create_all()
+    # from server.db.models import *
+    # sql_db.create_all()
+
+    db = DatabaseHelper()
+    db.setup_scouting_entry("2017onham", 5406, 33, 'qm', {'a': 'a'})
+    db.setup_scouting_entry("2017onham", 1503, 33, 'qm', {'a': 'b'})
+    db.setup_scouting_entry("2017onham", 4618, 33, 'qm', {'a': 'c'})
