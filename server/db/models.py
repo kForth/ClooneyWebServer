@@ -34,9 +34,12 @@ class Match(db.Model):
 
     # scouting_entries = db.relationship('ScoutingEntry', backref='match', lazy='dynamic')
     teams = db.relationship('Team', secondary=match_teams, backref=db.backref('match', lazy='dynamic'))
+    def get_tba_key(self):
+        middle = "m" if self.match_level != "qm" else ""
+        return "{0}_{1}{2}{3}".format(self.event_key, self.match_level, middle, self.match_number)
 
     def __repr__(self):
-        return "<Match {0}{1} @ {2}>".format(self.match_number, self.match_level, self.event_key)
+        return "<Match {}>".format(self.get_tba_key())
 
 
 class Team(db.Model):
