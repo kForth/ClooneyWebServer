@@ -24,6 +24,12 @@ class Match(db.Model):
         middle = "m" if self.match_level != "qm" else ""
         return "{0}_{1}{2}{3}".format(self.event_key, self.match_level, middle, self.match_number)
 
+    def add_team(self, team):
+        if self.teams is None:
+            self.teams = []
+        if team not in self.teams:
+            self.teams = list(self.teams) + [team]
+
     def __repr__(self):
         return "<Match {}>".format(self.get_tba_key())
 
@@ -44,6 +50,6 @@ class ScoutingEntry(db.Model):
     value = db.Column(JSON)
 
     def __repr__(self):
-        return '<ScoutingEntry {0}:{1} [{2}]>'.format(self.event, self.team_number, self.key)
+        return '<ScoutingEntry {0}:{1}>'.format(self.event, self.team_number)
 
 
