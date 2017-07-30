@@ -60,7 +60,7 @@ class DatabaseHelper:
             event = self.setup_event(event_key, update_tba_on_create)
         return event
 
-    def setup_event_matches_from_tba(self, event_key):
+    def setup_event_from_tba(self, event_key):
         event = self.get_event(event_key)
         matches = tba.get_event_matches(event_key)
         for match_info in matches:
@@ -75,6 +75,13 @@ class DatabaseHelper:
                 for team in match_info['alliances'][alliance]['team_keys']:
                     match.add_team(self.get_team(int(team[3:])).number)
 
+        teams = tba.get_event_teams(event_key)
+        for team_info in teams:
+            team = self.get_team(team_info["team_number"], update_tba_on_create=False)
+            team.info = team_info
+            event.add_team(team.number)
+
+        sql_db.session.commit()
         return event
 
     def get_all_events(self):
@@ -84,6 +91,9 @@ class DatabaseHelper:
     def get_events_for_year(self, year):
         from server.db.models import Event
         return Event.query.filter_by(year=year).all()
+
+    def get_event_teams(self, event_key):
+        return list(self.get_event(event_key).teams)
 
     # Match
 
@@ -158,3 +168,4 @@ if __name__ == "__main__":
     # sql_db.create_all()
 
     db = DatabaseHelper()
+    db.setup_event_from_tba('2017onham')
