@@ -53,3 +53,12 @@ class ScoutingEntry(db.Model):
         return '<ScoutingEntry {0}:{1}>'.format(self.event, self.team_number)
 
 
+class AnalysisEntry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    event = db.Column(db.String(16), db.ForeignKey('event.key'))
+    team_number = db.Column(db.Integer, db.ForeignKey('team.number'))
+    value = db.Column(JSON)
+    matches = db.Column(ARRAY(db.Integer, db.ForeignKey('match.id')))
+
+    def __repr__(self):
+        return '<AnalysisEntry {0}:{1}>'.format(self.event, self.team_number)
