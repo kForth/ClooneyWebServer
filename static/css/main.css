@@ -1,0 +1,14 @@
+.navbar {
+    background: #37474F;
+    color: #ECEFF1;
+}
+
+.content {
+    position: fixed;
+    left: 0;
+    top: 50px;
+    width: 100%;
+    height: calc(100% - 50px);
+    margin: 0;
+    padding: 0;
+}
