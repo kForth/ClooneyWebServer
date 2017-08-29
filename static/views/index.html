@@ -1,0 +1,35 @@
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Clooney</title>
+    <link rel="stylesheet" type="text/css" href="../../static/node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/main.css">
+
+</head>
+<body ng-controller="ApplicationController">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                Clooney
+            </a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Link</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="content" ng-view ng-cloak></div>
+
+<script src="../../static/node_modules/angular/angular.min.js"></script>
+<script src="../../static/node_modules/angular-cookies/angular-cookies.min.js"></script>
+<script src="../../static/node_modules/angular-route/angular-route.min.js"></script>
+<script src="../../static/node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="../../static/node_modules/angular-md5/angular-md5.min.js"></script>
+<script src="../../static/node_modules/chart.js/dist/Chart.js"></script>
+<script src="../../static/node_modules/angular-chart.js/angular-chart.js"></script>
+<script src="../../static/controllers/app.js"></script>
+</body>
+</html>

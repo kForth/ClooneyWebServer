@@ -2,3 +2,6 @@
 env/
 .idea/
 *.pyc
+static/node_modules/
+static/yarn.lock
+static/package.json
