@@ -1,0 +1,29 @@
+<link rel="stylesheet" type="text/css" href="../../../static/css/sheet_gen.css">
+
+<div class="col-xs-12 col-sm-6 sheet_area">
+    <canvas class="sheet_canvas">
+
+    </canvas>
+</div>
+<div class="col-xs-12 col-sm-6 info_area">
+    <div class="option_bar">
+        <ul class="option_list">
+            <li class="option_list_item" uib-dropdown is-open="add_field_status.isopen">
+                <button id="add-item-button" class="option_item_icon btn btn-default" uib-dropdown-toggle type="button">
+                    <span class="glyphicon glyphicon-plus"></span> Add Field
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="add-item-button">
+                    <li role="menuitem">asdf</li>
+                    <li role="menuitem">fdsdf</li>
+                    <li role="menuitem">asdfery</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="field_area">
+        <div class="field_section" ng-repeat="field in data">
+            <div class="fieldSettingsDirective" field="field"></div>
+        </div>
+    </div>
+</div>
