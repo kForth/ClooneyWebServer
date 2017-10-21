@@ -38,6 +38,14 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
                 templateUrl: '../../../static/views/analysis/table.html',
                 controller: 'OprsController'
             })
+            .when('/pred/:team_number', {
+                templateUrl: '../../../static/views/analysis/table.html',
+                controller: 'PredictionController'
+            })
+            .when('/pred', {
+                templateUrl: '../../../static/views/analysis/table.html',
+                controller: 'PredictionController'
+            })
             .when('/analysis', {
                 templateUrl: '../../../static/views/analysis/graphs.html',
                 controller: 'SingleAnalysisController'

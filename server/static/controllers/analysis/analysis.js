@@ -338,6 +338,32 @@ app.controller('OprsController', function ($scope, $cookies, $http) {
         });
 });
 
+app.controller('PredictionController', function ($scope, $cookies, $http, $routeParams) {
+    $scope.event = {
+        name: $cookies.get('selected-event-name'),
+        key: $cookies.get('selected-event-id')
+    };
+
+    var httpSuffix = "";
+    if ($routeParams.team_number != undefined) {
+        httpSuffix += "/" + $routeParams.team_number;
+        $scope.highlight_val = $routeParams.team_number;
+    }
+
+    $http.get("/api/headers/" + $scope.event.key + "/predictions", {cache: true})
+        .then(function (response) {
+            $scope.headers = response.data;
+        });
+
+    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/predictions' + httpSuffix, {cache: true})
+        .then(function (response) {
+            $scope.data = response.data;
+            if (response.data.length < 1) {
+                angular.element(document.querySelector("#table"))[0].innerHTML = "No predictions available."
+            }
+        });
+});
+
 app.controller('RawController', function ($scope, $cookies, $http, $sce) {
     $scope.event = {
         name: $cookies.get('selected-event-name'),

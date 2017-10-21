@@ -115,9 +115,7 @@ class InfoServer(object):
         print("Updating Event: {}".format(event_id))
         from server.models import Event
         tba_info = self.tba.get_event(event_id)
-
         print(tba_info)
-
         entry = Event.query.filter_by(id=event_id).first()
         if entry:
             entry.set_tba_info(tba_info)

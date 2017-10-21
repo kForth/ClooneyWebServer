@@ -9,15 +9,19 @@ class Event(db.Model):
     id = db.Column(db.VARCHAR(32), primary_key=True)
     tba_info = db.Column(db.TEXT, nullable=True)
     team_list = db.Column(db.TEXT, nullable=True)
+    matches = db.Column(db.TEXT, nullable=True)
 
-    def __init__(self, id: str, tba_info: dict, team_list: list):
+    def __init__(self, id: str, tba_info: dict, team_list: list, matches: list):
         self.id = id
         self.tba_info = tba_info
         self.team_list = team_list
+        self.matches = matches
         if type(self.tba_info) is dict:
             self.tba_info = json.dumps(self.tba_info)
         if type(self.team_list) is list:
             self.team_list = json.dumps(self.team_list)
+        if type(self.matches) is list:
+            self.matches = json.dumps(self.matches)
 
     def set_tba_info(self, info: dict):
         self.tba_info = json.dumps(info)
@@ -25,11 +29,17 @@ class Event(db.Model):
     def set_team_list(self, teams: list):
         self.team_list = json.dumps(teams)
 
+    def set_matches(self, matches: list):
+        self.matches = json.dumps(matches)
+
     def get_team_list(self):
         return json.loads(self.team_list)
 
     def get_tba_info(self):
         return json.loads(self.tba_info)
+
+    def get_matches(self):
+        return json.loads(self.matches)
 
     def __repr__(self):
         return '<Event {})>'.format(self.id)
@@ -38,7 +48,8 @@ class Event(db.Model):
         return {
             "id": self.id,
             "tba_info": json.loads(self.tba_info),
-            "team_list": json.loads(self.team_list)
+            "team_list": json.loads(self.team_list),
+            "matches": json.loads(self.matches)
         }
 
 
@@ -104,6 +115,11 @@ class AnalysisEntry(db.Model):
 
     def get_data(self):
         return json.loads(self.data)
+
+    def set_data(self, data):
+        self.data = data
+        if type(self.data) is dict:
+            self.data = json.dumps(self.data)
 
     def __repr__(self):
         return '<Entry {0}: {1} {2})>'.format(self.team, self.event, self.key)

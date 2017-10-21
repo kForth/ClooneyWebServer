@@ -47,7 +47,7 @@ class OprCalculator(object):
         return list(np.unique(teams))
 
     @staticmethod
-    def get_score_sums(match_matrix: list, teams: list, key: str):
+    def get_score_sums(match_matrix: list, teams: list):
         scores = [int(0)] * len(teams)
         for i in range(len(match_matrix)):
             match = match_matrix[i]
@@ -56,8 +56,8 @@ class OprCalculator(object):
                     teams.append(int(match[j]))
                     teams.sort()
                     scores.insert(teams.index(match[j]), 0)
-                if type(match[-1][key]) in [int, float, bool]:
-                    scores[teams.index(match[j])] += match[-1][key]
+                if type(match[-1]) in [int, float, bool]:
+                    scores[teams.index(match[j])] += match[-1]
         return teams, scores
 
     @staticmethod
@@ -98,18 +98,25 @@ class OprCalculator(object):
         start_time = time.time()
         solve_time_accum = 0
         matches = self.get_matches_from_tba(event_id)
+        if len(matches) < 1:
+            return []
         teams = self.get_team_list_from_matches(event_id, matches)
         interactions = self.get_interaction_matrix(matches, teams)
         opr_list = {}
-
-        for score_type in matches[0][-1].keys():
+        for score_type in list(matches[0][-1].keys()) + ['teleGears']:
             if len(matches) == 0 or score_type in ["tba_rpEarned"]:
                 continue
             temp_matches = []
             for m in matches:
-                if type(m[-1][score_type]) in [int, float]:
-                    temp_matches += [m[:-1] + [round(1.0 * float(m[-1][score_type]), 2)]]
-            dump, scores = self.get_score_sums(matches, list(teams), score_type)
+                if score_type == "teleGears":
+                    val = round(1.0 * float(m[-1]["teleopRotorPoints"]), 2)
+                    val = [0, 2, 6, 12, 13][int(val / 40.0)]
+                    temp_matches += [m[:-1] + [val]]
+                elif type(m[-1][score_type]) in [int, float]:
+                    val = round(1.0 * float(m[-1][score_type]), 2)
+                    temp_matches += [m[:-1] + [val]]
+
+            dump, scores = self.get_score_sums(temp_matches, list(teams))
 
             solve_start_time = time.time()
             if minimize:
@@ -148,11 +155,11 @@ if __name__ == "__main__":
     tba = BlueAllianceAPI("Clooney", "Clooney", "2")
 
     events = tba.get_events("2017")
-    target_week = 3 #zero index
-    event_keys = []
-    for event in events:
-        if event["week"] is not None and event["week"] == target_week:
-            event_keys.append(event["key"])
+    target_week = 7 #zero index
+    event_keys = ['2017dal']
+    # for event in events:
+    #     if event["week"] is not None and event["week"] < target_week:
+    #         event_keys.append(event["key"])
 
     opr = OprCalculator(tba)
 

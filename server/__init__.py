@@ -8,7 +8,6 @@ from server.data import DataServer
 from server.db import Database
 from server.stats import StatsServer
 from server.info import InfoServer
-from server.receiver import ReceiverServer
 from server.users import UsersServer
 from server.sql import SqlServer
 
@@ -31,7 +30,7 @@ class ClooneyServer(object):
         selfapi_manager = APIManager(app, flask_sqlalchemy_db=sql_db)
         selfapi_manager.create_api(OprEntry, methods=['GET'], results_per_page=-1, url_prefix="/api/sql/")
 
-        self.tba = BlueAllianceAPI('kestin_goforth', 'Clooney', '1.0', enable_caching=True, cache_db_path='./tba.json')
+        self.tba = BlueAllianceAPI('kestin_goforth', 'Clooney', '1.0', enable_caching=False, cache_db_path='./tba.json')
         self.db = Database()
 
         self._register_views()
@@ -39,7 +38,6 @@ class ClooneyServer(object):
         self.stats_server = StatsServer(self._add, self.db, self.sql_db, self.tba, "/api")
         self.info_server = InfoServer(self._add, self.db, self.sql_db, self.tba, "/api")
         self.sql_server = SqlServer(self._add, self.sql_db, "/api/sql")
-        self.recv_server = ReceiverServer(self._add, self.tba, self.db, url_prefix="/api/data")
         self.user_server = UsersServer(self._add, url_prefix="/user")
 
         self.run = self.app.run

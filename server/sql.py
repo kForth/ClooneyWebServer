@@ -33,6 +33,8 @@ class SqlServer(object):
             else:
                 raise KeyError('ID Not found in DB')
         except KeyError as _:
+            if 'id' in data.keys():
+                del data['id']
             entry = ScoutingEntry(**data)
             self.db.session.add(entry)
         self.db.session.commit()

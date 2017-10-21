@@ -8,7 +8,12 @@
         <div class="info-block">
             <div class="event-name" ng-cloak>
                 {{ event.name }}
-                <small class="event-key">{{ event.key }}</small>
+                <small class="event-key">
+                    {{ event.key }}
+                    <a href="http://thebluealliance.com/event/{{ event.key }}" target="_blank">
+                        <span class="glyphicon glyphicon-link"></span>
+                    </a>
+                </small>
             </div>
         </div>
     </div>
@@ -20,7 +25,7 @@
                 <th></th>
                 <th ng-repeat="header in headers" class="data-header clickable {{ header.class }}"
                     ng-click="sortData($event, header.sort_id)">
-                    {{ header.title }}
+                    <span uib-tooltip="{{ header.tooltip }}" tooltip-placement="top">{{ header.title }}</span>
                     <span ng-show="sorts.indexOf(header.sort_id) > -1"
                           class="glyphicon glyphicon-chevron-up">{{ sorts.indexOf(header.sort_id)+1 }}</span>
                     <span ng-show="sorts.indexOf('-' + header.sort_id) > -1"
@@ -37,7 +42,7 @@
                     <b>{{ $index+1 }}</b>
                 </td>
                 <td ng-repeat="header in headers" class="data-box {{ header.data_class }}"
-                    ng-class="{'highlight-green': colours[elem.a] % 4 == 1, 'highlight-red': colours[elem.a] % 4 == 2, 'highlight-blue': colours[elem.a] % 4 == 3}">
+                    ng-class="{'highlight-green': colours[elem.a] % 4 == 1 || elem[header.sort_id] == highlight_val, 'highlight-red': colours[elem.a] % 4 == 2, 'highlight-blue': colours[elem.a] % 4 == 3}">
                     <a ng-show="header.title === 'Team'" href="#/team/{{ elem[header.sort_id] }}" class="team-link"
                        ng-bind="elem[header.sort_id]">
                     </a>
