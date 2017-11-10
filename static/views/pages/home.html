@@ -1,1 +1,7 @@
-<h1>Clooney</h1>
+<div class="inner-content">
+    <div class="event-select-holder form-group col-xs-12 col-sm-6 col-md-4 col-xs-offset-0 col-sm-offset-3 col-md-offset-4">
+        <label for="event_select">Select Event:</label>
+        <input id="event_select" type="text" class="form-control" ng-model="selected_event" uib-typeahead="event.name as e for event in events" placeholder="Search Events">
+        <button class="btn btn-primary btn-block" ng-click="select_event()">GO</button>
+    </div>
+</div>
