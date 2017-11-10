@@ -5,3 +5,4 @@ env/
 static/node_modules/*
 static/yarn.lock
 static/package.json
+db.json
