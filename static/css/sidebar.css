@@ -1,0 +1,43 @@
+.sidebar {
+    height: calc(100% - 50px);
+    width: 200px;
+    position: fixed;
+    overflow-y: scroll;
+    left: 0;
+    top: 50px;
+    border-right: 1px solid #ddd;
+}
+
+.sidebar-list-bottom {
+    width: inherit;
+    position: absolute;
+    bottom: 0;
+}
+
+.sidebar-item {
+    margin: 0;
+    font-weight: 400;
+    border-bottom: 1px solid #ddd;
+    padding: 8px 5px;
+}
+
+.sidebar-item .active {
+    background: #ddd;
+    font-size: 60px;
+}
+
+.sidebar-header {
+    margin: 0;
+    font-weight: 500;
+    padding: 5px 5px 0 5px;
+}
+
+.sidebar-header-bordered {
+    border-bottom: 1px solid #ddd;
+}
+
+.sidebar-input {
+    width: calc(100% - 10px);
+    margin: 0 5px 5px;
+    padding-left: 5px;
+}
