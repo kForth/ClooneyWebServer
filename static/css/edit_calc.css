@@ -1,0 +1,22 @@
+.calculation-list-holder {
+}
+
+.calculation-list {
+    border: 1px solid #ddd;
+}
+
+.calculation-list tr {
+    height: 20px;
+    padding: 2px;
+}
+
+.calculation-list input, .calculation-list select {
+    padding: 2px;
+    height: 20px;
+}
+
+.calculation-list-item {
+}
+
+.calculation-list-item .selected {
+}

@@ -1,0 +1,37 @@
+<div ng-include="'../../../../static/views/sidebar.html'"></div>
+<link rel="stylesheet" type="text/css" href="../../../../static/css/edit_calc.css">
+
+<div class="inner-content-with-sidebar" ng-controller="EditCalculationsController">
+    <div class="col-xs-12">
+        <b class="page-header">Edit Calculations</b>
+    </div>
+
+    <div class="calculation-list-holder col-xs-12">
+        <table class="table table-striped calculation-list">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Key</th>
+                    <th>Formula</th>
+                    <th>Data Type</th>
+                </tr>
+            </thead>
+            <tbody ui-sortable ng-model="calculations">
+                <tr ng-repeat="calc in calculations">
+                    <td><span class="glyphicon glyphicon-menu-hamburger" style="font-size: 12px; padding: 2px 0 5px 5px; color: #999"></span></td>
+                    <td><input class="form-control" type="text" ng-model="calc.name"></td>
+                    <td><input class="form-control" type="text" ng-model="calc.key"></td>
+                    <td><input class="form-control" type="text" ng-model="calc.formula"></td>
+                    <td>
+                        <select class="form-control" ng-model="calc.type">
+                            <option>int</option>
+                            <option>float</option>
+                            <option>boolean</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

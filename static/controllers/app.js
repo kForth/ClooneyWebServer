@@ -9,6 +9,9 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             .when('/sheets', {
                 templateUrl: '../../../static/views/pages/create_sheets.html',
                 controller: 'SheetCreatorController'
+            .when('/s/c', {
+                templateUrl: '../../../static/views/pages/config/edit_calculations.html',
+                controller: 'ConfigController'
             })
             .otherwise({
                 redirectTo: '/'
