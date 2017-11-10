@@ -1,0 +1,33 @@
+<table id="table table-striped" class="table info-block" style="font-size: 14px" ng-cloak multi-sort-table highlight-table>
+            <thead>
+            <tr>
+                <th></th>
+                <th ng-repeat="header in headers" class="data-header clickable {{ header.class }}"
+                    ng-click="sortData($event, header.sort_id)">
+                    <span uib-tooltip="{{ header.tooltip }}" tooltip-placement="top">{{ header.title }}</span>
+                    <span ng-show="sorts.indexOf(header.sort_id) > -1"
+                          class="glyphicon glyphicon-sort">{{ sorts.indexOf(header.sort_id)+1 }}</span>
+                    <span ng-show="sorts.indexOf('-' + header.sort_id) > -1"
+                          class="glyphicon glyphicon-sort-by-order">{{ sorts.indexOf("-" + header.sort_id)+1 }}</span>
+                    <span ng-show="sorts.indexOf(header.sort_id) < 0 && sorts.indexOf(header.sort_id) < 0"
+                          class="glyphicon glyphicon-sort-by-order-alt"> </span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="elem in data | orderBy:sorts">
+                <td ng-click="cycleColour(elem.a)"
+                    ng-class="{'highlight-green': colours[elem.a] % 4 == 1, 'highlight-red': colours[elem.a] % 4 == 2, 'highlight-blue': colours[elem.a] % 4 == 3}">
+                    <b>{{ $index+1 }}</b>
+                </td>
+                <td ng-repeat="header in headers" class="data-box {{ header.data_class }}"
+                    ng-class="{'highlight-green': colours[elem.a] % 4 == 1 || elem[header.sort_id] == highlight_val, 'highlight-red': colours[elem.a] % 4 == 2, 'highlight-blue': colours[elem.a] % 4 == 3}">
+                    <a ng-show="header.title === 'Team'" href="#/team/{{ elem[header.sort_id] }}" class="team-link"
+                       ng-bind="elem[header.sort_id]">
+                    </a>
+                    <span ng-show="header.title != 'Team'" ng-bind="elem[header.sort_id]"
+                          uib-tooltip="{{ header.title }}: {{ elem[header.sort_id + 'tooltip'] }}" tooltip-placement="top"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
