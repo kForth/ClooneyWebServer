@@ -31,6 +31,74 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             });
     });
 
+app.directive('highlightTable', function ($location, $cookies) {
+    function link(scope) {
+        // var cookie_prefix = $location.$$path.replace("/", "");
+        try{
+            scope.colours = JSON.parse($cookies.get("highlighted-rows"));
+        }
+        catch(ex){}
+        if(scope.colours === undefined)
+            scope.colours = {};
+
+        scope.cycleColour = function(index){
+            if(scope.colours[index] === undefined)
+                scope.colours[index] = 0;
+            scope.colours[index]++;
+            $cookies.put("highlighted-rows", JSON.stringify(scope.colours));
+        };
+    }
+
+    return {
+        link: link,
+        restrict: 'A'
+    };
+});
+
+app.directive('multiSortTable', function ($location, $cookies) {
+
+    function link(scope) {
+        var cookie_prefix = $location.$$path.replace("/", "");
+        try{
+            scope.sorts = JSON.parse($cookies.get(cookie_prefix + '-table-sort'));
+        }
+        catch(ex){}
+
+        if(scope.sorts === undefined)
+            scope.sorts = [];
+
+        scope.sortData = function (event, key) {
+            if(event.shiftKey){
+                scope.sorts = [];
+                // if(scope.sorts.indexOf("-" + key) > -1)
+                //     scope.sorts.splice(scope.sorts.indexOf("-" + key), 1);
+                // if(scope.sorts.indexOf(key) > -1)
+                //     scope.sorts.splice(scope.sorts.indexOf(key), 1);
+            }
+            if(scope.sorts.indexOf("-" + key) > -1){
+                var index = scope.sorts.indexOf("-" + key);
+                // scope.sorts.splice(index, 1);
+                scope.sorts[index] = key;
+            }
+            else if(scope.sorts.indexOf(key) > -1){
+                var index = scope.sorts.indexOf(key);
+                scope.sorts.splice(index, 1);
+                // scope.sorts[index] = "-" + key;
+            }
+            else{
+                scope.sorts.push("-" + key);
+            }
+
+            $cookies.put(cookie_prefix + '-table-sort', JSON.stringify(scope.sorts));
+        };
+    }
+
+    return {
+        link: link,
+        restrict: 'A'
+    };
+});
+
 app.controller('ApplicationController', function ($scope, $cookies) {
     if($cookies.get('tracked_event') != undefined){
         $scope.tracked_event = $cookies.get('tracked_event');
