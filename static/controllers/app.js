@@ -46,15 +46,16 @@ var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngCook
 app.directive('highlightTable', function ($location, $cookies) {
     function link(scope) {
         // var cookie_prefix = $location.$$path.replace("/", "");
-        try{
+        try {
             scope.colours = JSON.parse($cookies.get("highlighted-rows"));
         }
-        catch(ex){}
-        if(scope.colours === undefined)
+        catch (ex) {
+        }
+        if (scope.colours === undefined)
             scope.colours = {};
 
-        scope.cycleColour = function(index){
-            if(scope.colours[index] === undefined)
+        scope.cycleColour = function (index) {
+            if (scope.colours[index] === undefined)
                 scope.colours[index] = 0;
             scope.colours[index]++;
             $cookies.put("highlighted-rows", JSON.stringify(scope.colours));
@@ -71,33 +72,26 @@ app.directive('multiSortTable', function ($location, $cookies) {
 
     function link(scope) {
         var cookie_prefix = $location.$$path.replace("/", "");
-        try{
+        try {
             scope.sorts = JSON.parse($cookies.get(cookie_prefix + '-table-sort'));
         }
-        catch(ex){}
+        catch (ex) {
+        }
 
-        if(scope.sorts === undefined)
+        if (scope.sorts === undefined)
             scope.sorts = [];
 
         scope.sortData = function (event, key) {
-            if(event.shiftKey){
+            if (event.shiftKey) {
                 scope.sorts = [];
-                // if(scope.sorts.indexOf("-" + key) > -1)
-                //     scope.sorts.splice(scope.sorts.indexOf("-" + key), 1);
-                // if(scope.sorts.indexOf(key) > -1)
-                //     scope.sorts.splice(scope.sorts.indexOf(key), 1);
             }
-            if(scope.sorts.indexOf("-" + key) > -1){
-                var index = scope.sorts.indexOf("-" + key);
-                // scope.sorts.splice(index, 1);
-                scope.sorts[index] = key;
+            if (scope.sorts.indexOf("-" + key) > -1) {
+                scope.sorts[scope.sorts.indexOf("-" + key)] = key;
             }
-            else if(scope.sorts.indexOf(key) > -1){
-                var index = scope.sorts.indexOf(key);
-                scope.sorts.splice(index, 1);
-                // scope.sorts[index] = "-" + key;
+            else if (scope.sorts.indexOf(key) > -1) {
+                scope.sorts.splice(scope.sorts.indexOf(key), 1);
             }
-            else{
+            else {
                 scope.sorts.push("-" + key);
             }
 
@@ -112,7 +106,7 @@ app.directive('multiSortTable', function ($location, $cookies) {
 });
 
 app.controller('ApplicationController', function ($scope, $cookies) {
-    if($cookies.get('tracked_event') != undefined){
+    if ($cookies.get('tracked_event') != undefined) {
         $scope.tracked_event = $cookies.get('tracked_event');
     }
 });
@@ -122,13 +116,13 @@ app.controller('NavbarController', function ($scope) {
 });
 
 app.controller('SidebarController', function ($scope, $cookies, $location) {
-    if($cookies.get('tracked_team') != undefined){
+    if ($cookies.get('tracked_team') != undefined) {
         $scope.tracked_team = $cookies.get('tracked_team');
     }
-    if($cookies.get('tracked_event') != undefined){
+    if ($cookies.get('tracked_event') != undefined) {
         $scope.event_name = $cookies.get('tracked_event');
     }
-    $scope.nav = function(path){
+    $scope.nav = function (path) {
         $location.path(path);
         $cookies.put('tracked_team', $scope.tracked_team);
     }
@@ -136,17 +130,20 @@ app.controller('SidebarController', function ($scope, $cookies, $location) {
 
 app.controller('HomeController', function ($scope, $location, $cookies) {
     $scope.selected_event = "";
-    $scope.events = [{'key': '2017onwa', 'name': 'Waterloo'}, {'key': '2017onham', 'name': 'McMaster'}, {'key': '2017obar', 'name': 'Georgian'}]
+    $scope.events = [{'key': '2017onwa', 'name': 'Waterloo'}, {
+        'key': '2017onham',
+        'name': 'McMaster'
+    }, {'key': '2017obar', 'name': 'Georgian'}];
 
-    if($cookies.get('tracked_event') != undefined){
+    if ($cookies.get('tracked_event') != undefined) {
         $scope.selected_event = $cookies.get('tracked_event').name;
     }
 
-    $scope.select_event = function(){
-        if($scope.selected_event == "") return;
+    $scope.select_event = function () {
+        if ($scope.selected_event == "") return;
         console.log($scope.selected_event);
-        $scope.events.forEach(function(elem){
-            if(elem.name === $scope.selected_event){
+        $scope.events.forEach(function (elem) {
+            if (elem.name === $scope.selected_event) {
                 $cookies.put('tracked_event', elem.key);
                 $scope.tracked_event = elem.key;
                 $location.path("/a");
@@ -177,10 +174,10 @@ app.controller('EntriesController', function ($scope) {
 
 app.controller('EditCalculationsController', function ($scope) {
     $scope.calculations = [
-        {'name': 'a', 'key': 'a', 'formula':'x*x', 'type': 'float'},
-        {'name': 'b', 'key': 'b', 'formula':'x+y', 'type': 'float'},
-        {'name': 'c', 'key': 'c', 'formula':'x+y*x-y/x/x', 'type': 'float'},
-        {'name': 'd', 'key': 'd', 'formula':'x+2', 'type': 'float'}
+        {'name': 'a', 'key': 'a', 'formula': 'x*x', 'type': 'float'},
+        {'name': 'b', 'key': 'b', 'formula': 'x+y', 'type': 'float'},
+        {'name': 'c', 'key': 'c', 'formula': 'x+y*x-y/x/x', 'type': 'float'},
+        {'name': 'd', 'key': 'd', 'formula': 'x+2', 'type': 'float'}
     ];
 });
 

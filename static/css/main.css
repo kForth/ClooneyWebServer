@@ -34,7 +34,7 @@ a:hover{
     width: calc(100% - 200px);
 }
 
-.event-select-holder {
+.info-holder {
     font-size: 16px;
     margin-top: 60px;
     padding: 20px 30px 30px 30px;
@@ -42,8 +42,8 @@ a:hover{
     border-radius: 5px;
 }
 
-.event-select-holder button {
-    margin-top: 5px;
+.info-holder input {
+    margin-bottom: 5px;
 }
 
 .page-header {
