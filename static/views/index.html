@@ -8,18 +8,7 @@
 </head>
 <body ng-controller="ApplicationController">
 
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-                Clooney
-            </a>
-        </div>
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Link</a></li>
-        </ul>
-    </div>
-</nav>
+<div ng-include="'../../static/views/navbar.html'"></div>
 
 <div class="content" ng-view ng-cloak></div>
 
