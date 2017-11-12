@@ -118,9 +118,8 @@ class TBA(object):
         self.get_district_rankings = lambda district_id: self._get_district(district_id, '/rankings')
 
     def _get(self, url):
-        headers = self.__headers
-        if self.__use_cache and url in self._cache.keys():
-            print("Using IfModifiedSince header {}".format(self._cache[url]['date']))
+        headers = dict(self.__headers)
+        if self.__use_cache and url in list(self._cache.keys()):
             headers['If-Modified-Since'] = self._cache[url]['date']
         result = requests.get(self.tba_url + url, headers=headers)
         if result.status_code == 200:
@@ -130,12 +129,10 @@ class TBA(object):
             return result.json()
         elif result.status_code == 304:
             if self.__use_cache and url in self._cache.keys():
-                return self._cache[url]['json']
+                    return self._cache[url]['json']
             else:
-                print(url)
                 raise NotModifiedException('Url ({0}) not modified since: {1}'.format(url, result.headers['Last-Modified']))
         else:
-            print(url)
             raise BadResponseCodeException('Url ({0}) had bad Response Code: {1}'.format(url, result.status_code))
 
 
