@@ -62,6 +62,8 @@ class DatabaseInteractor:
                 self.commit()
                 if use_tba:
                     self._tba.update_event_details(data['key'])
+                    self._tba.update_event_teams(data['key'])
+                    self._tba.update_event_matches(data['key'])
                 return make_response(jsonify(), 200)
             else:
                 return make_response(jsonify(), 409)
