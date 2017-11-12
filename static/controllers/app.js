@@ -105,12 +105,49 @@ app.directive('multiSortTable', function ($location, $cookies) {
     };
 });
 
-app.controller('ApplicationController', function ($scope, $cookies) {
-    $scope.isNavCollapsed = true;
+app.controller('ApplicationController', function ($scope, $cookies, $location) {
+    $scope.tracking_input_data = {
+        'event': '',
+        'team': ''
+    };
 
     if ($cookies.get('tracked_event') != undefined) {
         $scope.tracked_event = $cookies.get('tracked_event');
     }
+
+    $scope.isNavCollapsed = true;
+    $scope.tracked_event_okay = false;
+    $scope.select_event_button = function () {
+        console.log($scope.tracking_input_data.event);
+        events.forEach(function (e) {
+            if (e.key === $scope.tracking_input_data.event || e.name === $scope.tracking_input_data.event) {
+                $scope.tracked_event = e.key;
+                $scope.tracked_event_okay = true;
+                $location.path('/a');
+            }
+        });
+    };
+
+    var events = [
+        {
+            'key': '2017onwat',
+            'name': '2017 Waterloo'
+        },
+        {
+            'key': '2017onham',
+            'name': '2017 McMaster'
+        },
+        {
+            'key': '2017onbar',
+            'name': '2017 Georgian'
+        }
+    ];
+    $scope.events = [];
+    events.forEach(function (e) {
+        $scope.events.push(e.key);
+        $scope.events.push(e.name);
+    });
+    $scope.events.sort();
 });
 
 
