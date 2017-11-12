@@ -163,7 +163,6 @@ app.controller('AnalysisEntriesController', function ($scope) {
 });
 
 app.controller('SettingsHomeController', function ($scope) {
-
 });
 
 app.controller('SettingsCalculationsController', function ($scope) {
@@ -225,6 +224,7 @@ app.controller('SetupEventController', function ($scope, $location, $http) {
                 if(resp.status === 200){
                     $scope.update_available_events();
                     $scope.tracked_event = event;
+                    $scope.tracked_event_okay = true;
                     $scope.tracking_input_data.event = event;
                     $location.path('/s');
                 }

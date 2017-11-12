@@ -51,6 +51,7 @@ class DatabaseInteractor:
                     'entries': [],
                     'info': {
                         'data': {} if use_tba else {
+                            'is_tba': False,
                             'name': data['name'],
                             'short_name': data['short_name']
                         },

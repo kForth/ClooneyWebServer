@@ -21,6 +21,7 @@ class TbaInteractor:
     def update_event_details(self, key):
         event = self._db.get_event(key)
         event['info']['data'] = self._tba.get_event_info(key)
+        event['info']['data']['is_tba'] = True
         self._db.set_event(key, event)
         self._db.commit()
 
