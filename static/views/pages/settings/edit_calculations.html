@@ -1,7 +1,7 @@
-<div ng-include="'../../../../static/views/sidebar.html'"></div>
+<div ng-include="'../../../static/views/sidebars/settings_sidebar.html'"></div>
 <link rel="stylesheet" type="text/css" href="../../../../static/css/edit_calc.css">
 
-<div class="inner-content-with-sidebar" ng-controller="EditCalculationsController">
+<div class="inner-content-with-sidebar">
     <div class="col-xs-12">
         <b class="page-header">Edit Calculations</b>
     </div>
@@ -10,11 +10,11 @@
         <table class="table table-striped calculation-list">
             <thead>
                 <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Key</th>
-                    <th>Formula</th>
-                    <th>Data Type</th>
+                    <th class="col-xs-1"></th>
+                    <th class="col-xs-2">Name</th>
+                    <th class="col-xs-2">Key</th>
+                    <th class="col-xs-5">Formula</th>
+                    <th class="col-xs-2">Data Type</th>
                 </tr>
             </thead>
             <tbody ui-sortable ng-model="calculations">

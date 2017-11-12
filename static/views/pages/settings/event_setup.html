@@ -1,0 +1,25 @@
+<div class="inner-content">
+    <div class="info-holder col-xs-12 col-sm-8 col-md-6 col-xs-offset-0 col-sm-offset-2 col-md-offset-3">
+        <h2>Event Setup</h2>
+
+        <div ng-if="setup_step == 0">
+            <button class="btn btn-primary btn-block btn-lg" ng-click="setup_with_tba_button()">Setup with TBA</button>
+            <button class="btn btn-default btn-block" ng-click="setup_manually_button()">Setup Manually</button>
+        </div>
+        <div ng-if="setup_step == 1">
+            <label class="">Search Events:</label>
+            <input type="text" class="form-control" ng-model="event_search_input" placeholder="eg. 2017 Georgian College, 2017onham" uib-typeahead="event for event in events | filter:$viewValue | limitTo:8">
+            <button class="btn btn-primary btn-block" ng-class="{'disabled': events.indexOf(event_search_input) < 0}" ng-click="setup_tba_event()">Setup</button>
+        </div>
+        <div ng-if="setup_step == 2">
+            <br>
+            <div class="form-group row" ng-repeat="input in default_data">
+                <label for="" class="col-xs-4 col-form-label">{{ input.label }}</label>
+                <div class="col-xs-8">
+                    <input class="form-control" type="{{ input.type }}" value="{{ input.default_value }}" ng-model="input_data[input.id]">
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block" ng-class="{'disabled': false}" ng-click="submit_manual_data()">Submit</button>
+        </div>
+    </div>
+</div>

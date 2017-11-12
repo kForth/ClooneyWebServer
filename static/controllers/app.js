@@ -6,25 +6,37 @@ var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngCook
                 templateUrl: '../../../static/views/pages/home.html',
                 controller: 'HomeController'
             })
-            .when('/a', {
-                templateUrl: '../../../static/views/pages/averages.html',
+            .when('/e', {
+                templateUrl: '../../../static/views/pages/event/home.html',
+                controller: 'EventHomeController'
+            })
+            .when('/e/a', {
+                templateUrl: '../../../static/views/pages/event/averages.html',
                 controller: 'AveragesController'
             })
-            .when('/i', {
-                templateUrl: '../../../static/views/pages/insights.html',
+            .when('/e/i', {
+                templateUrl: '../../../static/views/pages/event/insights.html',
                 controller: 'InsightsController'
             })
-            .when('/m', {
-                templateUrl: '../../../static/views/pages/matches.html',
+            .when('/e/m', {
+                templateUrl: '../../../static/views/pages/event/matches.html',
                 controller: 'MatchesController'
             })
-            .when('/e', {
-                templateUrl: '../../../static/views/pages/entries.html',
+            .when('/e/e', {
+                templateUrl: '../../../static/views/pages/event/entries.html',
                 controller: 'EntriesController'
             })
+            .when('/s', {
+                templateUrl: '../../../static/views/pages/settings/event_settings.html',
+                controller: 'EventSettingsController'
+            })
             .when('/s/c', {
-                templateUrl: '../../../static/views/pages/config/edit_calculations.html',
-                controller: 'ConfigController'
+                templateUrl: '../../../static/views/pages/settings/edit_calculations.html',
+                controller: 'EditCalculationsController'
+            })
+            .when('/setup/:setup_step?', {
+                templateUrl: '../../../static/views/pages/settings/event_setup.html',
+                controller: 'EventSetupController'
             })
             .otherwise({
                 redirectTo: '/'
@@ -105,6 +117,10 @@ app.controller('ApplicationController', function ($scope, $cookies) {
     }
 });
 
+app.controller('NavbarController', function ($scope) {
+    $scope.isNavCollapsed = false;
+});
+
 app.controller('SidebarController', function ($scope, $cookies, $location) {
     if($cookies.get('tracked_team') != undefined){
         $scope.tracked_team = $cookies.get('tracked_team');
@@ -139,6 +155,10 @@ app.controller('HomeController', function ($scope, $location, $cookies) {
     };
 });
 
+app.controller('EventHomeController', function ($scope) {
+
+});
+
 app.controller('AveragesController', function ($scope) {
 
 });
@@ -164,6 +184,64 @@ app.controller('EditCalculationsController', function ($scope) {
     ];
 });
 
-app.controller('ConfigController', function ($scope) {
+app.controller('EventSettingsController', function ($scope) {
+
+});
+
+app.controller('EventSetupController', function ($scope, $location) {
+    $scope.setup_step = 0;
+    $scope.events = ['2017onwa', '2017onham', '2017onbar', '2017 Waterloo District Event', '2017 McMaster District Event', '2017Georgian College District Event'];
+    $scope.use_tba = false;
+    $scope.default_data =
+        [
+            {
+                "id": "key",
+                "label" : "Event Key",
+                "default_value": "",
+                "type": "text"
+            },
+            {
+                "id": "name",
+                "label" : "Event Name",
+                "default_value": "",
+                "type": "text"
+            },
+            {
+                "id": "short_name",
+                "label" : "Short Name",
+                "default_value": "",
+                "type": "text"
+            }
+        ];
+
+    //Step 0 - Ask if we should use TBA
+    $scope.setup_with_tba_button = function () {
+        $scope.setup_step = 1;
+        $scope.use_tba = true;
+    };
+
+    $scope.setup_manually_button = function () {
+        $scope.setup_step = 2;
+    };
+
+    //Step 1 - (TBA Only) Search for the event.
+    $scope.event_search_input = "";
+    $scope.setup_tba_event = function () {
+        if ($scope.events.indexOf($scope.event_search_input) > -1) {
+            console.log(Scope.event_search_input);
+            //Do auto setup stuff.
+        }
+    };
+
+    //Step 2 - Edit the event information (pre-filled inputs if using TBA)
+    $scope.input_data = {};
+    $scope.submit_manual_data = function(){
+        console.log($scope.input_data);
+        if(true){
+            $location.path('/s/e');
+        }
+    };
+
+
 
 });

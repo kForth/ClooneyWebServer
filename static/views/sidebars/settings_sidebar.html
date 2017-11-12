@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="../../static/css/sidebar.css">
+<link rel="stylesheet" type="text/css" href="../../../static/css/sidebar.css">
 
 <div class="sidebar" ng-controller="SidebarController">
     <ul class="list-unstyled">
@@ -7,40 +7,40 @@
                 {{ event_name }}
             </div>
         </li>
-        <li>
-            <input class="form-control sidebar-input" type="text" placeholder="Highlight Team" ng-model="tracked_team" uib-typeahead="team for team in teams | filter:$viewValue | limitTo:8">
-        </li>
-        <li class="sidebar-header sidebar-header-bordered">
-        </li>
-        <li><a ng-click="nav('/a')">
+        <li><a ng-click="nav('/s/c')">
                 <div class="sidebar-item">
-                    Averages
+                    Edit Calculations
                 </div>
         </a></li>
-        <li><a ng-click="nav('/i')">
-                <div class="sidebar-item">
-                    Insights
+        <li><a ng-click="nav('/s/i')">
+                <div class="sidebar-item"> <!-- Only show this, team list, and matches if it's not a TBA event. -->
+                    Edit Event Info
                 </div>
         </a></li>
-        <li><a ng-click="nav('/m')">
+        <li><a ng-click="nav('/s/t')">
                 <div class="sidebar-item">
-                    Matches
+                    Edit Team List
                 </div>
         </a></li>
-        <li><a ng-click="nav('/e')">
+        <li><a ng-click="nav('/s/m')">
                 <div class="sidebar-item">
-                    Entries
+                    Edit Matches
+                </div>
+        </a></li>
+        <li><a ng-click=""> <!-- Only show this if it's a TBA event. Show a loading popup? -->
+                <div class="sidebar-item">
+                    Update TBA Info
                 </div>
         </a></li>
     </ul>
 
     <ul class="list-unstyled sidebar-list-bottom">
         <li class="sidebar-header sidebar-header-bordered">
-            Settings
+
         </li>
-        <li><a ng-click="nav('/s/c')">
+        <li><a ng-click="nav('/e')">
                 <div class="sidebar-item active">
-                    Edit Calculations
+                    Back to Analysis
                 </div>
         </a></li>
     </ul>
