@@ -13,25 +13,24 @@ a:hover{
 .content {
     margin: 0;
     padding: 0;
-    height: calc(100% - 50px);
 }
 
 .inner-content {
-    position: fixed;
-    left: 0;
-    top: 50px;
-    width: 100%;
     margin: 0;
     padding: 0;
+    width: 100%;
+    position: fixed;
+    top: 50px;
+    left: 0;
 }
 
-.inner-content-with-sidebar {
-    position: fixed;
-    top: 50px;
-    margin: 0;
-    padding: 0;
-    left: 200px;
+.inner-content .with-sidebar {
     width: calc(100% - 200px);
+    left: 200px;
+}
+
+.inner-content .with-nav {
+    top: 500px;
 }
 
 .info-holder {
