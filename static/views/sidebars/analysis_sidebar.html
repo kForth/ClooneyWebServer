@@ -2,37 +2,27 @@
 
 <div class="sidebar" ng-controller="SidebarController">
     <ul class="list-unstyled">
-        <li>
-            <div class="sidebar-header" style="font-size: 16px;">
-                {{ event_name }}
-            </div>
-        </li>
-        <li>
-            <input class="form-control sidebar-input" type="text" placeholder="Highlight Team" ng-model="tracked_team" uib-typeahead="team for team in teams | filter:$viewValue | limitTo:8">
-        </li>
-        <li class="sidebar-header sidebar-header-bordered">
-        </li>
-        <li><a ng-click="nav('/e')">
+        <li><a ng-click="nav('/a')">
                 <div class="sidebar-item">
                     Overview
                 </div>
         </a></li>
-        <li><a ng-click="nav('/e/a')">
+        <li><a ng-click="nav('/a/a')">
                 <div class="sidebar-item">
                     Averages
                 </div>
         </a></li>
-        <li><a ng-click="nav('/e/i')">
+        <li><a ng-click="nav('/a/i')">
                 <div class="sidebar-item">
                     Insights
                 </div>
         </a></li>
-        <li><a ng-click="nav('/e/m')">
+        <li><a ng-click="nav('/a/m')">
                 <div class="sidebar-item">
                     Matches
                 </div>
         </a></li>
-        <li><a ng-click="nav('/e/e')">
+        <li><a ng-click="nav('/a/e')">
                 <div class="sidebar-item">
                     Entries
                 </div>
@@ -40,13 +30,8 @@
     </ul>
 
     <ul class="list-unstyled sidebar-list-bottom">
-        <li class="sidebar-header sidebar-header-bordered">
-            Settings
+        <li>
+            <input class="form-control sidebar-input" type="text" placeholder="Highlight Team" ng-model="tracked_team" uib-typeahead="team for team in teams | filter:$viewValue | limitTo:8">
         </li>
-        <li><a ng-click="nav('/s')">
-                <div class="sidebar-item active">
-                    Event Settings
-                </div>
-        </a></li>
     </ul>
 </div>

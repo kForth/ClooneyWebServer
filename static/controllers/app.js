@@ -6,48 +6,48 @@ var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngCook
                 templateUrl: '../../../static/views/pages/home.html',
                 controller: 'HomeController'
             })
-            .when('/e', {
+            .when('/a', {
                 templateUrl: '../../../static/views/pages/event/home.html',
-                controller: 'EventHomeController'
+                controller: 'AnalysisHomeController'
             })
-            .when('/e/a', {
+            .when('/a/a', {
                 templateUrl: '../../../static/views/pages/event/averages.html',
-                controller: 'AveragesController'
+                controller: 'AnalysisAveragesController'
             })
-            .when('/e/i', {
+            .when('/a/i', {
                 templateUrl: '../../../static/views/pages/event/insights.html',
-                controller: 'InsightsController'
+                controller: 'AnalysisInsightsController'
             })
-            .when('/e/m', {
+            .when('/a/m', {
                 templateUrl: '../../../static/views/pages/event/matches.html',
-                controller: 'MatchesController'
+                controller: 'AnalysisMatchesController'
             })
-            .when('/e/e', {
+            .when('/a/e', {
                 templateUrl: '../../../static/views/pages/event/entries.html',
-                controller: 'EntriesController'
+                controller: 'AnalysisEntriesController'
             })
             .when('/s', {
                 templateUrl: '../../../static/views/pages/settings/event_settings.html',
-                controller: 'EventSettingsController'
+                controller: 'SettingsGomeController'
             })
             .when('/s/c', {
                 templateUrl: '../../../static/views/pages/settings/edit_calculations.html',
-                controller: 'EditCalculationsController'
+                controller: 'SettingsCalculationsController'
             })
-            .when('/setup/:setup_step?', {
+            .when('/setup', {
                 templateUrl: '../../../static/views/pages/settings/event_setup.html',
-                controller: 'EventSetupController'
+                controller: 'SetupEventController'
             })
             .otherwise({
                 redirectTo: '/'
             });
     });
 
-app.directive('highlightTable', function ($location, $cookies) {
+app.directive('highlightTable', function ($location, $cookies) { //TODO: Replace cookies with server memory.
     function link(scope) {
-        // var cookie_prefix = $location.$$path.replace("/", "");
+        var cookie_prefix = $location.$$path.replace("/", "-");
         try {
-            scope.colours = JSON.parse($cookies.get("highlighted-rows"));
+            scope.colours = JSON.parse($cookies.get(cookie_prefix + ":highlighted-rows"));
         }
         catch (ex) {
         }
@@ -58,7 +58,7 @@ app.directive('highlightTable', function ($location, $cookies) {
             if (scope.colours[index] === undefined)
                 scope.colours[index] = 0;
             scope.colours[index]++;
-            $cookies.put("highlighted-rows", JSON.stringify(scope.colours));
+            $cookies.put(cookie_prefix + ":highlighted-rows", JSON.stringify(scope.colours));
         };
     }
 
@@ -152,11 +152,8 @@ app.controller('ApplicationController', function ($scope, $cookies, $location) {
 
 
 app.controller('SidebarController', function ($scope, $cookies, $location) {
-    if ($cookies.get('tracked_team') != undefined) {
+    if ($cookies.get('tracked_team_') != undefined) {
         $scope.tracked_team = $cookies.get('tracked_team');
-    }
-    if ($cookies.get('tracked_event') != undefined) {
-        $scope.event_name = $cookies.get('tracked_event');
     }
     $scope.nav = function (path) {
         $location.path(path);
@@ -188,27 +185,31 @@ app.controller('HomeController', function ($scope, $location, $cookies) {
     };
 });
 
-app.controller('EventHomeController', function ($scope) {
+app.controller('AnalysisHomeController', function ($scope) {
 
 });
 
-app.controller('AveragesController', function ($scope) {
+app.controller('AnalysisAveragesController', function ($scope) {
 
 });
 
-app.controller('InsightsController', function ($scope) {
+app.controller('AnalysisInsightsController', function ($scope) {
 
 });
 
-app.controller('MatchesController', function ($scope) {
+app.controller('AnalysisMatchesController', function ($scope) {
 
 });
 
-app.controller('EntriesController', function ($scope) {
+app.controller('AnalysisEntriesController', function ($scope) {
 
 });
 
-app.controller('EditCalculationsController', function ($scope) {
+app.controller('SettingsGomeController', function ($scope) {
+
+});
+
+app.controller('SettingsCalculationsController', function ($scope) {
     $scope.calculations = [
         {'name': 'a', 'key': 'a', 'formula': 'x*x', 'type': 'float'},
         {'name': 'b', 'key': 'b', 'formula': 'x+y', 'type': 'float'},
@@ -217,11 +218,7 @@ app.controller('EditCalculationsController', function ($scope) {
     ];
 });
 
-app.controller('EventSettingsController', function ($scope) {
-
-});
-
-app.controller('EventSetupController', function ($scope, $location) {
+app.controller('SetupEventController', function ($scope, $location) {
     $scope.setup_step = 0;
     $scope.events = ['2017onwa', '2017onham', '2017onbar', '2017 Waterloo District Event', '2017 McMaster District Event', '2017Georgian College District Event'];
     $scope.use_tba = false;
@@ -229,19 +226,19 @@ app.controller('EventSetupController', function ($scope, $location) {
         [
             {
                 "id": "key",
-                "label" : "Event Key",
+                "label": "Event Key",
                 "default_value": "",
                 "type": "text"
             },
             {
                 "id": "name",
-                "label" : "Event Name",
+                "label": "Event Name",
                 "default_value": "",
                 "type": "text"
             },
             {
                 "id": "short_name",
-                "label" : "Short Name",
+                "label": "Short Name",
                 "default_value": "",
                 "type": "text"
             }
@@ -268,13 +265,12 @@ app.controller('EventSetupController', function ($scope, $location) {
 
     //Step 2 - Edit the event information (pre-filled inputs if using TBA)
     $scope.input_data = {};
-    $scope.submit_manual_data = function(){
+    $scope.submit_manual_data = function () {
         console.log($scope.input_data);
-        if(true){
+        if (true) {
             $location.path('/s/e');
         }
     };
-
 
 
 });

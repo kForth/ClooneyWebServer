@@ -2,11 +2,6 @@
 
 <div class="sidebar" ng-controller="SidebarController">
     <ul class="list-unstyled">
-        <li>
-            <div class="sidebar-header" style="font-size: 16px;">
-                {{ event_name }}
-            </div>
-        </li>
         <li><a ng-click="nav('/s/c')">
                 <div class="sidebar-item">
                     Edit Calculations
@@ -30,17 +25,6 @@
         <li><a ng-click=""> <!-- Only show this if it's a TBA event. Show a loading popup? -->
                 <div class="sidebar-item">
                     Update TBA Info
-                </div>
-        </a></li>
-    </ul>
-
-    <ul class="list-unstyled sidebar-list-bottom">
-        <li class="sidebar-header sidebar-header-bordered">
-
-        </li>
-        <li><a ng-click="nav('/e')">
-                <div class="sidebar-item active">
-                    Back to Analysis
                 </div>
         </a></li>
     </ul>

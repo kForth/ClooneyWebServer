@@ -10,12 +10,20 @@ a:hover{
 
 }
 
+.navbar-brand img{
+    height: 34px;
+    border-radius: 5px;
+    margin-top: -7px;
+    margin-right: -10px;
+    border: 1px solid #ccc;
+}
+
 .content {
     margin: 0;
     padding: 0;
 }
 
-.inner-content {
+.inner-content, .inner-content-with-sidebar {
     margin: 0;
     padding: 0;
     width: 100%;
@@ -24,14 +32,11 @@ a:hover{
     left: 0;
 }
 
-.inner-content .with-sidebar {
+.inner-content-with-sidebar {
     width: calc(100% - 200px);
     left: 200px;
 }
 
-.inner-content .with-nav {
-    top: 500px;
-}
 
 .info-holder {
     font-size: 16px;
