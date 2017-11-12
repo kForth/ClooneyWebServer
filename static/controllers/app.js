@@ -124,9 +124,11 @@ app.controller('ApplicationController', function ($scope, $location, $http) {
     $scope.isNavCollapsed = true;
     $scope.tracked_event_okay = false;
     $scope.select_event_button = function () {
-        $scope.tracked_event = $scope.tracking_input_data.event;
-        $scope.tracked_event_okay = true;
-        $location.path('/a');
+        if(typeof($scope.tracking_input_data.event) == 'object'){
+            $scope.tracked_event = $scope.tracking_input_data.event;
+            $scope.tracked_event_okay = true;
+            $location.path('/a');
+        }
     };
 
 });
