@@ -146,30 +146,32 @@ app.controller('HomeController', function ($scope) {
 
 });
 
-app.controller('AnalysisHomeController', function ($scope) {
-
+app.controller('AnalysisHomeController', function ($scope, $location) {
+    if($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisAveragesController', function ($scope) {
-
+app.controller('AnalysisAveragesController', function ($scope, $location) {
+    if($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisInsightsController', function ($scope) {
-
+app.controller('AnalysisInsightsController', function ($scope, $location) {
+    if($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisMatchesController', function ($scope) {
-
+app.controller('AnalysisMatchesController', function ($scope, $location) {
+    if($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisEntriesController', function ($scope) {
-
+app.controller('AnalysisEntriesController', function ($scope, $location) {
+    if($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('SettingsHomeController', function ($scope) {
+app.controller('SettingsHomeController', function ($scope, $location) {
+    if($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('SettingsCalculationsController', function ($scope) {
+app.controller('SettingsCalculationsController', function ($scope, $location) {
+    if($scope.tracked_event === undefined) $location.path("/");
     $scope.calculations = [
         {'name': 'a', 'key': 'a', 'formula': 'x*x', 'type': 'float'},
         {'name': 'b', 'key': 'b', 'formula': 'x+y', 'type': 'float'},
@@ -246,9 +248,7 @@ app.controller('SetupEventController', function ($scope, $location, $http) {
     $scope.input_data = {};
     $scope.submit_manual_data = function () {
         console.log($scope.input_data);
-        if (true) {
-            $location.path('/s/e');
-        }
+        // $location.path('/s/e');
     };
 
 
