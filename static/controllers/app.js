@@ -106,14 +106,13 @@ app.directive('multiSortTable', function ($location, $cookies) {
 });
 
 app.controller('ApplicationController', function ($scope, $cookies) {
+    $scope.isNavCollapsed = true;
+
     if ($cookies.get('tracked_event') != undefined) {
         $scope.tracked_event = $cookies.get('tracked_event');
     }
 });
 
-app.controller('NavbarController', function ($scope) {
-    $scope.isNavCollapsed = false;
-});
 
 app.controller('SidebarController', function ($scope, $cookies, $location) {
     if ($cookies.get('tracked_team') != undefined) {
