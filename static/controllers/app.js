@@ -106,7 +106,9 @@ app.directive('multiSortTable', function ($location, $cookies) {
 });
 
 app.controller('ApplicationController', function ($scope, $location, $http) {
-    $scope.tracked_event = {};
+    $scope.$on('$routeChangeStart', function($event, next, current) {
+        $scope.tracking_input_data.event = $scope.tracked_event;
+    });
 
     $scope.available_events = [];
     $scope.update_available_events = function(){
@@ -227,7 +229,6 @@ app.controller('SetupEventController', function ($scope, $location, $http) {
                     $scope.update_available_events();
                     $scope.tracked_event = event;
                     $scope.tracked_event_okay = true;
-                    $scope.tracking_input_data.event = event;
                     $location.path('/s');
                 }
             },
