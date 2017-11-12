@@ -28,7 +28,7 @@ var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngCook
             })
             .when('/s', {
                 templateUrl: '../../../static/views/pages/settings/event_settings.html',
-                controller: 'SettingsGomeController'
+                controller: 'SettingsHomeController'
             })
             .when('/s/c', {
                 templateUrl: '../../../static/views/pages/settings/edit_calculations.html',
@@ -43,7 +43,7 @@ var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngCook
             });
     });
 
-app.directive('highlightTable', function ($location, $cookies) { //TODO: Replace cookies with server memory.
+app.directive('highlightTable', function ($location, $cookies) {
     function link(scope) {
         var cookie_prefix = $location.$$path.replace("/", "-");
         try {
@@ -105,84 +105,41 @@ app.directive('multiSortTable', function ($location, $cookies) {
     };
 });
 
-app.controller('ApplicationController', function ($scope, $cookies, $location) {
+app.controller('ApplicationController', function ($scope, $location, $http) {
+    $scope.tracked_event = {};
+
+    $scope.available_events = [];
+    $scope.update_available_events = function(){
+        $http.get('/get/available_events').then(function(resp){
+            $scope.available_events = resp.data;
+        });
+    };
+    $scope.update_available_events();
+
     $scope.tracking_input_data = {
         'event': '',
         'team': ''
     };
 
-    if ($cookies.get('tracked_event') != undefined) {
-        $scope.tracked_event = $cookies.get('tracked_event');
-    }
-
     $scope.isNavCollapsed = true;
     $scope.tracked_event_okay = false;
     $scope.select_event_button = function () {
-        console.log($scope.tracking_input_data.event);
-        events.forEach(function (e) {
-            if (e.key === $scope.tracking_input_data.event || e.name === $scope.tracking_input_data.event) {
-                $scope.tracked_event = e.key;
-                $scope.tracked_event_okay = true;
-                $location.path('/a');
-            }
-        });
+        $scope.tracked_event = $scope.tracking_input_data.event;
+        $scope.tracked_event_okay = true;
+        $location.path('/a');
     };
 
-    var events = [
-        {
-            'key': '2017onwat',
-            'name': '2017 Waterloo'
-        },
-        {
-            'key': '2017onham',
-            'name': '2017 McMaster'
-        },
-        {
-            'key': '2017onbar',
-            'name': '2017 Georgian'
-        }
-    ];
-    $scope.events = [];
-    events.forEach(function (e) {
-        $scope.events.push(e.key);
-        $scope.events.push(e.name);
-    });
-    $scope.events.sort();
 });
 
 
-app.controller('SidebarController', function ($scope, $cookies, $location) {
-    if ($cookies.get('tracked_team_') != undefined) {
-        $scope.tracked_team = $cookies.get('tracked_team');
-    }
+app.controller('SidebarController', function ($scope, $location) {
     $scope.nav = function (path) {
         $location.path(path);
-        $cookies.put('tracked_team', $scope.tracked_team);
     }
 });
 
-app.controller('HomeController', function ($scope, $location, $cookies) {
-    $scope.selected_event = "";
-    $scope.events = [{'key': '2017onwa', 'name': 'Waterloo'}, {
-        'key': '2017onham',
-        'name': 'McMaster'
-    }, {'key': '2017obar', 'name': 'Georgian'}];
+app.controller('HomeController', function ($scope) {
 
-    if ($cookies.get('tracked_event') != undefined) {
-        $scope.selected_event = $cookies.get('tracked_event').name;
-    }
-
-    $scope.select_event = function () {
-        if ($scope.selected_event == "") return;
-        console.log($scope.selected_event);
-        $scope.events.forEach(function (elem) {
-            if (elem.name === $scope.selected_event) {
-                $cookies.put('tracked_event', elem.key);
-                $scope.tracked_event = elem.key;
-                $location.path("/a");
-            }
-        });
-    };
 });
 
 app.controller('AnalysisHomeController', function ($scope) {
@@ -205,7 +162,7 @@ app.controller('AnalysisEntriesController', function ($scope) {
 
 });
 
-app.controller('SettingsGomeController', function ($scope) {
+app.controller('SettingsHomeController', function ($scope) {
 
 });
 
@@ -218,10 +175,8 @@ app.controller('SettingsCalculationsController', function ($scope) {
     ];
 });
 
-app.controller('SetupEventController', function ($scope, $location) {
+app.controller('SetupEventController', function ($scope, $location, $http) {
     $scope.setup_step = 0;
-    $scope.events = ['2017onwa', '2017onham', '2017onbar', '2017 Waterloo District Event', '2017 McMaster District Event', '2017Georgian College District Event'];
-    $scope.use_tba = false;
     $scope.default_data =
         [
             {
@@ -244,10 +199,16 @@ app.controller('SetupEventController', function ($scope, $location) {
             }
         ];
 
+    $scope.alert = false;
+    $scope.closeAlert = function(){$scope.alert = false};
+
     //Step 0 - Ask if we should use TBA
     $scope.setup_with_tba_button = function () {
         $scope.setup_step = 1;
-        $scope.use_tba = true;
+        $scope.searchable_events = [];
+        $http.get('/get/search_events').then(function(resp){
+            $scope.searchable_events = resp.data;
+        });
     };
 
     $scope.setup_manually_button = function () {
@@ -255,15 +216,30 @@ app.controller('SetupEventController', function ($scope, $location) {
     };
 
     //Step 1 - (TBA Only) Search for the event.
-    $scope.event_search_input = "";
+    $scope.event_search = {'input': ''};
     $scope.setup_tba_event = function () {
-        if ($scope.events.indexOf($scope.event_search_input) > -1) {
-            console.log(Scope.event_search_input);
-            //Do auto setup stuff.
-        }
+        $scope.alert = false;
+        var event = $scope.event_search.input;
+        $http.post('/setup_tba_event', {'key': event.key})
+            .then(function(resp){
+                if(resp.status === 200){
+                    $scope.update_available_events();
+                    $scope.tracked_event = event;
+                    $scope.tracking_input_data.event = event;
+                    $location.path('/s');
+                }
+            },
+            function(resp){
+                if(resp.status === 409){
+                    $scope.alert = { type: 'danger', msg: event.key + ' has already been setup.' };
+                }
+                else{
+                    $scope.alert = { type: 'danger', msg: 'Some kind of error occurred with ' + event.key + '. Try again?' };
+                }
+            });
     };
 
-    //Step 2 - Edit the event information (pre-filled inputs if using TBA)
+    //Step 2 - Edit the event information
     $scope.input_data = {};
     $scope.submit_manual_data = function () {
         console.log($scope.input_data);

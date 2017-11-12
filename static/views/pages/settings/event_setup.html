@@ -1,4 +1,5 @@
 <div class="inner-content">
+
     <div class="info-holder col-xs-12 col-sm-8 col-md-6 col-xs-offset-0 col-sm-offset-2 col-md-offset-3">
         <h2>Event Setup</h2>
 
@@ -8,8 +9,8 @@
         </div>
         <div ng-if="setup_step == 1">
             <label class="">Search Events:</label>
-            <input type="text" class="form-control" ng-model="event_search_input" placeholder="eg. 2017 Georgian College, 2017onham" uib-typeahead="event for event in events | filter:$viewValue | limitTo:8">
-            <button class="btn btn-primary btn-block" ng-class="{'disabled': events.indexOf(event_search_input) < 0}" ng-click="setup_tba_event()">Setup</button>
+            <input type="text" class="form-control" ng-model="event_search.input" placeholder="eg. 2017 Georgian College, 2017onham" uib-typeahead="e as (e.year + ' ' + e.name) for e in searchable_events | filter:$viewValue | limitTo: 8">
+            <button class="btn btn-primary btn-block" ng-click="setup_tba_event()">Setup</button>
         </div>
         <div ng-if="setup_step == 2">
             <br>
@@ -21,5 +22,9 @@
             </div>
             <button class="btn btn-primary btn-block" ng-class="{'disabled': false}" ng-click="submit_manual_data()">Submit</button>
         </div>
+        <br>
+        <div uib-alert ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert()" ng-if="alert != false">{{alert.msg}}</div>
+
     </div>
+
 </div>

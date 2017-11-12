@@ -1,13 +1,10 @@
 from flask import Flask
 
-from tba import TBA
-
 from db import DatabaseInteractor
 
 app = Flask(__name__)
 app.config.from_pyfile('server.cfg')
-tba = TBA(app.config['TBA_AUTH_KEY'])
-db = DatabaseInteractor(app.root_path)
+db = DatabaseInteractor(app.root_path, app.add_url_rule, app.config['TBA_AUTH_KEY'])
 
 
 @app.route('/')

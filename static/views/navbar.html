@@ -14,7 +14,7 @@
 
         <div class="collapse navbar-collapse" uib-collapse="isNavCollapsed">
             <div class="navbar-form navbar-left">
-                <input type="text" class="form-control" ng-model="tracking_input_data.event" placeholder="Select Event" uib-typeahead="e for e in events | filter:$viewValue | limitTo: 8">
+                <input type="text" class="form-control" style="width: 250px" ng-model="tracking_input_data.event" placeholder="Select Event" uib-typeahead="e as (e.year + ' ' + e.name) for e in available_events | filter:$viewValue | limitTo: 8">
                 <button ng-click="select_event_button()" class="btn btn-default">Go</button>
             </div>
 
