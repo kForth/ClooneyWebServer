@@ -1,0 +1,236 @@
+[
+  {
+    "key":     "HorizontalOptions",
+    "type":    "HorizontalOptions",
+    "options": [
+      {
+        "type":  "text",
+        "label": "Label",
+        "id":    "label"
+      },
+      {
+        "type":  "text",
+        "label": "Options",
+        "id":    "options"
+      },
+      {
+        "type":  "checkbox",
+        "label": "Prev Line",
+        "id":    "prev_line",
+        "value": false
+      },
+      {
+        "type":  "number",
+        "label": "X Offset",
+        "id":    "offset",
+        "value": 0
+      },
+      {
+        "type":  "checkbox",
+        "label": "Note Space",
+        "id":    "note_space",
+        "value": false
+      },
+      {
+        "type":  "number",
+        "label": "Note Width",
+        "id":    "note_width",
+        "value": 3
+      }
+    ]
+  },
+  {
+    "key":     "BulkOptions",
+    "type":    "BulkOptions",
+    "options": [
+      {
+        "type":  "text",
+        "label": "Label",
+        "id":    "label"
+      },
+      {
+        "type":  "text",
+        "label": "Options",
+        "id":    "options"
+      },
+      {
+        "type":  "text",
+        "label": "Labels",
+        "id":    "labels"
+      },
+      {
+        "type":  "checkbox",
+        "label": "Prev Line",
+        "id":    "prev_line",
+        "value": false
+      }
+    ]
+  },
+  {
+    "key":     "Numbers",
+    "type":    "Numbers",
+    "options": [
+      {
+        "type":  "text",
+        "label": "Label",
+        "id":    "label"
+      },
+      {
+        "type":  "number",
+        "label": "Ones",
+        "id":    "ones",
+        "value": 9
+      },
+      {
+        "type":  "number",
+        "label": "Tens",
+        "id":    "tens",
+        "value": 0
+      },
+      {
+        "type":  "checkbox",
+        "label": "Show Zero",
+        "id":    "show_zero",
+        "value": false
+      }
+    ]
+  },
+  {
+    "key":     "Image",
+    "type":    "Image",
+    "options": [
+      {
+        "type":  "text",
+        "label": "Label",
+        "id":    "label"
+      },
+      {
+        "type":  "number",
+        "label": "Width",
+        "id":    "width",
+        "value":  0
+      },
+      {
+        "type":  "text",
+        "label": "Height",
+        "id":    "height"
+      },
+      {
+        "type":  "text",
+        "label": "Image",
+        "id":    "image_path"
+      },
+      {
+        "type":  "checkbox",
+        "label": "Prev Line",
+        "id":    "prev_line",
+        "value": false
+      },
+      {
+        "type":  "number",
+        "label": "X Offset",
+        "id":    "offset",
+        "value": 4.25
+      },
+      {
+        "type":  "number",
+        "label": "Y Offset",
+        "id":    "y_offset",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "key":     "Boolean",
+    "type":    "Boolean",
+    "options": [
+      {
+        "type":  "text",
+        "label": "Label",
+        "id":    "label"
+      },
+      {
+        "type":  "checkbox",
+        "label": "Prev Line",
+        "id":    "prev_line",
+        "value": false
+      },
+      {
+        "type":  "number",
+        "label": "X Offset",
+        "id":    "offset",
+        "value": 0
+      }
+    ]
+  },
+  {
+    "type":    "Divider",
+    "options": [
+      {
+        "type":  "text",
+        "label": "Label",
+        "id":    "label",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "key":     "Digits",
+    "type":    "Digits",
+    "options": [
+      {
+        "type":  "text",
+        "label": "Label",
+        "id":    "label",
+        "value": ""
+      },
+      {
+        "type":  "number",
+        "label": "Digits",
+        "id":    "digits",
+        "value": 4
+      },
+      {
+        "type":  "checkbox",
+        "label": "Values",
+        "id":    "values",
+        "value": "11 11 11 11"
+      }
+    ]
+  },
+  {
+    "key":     "String",
+    "type":    "String",
+    "options": [
+      {
+        "type":  "text",
+        "label": "String",
+        "id":    "string"
+      },
+      {
+        "type":  "number",
+        "label": "Font Size",
+        "id":    "font_size",
+        "value": -1
+      },
+      {
+        "type":  "text",
+        "label": "Pos",
+        "id":    "pos",
+        "value": "[0, 0]"
+      },
+      {
+        "type":  "text",
+        "label": "Height",
+        "id":    "height",
+        "value": "normal"
+      },
+      {
+        "type":  "number",
+        "label": "X Offset",
+        "id":    "x_offset",
+        "value": 0
+      }
+    ]
+  }
+]
