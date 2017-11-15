@@ -38,6 +38,10 @@ var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngCook
                 templateUrl: '../../../static/views/pages/settings/event_setup.html',
                 controller: 'SetupEventController'
             })
+            .when('/sheets', {
+                templateUrl: '../../../static/views/pages/sheets/home.html',
+                controller: 'SheetsHomeController'
+            })
             .when('/login', {
                 templateUrl: '../../../static/views/pages/user/login.html',
                 controller: 'UserLoginController'
@@ -406,4 +410,9 @@ app.controller('SetupEventController', function ($scope, $location, $http, Authe
     };
 
 
+});
+
+
+app.controller('SheetsHomeController', function ($scope, $location, $http, AuthenticationService) {
+    if (!AuthenticationService.isAuthorized(2)) $location.path("/");
 });
