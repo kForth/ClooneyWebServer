@@ -118,9 +118,10 @@ app.directive('multiSortTable', function ($location, $cookies) {
     };
 });
 
-app.controller('ApplicationController', function ($scope, $location, $http) {
+app.controller('ApplicationController', function ($scope, $location, $http, $rootScope) {
     $scope.$on('$routeChangeStart', function () {
         $scope.tracking_input_data.event = $scope.tracked_event;
+        $scope.user_data = $rootScope.globals.currentUser;
     });
 
     $scope.available_events = [];
@@ -280,8 +281,8 @@ app.controller('UserRegisterController', function ($scope, $location, UserServic
     }
 });
 
-app.controller('AnalysisHomeController', function ($scope, $location, $rootScope) {
-    if ($scope.tracked_event === undefined || $rootScope.globals.user.role > 1) $location.path("/");
+app.controller('AnalysisHomeController', function ($scope, $location) {
+    if ($scope.tracked_event === undefined) $location.path("/");
 });
 
 app.controller('AnalysisAveragesController', function ($scope, $location) {
@@ -300,11 +301,12 @@ app.controller('AnalysisEntriesController', function ($scope, $location) {
     if ($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('SettingsHomeController', function ($scope, $location) {
-
+app.controller('SettingsHomeController', function ($scope, $location, $rootScope) {
+    if ($scope.tracked_event === undefined || $rootScope.globals.currentUser.role <= 2) $location.path("/");
 });
 
 app.controller('SettingsCalculationsController', function ($scope, $location) {
+    if ($scope.tracked_event === undefined || $rootScope.globals.currentUser.role <= 2) $location.path("/");
     $scope.calculations = [
         {'name': 'a', 'key': 'a', 'formula': 'x*x', 'type': 'float'},
         {'name': 'b', 'key': 'b', 'formula': 'x+y', 'type': 'float'},
@@ -314,6 +316,7 @@ app.controller('SettingsCalculationsController', function ($scope, $location) {
 });
 
 app.controller('SetupEventController', function ($scope, $location, $http) {
+    if ($rootScope.globals.currentUser.role <= 2) $location.path("/");
     $scope.setup_step = 0;
     $scope.default_data =
         [
