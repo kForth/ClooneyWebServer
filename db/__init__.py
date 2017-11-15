@@ -46,7 +46,6 @@ class DatabaseInteractor:
 
     def get_user_by_name(self, username):
         user = [e for e in self._db['users']['users'] if e['username'].lower() == username.lower()]
-        print(user)
         return dict(user[0]) if user else None
 
     def add_user(self, user):
@@ -83,7 +82,6 @@ class DatabaseInteractor:
     def setup_event(self, use_tba=False):
         if request.json:
             data = request.json
-            print(data)
             if data['key'] not in self._db['events'].keys():
                 event = {
                     'key': data['key'],

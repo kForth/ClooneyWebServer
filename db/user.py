@@ -1,4 +1,5 @@
 from flask import jsonify, make_response, request
+from hashlib import sha1
 import hmac
 
 
@@ -14,12 +15,12 @@ class UserDatabaseInteractor:
         self._app.add_url_rule('/users/update/<id>', '/users/update/<id>', self.get_user_by_name, methods=('POST',))
 
     def _encrypt_password(self, pwd):
-        hash = hmac.new(self._app.config['PASSWORD_KEY'].encode('utf-8'))
-        hash.update(str(pwd).encode('utf-8'))
+        hash = hmac.new(self._app.config['PASSWORD_KEY'].encode('UTF-8'), msg=pwd, digestmod=sha1)
         return hash.hexdigest()
 
     def _verify_password(self, pwd, hash):
-        return hmac.compare_digest(self._encrypt_password(pwd), hash)
+        pwd = str(self._encrypt_password(pwd))
+        return hmac.compare_digest(str(pwd), str(hash))
 
     def get_user_by_id(self, id):
         user = self._db.get_user_by_id(id)
