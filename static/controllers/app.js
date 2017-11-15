@@ -119,13 +119,13 @@ app.directive('multiSortTable', function ($location, $cookies) {
 });
 
 app.controller('ApplicationController', function ($scope, $location, $http) {
-    $scope.$on('$routeChangeStart', function($event, next, current) {
+    $scope.$on('$routeChangeStart', function () {
         $scope.tracking_input_data.event = $scope.tracked_event;
     });
 
     $scope.available_events = [];
-    $scope.update_available_events = function(){
-        $http.get('/get/available_events').then(function(resp){
+    $scope.update_available_events = function () {
+        $http.get('/get/available_events').then(function (resp) {
             $scope.available_events = resp.data;
         });
     };
@@ -139,7 +139,7 @@ app.controller('ApplicationController', function ($scope, $location, $http) {
     $scope.isNavCollapsed = true;
     $scope.tracked_event_okay = false;
     $scope.select_event_button = function () {
-        if(typeof($scope.tracking_input_data.event) == 'object'){
+        if (typeof($scope.tracking_input_data.event) == 'object') {
             $scope.tracked_event = $scope.tracking_input_data.event;
             $scope.tracked_event_okay = true;
             $location.path('/a');
@@ -147,7 +147,6 @@ app.controller('ApplicationController', function ($scope, $location, $http) {
     };
 
 });
-
 
 app.controller('SidebarController', function ($scope, $location) {
     $scope.nav = function (path) {
@@ -286,27 +285,26 @@ app.controller('AnalysisHomeController', function ($scope, $location, $rootScope
 });
 
 app.controller('AnalysisAveragesController', function ($scope, $location) {
-    if($scope.tracked_event === undefined) $location.path("/");
+    if ($scope.tracked_event === undefined) $location.path("/");
 });
 
 app.controller('AnalysisInsightsController', function ($scope, $location) {
-    if($scope.tracked_event === undefined) $location.path("/");
+    if ($scope.tracked_event === undefined) $location.path("/");
 });
 
 app.controller('AnalysisMatchesController', function ($scope, $location) {
-    if($scope.tracked_event === undefined) $location.path("/");
+    if ($scope.tracked_event === undefined) $location.path("/");
 });
 
 app.controller('AnalysisEntriesController', function ($scope, $location) {
-    if($scope.tracked_event === undefined) $location.path("/");
+    if ($scope.tracked_event === undefined) $location.path("/");
 });
 
 app.controller('SettingsHomeController', function ($scope, $location) {
-    if($scope.tracked_event === undefined) $location.path("/");
+
 });
 
 app.controller('SettingsCalculationsController', function ($scope, $location) {
-    if($scope.tracked_event === undefined) $location.path("/");
     $scope.calculations = [
         {'name': 'a', 'key': 'a', 'formula': 'x*x', 'type': 'float'},
         {'name': 'b', 'key': 'b', 'formula': 'x+y', 'type': 'float'},
@@ -340,13 +338,15 @@ app.controller('SetupEventController', function ($scope, $location, $http) {
         ];
 
     $scope.alert = false;
-    $scope.closeAlert = function(){$scope.alert = false};
+    $scope.closeAlert = function () {
+        $scope.alert = false
+    };
 
     //Step 0 - Ask if we should use TBA
     $scope.setup_with_tba_button = function () {
         $scope.setup_step = 1;
         $scope.searchable_events = [];
-        $http.get('/get/search_events').then(function(resp){
+        $http.get('/get/search_events').then(function (resp) {
             $scope.searchable_events = resp.data;
         });
     };
@@ -361,22 +361,25 @@ app.controller('SetupEventController', function ($scope, $location, $http) {
         $scope.alert = false;
         var event = $scope.event_search.input;
         $http.post('/setup_tba_event', {'key': event.key})
-            .then(function(resp){
-                if(resp.status === 200){
-                    $scope.update_available_events();
-                    $scope.tracked_event = event;
-                    $scope.tracked_event_okay = true;
-                    $location.path('/s');
-                }
-            },
-            function(resp){
-                if(resp.status === 409){
-                    $scope.alert = { type: 'danger', msg: event.key + ' has already been setup.' };
-                }
-                else{
-                    $scope.alert = { type: 'danger', msg: 'Some kind of error occurred with ' + event.key + '. Try again?' };
-                }
-            });
+            .then(function (resp) {
+                    if (resp.status === 200) {
+                        $scope.update_available_events();
+                        $scope.tracked_event = event;
+                        $scope.tracked_event_okay = true;
+                        $location.path('/s');
+                    }
+                },
+                function (resp) {
+                    if (resp.status === 409) {
+                        $scope.alert = {type: 'danger', msg: event.key + ' has already been setup.'};
+                    }
+                    else {
+                        $scope.alert = {
+                            type: 'danger',
+                            msg: 'Some kind of error occurred with ' + event.key + '. Try again?'
+                        };
+                    }
+                });
     };
 
     //Step 2 - Edit the event information
