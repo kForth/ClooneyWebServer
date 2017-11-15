@@ -5,10 +5,11 @@ from os import path
 
 from db.tba import TbaInteractor
 from db.user import UserDatabaseInteractor
+from db.sheets import SheetDatabaseInteractor
 
 
 class DatabaseInteractor:
-    DEFAULT_DB = {'events': {}, 'users': {'users': [], 'max_id': -1}}
+    DEFAULT_DB = {'events': {}, 'users': {'users': [], 'max_id': -1}, 'sheets': []}
 
     def __init__(self, app, filename="db.json"):
         self.filepath = app.root_path + "/" + filename
@@ -16,6 +17,7 @@ class DatabaseInteractor:
         self._db = self._load_db()
         self._users = UserDatabaseInteractor(self, app)
         self._tba = TbaInteractor(self, app)
+        self._sheets = SheetDatabaseInteractor(self, app)
 
         self._app.add_url_rule('/get/available_events', '/get/available_events', view_func=self.get_available_events, methods=('GET',))
 
@@ -34,6 +36,9 @@ class DatabaseInteractor:
 
     def get_users(self):
         return self._db['users']['users']
+
+    def get_sheets(self):
+        return self._db['sheets']
 
     def get_user_by_id(self, user_id):
         user = [e for e in self._db['users'] if e['id'] == user_id]

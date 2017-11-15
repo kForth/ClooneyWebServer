@@ -128,7 +128,7 @@ app.controller('ApplicationController', function ($scope, $location, $http, $roo
     $scope.$on('$routeChangeStart', function () {
         $scope.data_loading = false;
         $scope.tracking_input_data.event = $scope.tracked_event;
-        if($rootScope.globals != undefined && $rootScope.globals.currentUser != undefined){
+        if ($rootScope.globals != undefined && $rootScope.globals.currentUser != undefined) {
             $scope.user_data = $rootScope.globals.currentUser;
         }
     });
@@ -179,7 +179,7 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
     return service;
 
     function Login(username, password, success_callback, fail_callback) {
-        $http.post('/login', { username: username, password: password })
+        $http.post('/login', {username: username, password: password})
             .then(function (resp) {
                     success_callback(resp);
                 },
@@ -208,7 +208,7 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
         $http.defaults.headers.common.Authorization = 'Basic';
     }
 
-    function isAuthorized(min_level){
+    function isAuthorized(min_level) {
         return $rootScope.globals != undefined && $rootScope.globals.currentUser != undefined &&
             $rootScope.globals.currentUser.user.role >= min_level;
 
@@ -254,7 +254,7 @@ app.controller('UserLoginController', function ($scope, $location, Authenticatio
     };
     AuthenticationService.ClearCredentials();
 
-    $scope.closeAlert = function(){
+    $scope.closeAlert = function () {
         $scope.alert = undefined;
     };
 
@@ -281,7 +281,7 @@ app.controller('UserRegisterController', function ($scope, $location, UserServic
         'password': ''
     };
 
-    $scope.closeAlert = function(){
+    $scope.closeAlert = function () {
         $scope.alert = undefined;
     };
 
@@ -415,16 +415,10 @@ app.controller('SetupEventController', function ($scope, $location, $http, Authe
 
 app.controller('SheetsHomeController', function ($scope, $location, $http, AuthenticationService) {
     // if (!AuthenticationService.isAuthorized(2)) $location.path("/");
-    $scope.sheets = [
-        {
-            'name': 'No Fuel',
-            'date_created': new Date().toDateString(),
-            'date_modified': new Date().toDateString()
-        },
-        {
-            'name': 'Everything',
-            'date_created': new Date().toDateString(),
-            'date_modified': new Date().toDateString()
-        }
-    ];
+    $scope.sheets = [];
+    $http.get('/get/sheets')
+        .then(function (resp) {
+            $scope.sheets = resp.data;
+
+        });
 });
