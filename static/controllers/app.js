@@ -121,7 +121,9 @@ app.directive('multiSortTable', function ($location, $cookies) {
 app.controller('ApplicationController', function ($scope, $location, $http, $rootScope) {
     $scope.$on('$routeChangeStart', function () {
         $scope.tracking_input_data.event = $scope.tracked_event;
-        $scope.user_data = $rootScope.globals.currentUser;
+        if($rootScope.globals != undefined && $rootScope.globals.currentUser != undefined){
+            $scope.user_data = $rootScope.globals.currentUser;
+        }
     });
 
     $scope.available_events = [];
@@ -165,6 +167,7 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
     service.Login = Login;
     service.SetCredentials = SetCredentials;
     service.ClearCredentials = ClearCredentials;
+    service.isAuthorized = isAuthorized;
 
     return service;
 
@@ -196,6 +199,12 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
         $rootScope.globals = {};
         $cookies.remove('globals');
         $http.defaults.headers.common.Authorization = 'Basic';
+    }
+
+    function isAuthorized(min_level){
+        return $rootScope.globals != undefined && $rootScope.globals.currentUser != undefined &&
+            $rootScope.globals.currentUser.user.role >= min_level;
+
     }
 });
 
@@ -301,12 +310,12 @@ app.controller('AnalysisEntriesController', function ($scope, $location) {
     if ($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('SettingsHomeController', function ($scope, $location, $rootScope) {
-    if ($scope.tracked_event === undefined || $rootScope.globals.currentUser.role <= 2) $location.path("/");
+app.controller('SettingsHomeController', function ($scope, $location, AuthenticationService) {
+    if ($scope.tracked_event === undefined || !AuthenticationService.isAuthorized(2)) $location.path("/");
 });
 
-app.controller('SettingsCalculationsController', function ($scope, $location) {
-    if ($scope.tracked_event === undefined || $rootScope.globals.currentUser.role <= 2) $location.path("/");
+app.controller('SettingsCalculationsController', function ($scope, $location, AuthenticationService) {
+    if ($scope.tracked_event === undefined || !AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.calculations = [
         {'name': 'a', 'key': 'a', 'formula': 'x*x', 'type': 'float'},
         {'name': 'b', 'key': 'b', 'formula': 'x+y', 'type': 'float'},
@@ -315,8 +324,8 @@ app.controller('SettingsCalculationsController', function ($scope, $location) {
     ];
 });
 
-app.controller('SetupEventController', function ($scope, $location, $http) {
-    if ($rootScope.globals.currentUser.role <= 2) $location.path("/");
+app.controller('SetupEventController', function ($scope, $location, $http, AuthenticationService) {
+    if (!AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.setup_step = 0;
     $scope.default_data =
         [

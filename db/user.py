@@ -63,7 +63,7 @@ class UserDatabaseInteractor:
                     'user': {
                         'id': user['id'],
                         'username': username,
-                        'role': user['role'],
+                        'role': self.ROLES.index(user['role']),
                         'first_name': user['first_name'],
                         'last_name': user['last_name']
                     }

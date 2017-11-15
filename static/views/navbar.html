@@ -20,11 +20,15 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li ng-if="tracked_event_okay"><a href="#/a">Analysis</a></li>
-                <li ng-if="tracked_event_okay"><a href="#/s">Settings</a></li>
+                <li ng-if="tracked_event_okay && user_data.user.role >= 2"><a href="#/s">Settings</a></li>
                 <li uib-dropdown>
                     <a uib-dropdown-toggle><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a>
                     <ul uib-dropdown-menu>
-                        <li><a href="#/setup">Setup New Event</a></li>
+                        <li><a href="#/login" ng-if="user_data == undefined">Login</a></li>
+                        <li><a href="#/logout" ng-if="user_data != undefined">Logout</a></li>
+                        <li><a></a></li>
+                        <li role="separator" class="divider" ng-if="user_data.user.role >= 2"></li>
+                        <li><a href="#/setup" ng-if="user_data.user.role >= 2">Setup New Event</a></li>
                     </ul>
                 </li>
             </ul>
