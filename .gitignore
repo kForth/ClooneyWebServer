@@ -2,6 +2,7 @@
 env/
 .idea/
 *.pyc
+*.wsgi
 static/node_modules/*
 static/yarn.lock
 static/package.json
