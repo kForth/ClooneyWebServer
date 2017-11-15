@@ -4,20 +4,23 @@ import json
 from os import path
 
 from db.tba import TbaInteractor
+from db.user import UserDatabaseInteractor
 
 
 class DatabaseInteractor:
-    DEFAULT_DB = {'events': {}, 'users': {}}
+    DEFAULT_DB = {'events': {}, 'users': {'users': [], 'max_id': -1}}
 
-    def __init__(self, folder_path, add_url_rule, tba_auth_key, filename="db.json"):
-        self.filepath = folder_path + ("" if folder_path[-1] == "/" else "/") + filename
-        self._add_url_rule = add_url_rule
+    def __init__(self, app, filename="db.json"):
+        self.filepath = app.root_path + "/" + filename
+        self._app = app
         self._db = self._load_db()
-        self._tba = TbaInteractor(self, tba_auth_key, add_url_rule)
+        self._users = UserDatabaseInteractor(self, app)
+        self._tba = TbaInteractor(self, app)
 
-        self._add_url_rule('/get/available_events', '/get/available_events', view_func=self.get_available_events, methods=('GET',))
-        self._add_url_rule('/setup_tba_event', '/setup_tba_event', view_func=lambda: self.setup_event(use_tba=True), methods=('POST',))
-        self._add_url_rule('/setup_event', '/setup_event', view_func=self.setup_event, methods=('POST',))
+        self._app.add_url_rule('/get/available_events', '/get/available_events', view_func=self.get_available_events, methods=('GET',))
+
+        self._app.add_url_rule('/setup_tba_event', '/setup_tba_event', view_func=lambda: self.setup_event(use_tba=True), methods=('POST',))
+        self._app.add_url_rule('/setup_event', '/setup_event', view_func=self.setup_event, methods=('POST',))
 
     def _load_db(self):
         if path.isfile(self.filepath):
@@ -29,6 +32,37 @@ class DatabaseInteractor:
     def commit(self):
         json.dump(self._db, open(self.filepath, "w+"))
 
+    def get_users(self):
+        return self._db['users']['users']
+
+    def get_user_by_id(self, user_id):
+        user = [e for e in self._db['users'] if e['id'] == user_id]
+        return dict(user[0]) if user else None
+
+    def get_user_by_name(self, username):
+        user = [e for e in self._db['users']['users'] if e['username'].lower() == username.lower()]
+        print(user)
+        return dict(user[0]) if user else None
+
+    def add_user(self, user):
+        user['id'] = self.get_next_id()
+        self._db['users']['max_id'] += 1
+        self._db['users']['users'].append(user)
+
+    def remove_user(self, user_id):
+        user = self.get_user_by_id(user_id)
+        if user:
+            self._db['users']['users'].remove(user)
+
+    def update_user(self, user_id, user):
+        old = self.get_user_by_id(user_id)
+        old.update(user)
+        self._db['users']['users'].remove(user)
+        self._db['users']['users'].append(old)
+
+    def get_next_id(self):
+        return int(self._db['users']['max_id'] + 1)
+
     def get_available_events(self):
         return make_response(jsonify(sorted(self.get_events(), key=lambda k: k['name'])), 200)
 
@@ -36,7 +70,7 @@ class DatabaseInteractor:
         return list(map(lambda x: x['info']['data'], self._db['events'].values()))
 
     def get_event(self, key):
-        return self._db['events'][key]
+        return dict(self._db['events'][key])
 
     def set_event(self, key, data):
         self._db['events'][key] = data
