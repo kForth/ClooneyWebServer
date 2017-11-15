@@ -4,7 +4,7 @@ from os import path
 import requests
 
 
-class TBA(object):
+class TBA:
     tba_url = 'https://thebluealliance.com/api/v3'
 
     def __init__(self, auth_key, use_cache=True, cache_filename="tba_cache.json"):

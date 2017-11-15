@@ -1,6 +1,6 @@
 from flask import make_response, jsonify
 
-from tba import TBA
+from tba_py import TBA
 
 
 class TbaInteractor:
