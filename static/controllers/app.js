@@ -414,5 +414,17 @@ app.controller('SetupEventController', function ($scope, $location, $http, Authe
 
 
 app.controller('SheetsHomeController', function ($scope, $location, $http, AuthenticationService) {
-    if (!AuthenticationService.isAuthorized(2)) $location.path("/");
+    // if (!AuthenticationService.isAuthorized(2)) $location.path("/");
+    $scope.sheets = [
+        {
+            'name': 'No Fuel',
+            'date_created': new Date().toDateString(),
+            'date_modified': new Date().toDateString()
+        },
+        {
+            'name': 'Everything',
+            'date_created': new Date().toDateString(),
+            'date_modified': new Date().toDateString()
+        }
+    ];
 });

@@ -1,1 +1,27 @@
-Sheets List
+<div class="inner-content">
+    <div class="info-holder col-xs-12 col-sm-10 col-xs-offset-0 col-sm-offset-1">
+        <h2>Scouting Sheets</h2>
+
+
+        <div class="calculation-list-holder col-xs-12">
+            <table class="table table-striped calculation-list">
+                <thead>
+                    <tr>
+                        <th class="col-xs-4" style="font-size: 20px">Name</th>
+                        <th class="col-xs-3" style="font-size: 20px">Date Created</th>
+                        <th class="col-xs-3" style="font-size: 20px">Date Modified</th>
+                        <th class="col-xs-2"></th>
+                    </tr>
+                </thead>
+                <tbody ui-sortable ng-model="sheets">
+                    <tr ng-repeat="sheet in sheets">
+                        <td style="font-weight: bold">{{ sheet.name }}</td>
+                        <td>{{ sheet.date_created }}</td>
+                        <td>{{ sheet.date_modified }}</td>
+                        <td><span class="glyphicon glyphicon-menu-hamburger" style="font-size: 12px; padding: 2px 0 5px 5px; color: #999"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
