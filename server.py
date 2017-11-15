@@ -4,7 +4,7 @@ from db import DatabaseInteractor
 
 app = Flask(__name__)
 app.config.from_pyfile('server.cfg')
-db = DatabaseInteractor(app.root_path, app.add_url_rule, app.config['TBA_AUTH_KEY'])
+db = DatabaseInteractor(app)
 
 
 @app.route('/')
