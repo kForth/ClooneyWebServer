@@ -1,15 +1,21 @@
 <div class="inner-content">
     <div class="info-holder col-xs-12 col-sm-10 col-xs-offset-0 col-sm-offset-1">
-        <h2>Scouting Sheets</h2>
-
+        <div class="col-xs-12 col-sm-6">
+            <b class="page-header">Scouting Sheets</b>
+        </div>
+        <div class="col-xs-12 col-sm-6" style="text-align: right">
+            <ul class="list-unstyled">
+                <li><a class="btn btn-default" href="#/sheets/create">Create New</a></li>
+            </ul>
+        </div>
 
         <div class="calculation-list-holder col-xs-12">
             <table class="table table-striped calculation-list">
                 <thead>
-                    <tr>
-                        <th class="col-xs-4" style="font-size: 20px">Name</th>
-                        <th class="col-xs-3" style="font-size: 20px">Date Created</th>
-                        <th class="col-xs-3" style="font-size: 20px">Date Modified</th>
+                    <tr style="font-size: 18px">
+                        <th class="col-xs-4">Name</th>
+                        <th class="col-xs-3">Date Created</th>
+                        <th class="col-xs-3">Date Modified</th>
                         <th class="col-xs-2"></th>
                     </tr>
                 </thead>
@@ -18,7 +24,7 @@
                         <td style="font-weight: bold">{{ sheet.name }}</td>
                         <td>{{ sheet.date_created }}</td>
                         <td>{{ sheet.date_modified }}</td>
-                        <td><span class="glyphicon glyphicon-menu-hamburger" style="font-size: 12px; padding: 2px 0 5px 5px; color: #999"></span></td>
+                        <td style="text-align: right"><span class="glyphicon glyphicon-menu-hamburger" style="font-size: 12px; padding: 2px 0 5px 5px; color: #999"></span></td>
                     </tr>
                 </tbody>
             </table>
