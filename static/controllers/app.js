@@ -42,6 +42,14 @@ var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngCook
                 templateUrl: '../../../static/views/pages/sheets/home.html',
                 controller: 'SheetsHomeController'
             })
+            .when('/sheets/create', {
+                templateUrl: '../../../static/views/pages/sheets/edit.html',
+                controller: 'SheetsCreateController'
+            })
+            .when('/sheets/edit', {
+                templateUrl: '../../../static/views/pages/sheets/edit.html',
+                controller: 'SheetsEditController'
+            })
             .when('/login', {
                 templateUrl: '../../../static/views/pages/user/login.html',
                 controller: 'UserLoginController'
@@ -420,5 +428,18 @@ app.controller('SheetsHomeController', function ($scope, $location, $http, Authe
         .then(function (resp) {
             $scope.sheets = resp.data;
 
+        });
+});
+
+app.controller('SheetsEditController', function ($scope, $location, $http, AuthenticationService) {
+    $scope.sheet_mode = 'edit';
+});
+
+app.controller('SheetsCreateController', function ($scope, $location, $http, AuthenticationService) {
+    $scope.sheet_mode = 'create';
+
+    $http.get("/get/default_fields")
+        .then(function(resp){
+            $scope.default_fields = resp.data;
         });
 });

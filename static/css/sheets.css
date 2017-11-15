@@ -1,0 +1,27 @@
+.sheet-edit-holder {
+    height: 500px;
+}
+
+.sheet-area {
+    background: #f00;
+    padding: 10px;
+}
+
+.field-area {
+    padding: 10px;
+    overflow-y: scroll;
+    height: 100%;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.field-section {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+    font-size: 14px
+}
+
+.field-section h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}

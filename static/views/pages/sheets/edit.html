@@ -1,0 +1,40 @@
+<link rel="stylesheet" type="text/css" href="../../../../static/css/sheets.css">
+
+<div class="inner-content">
+    <div class="info-holder col-xs-12 col-sm-10 col-xs-offset-0 col-sm-offset-1">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                <b class="page-header" ng-if="sheet_mode == 'edit'">Edit Sheet</b>
+                <b class="page-header" ng-if="sheet_mode == 'create'">Create Sheet</b>
+            </div>
+            <div class="col-xs-12 col-sm-6" style="text-align: right">
+                <ul class="list-unstyled">
+                    <li><a class="btn btn-default">Add Field</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row sheet-edit-holder">
+            <div class="col-xs-6 sheet-area">
+
+            </div>
+            <div class="col-xs-6 field-area">
+                <div class="field-section" ng-repeat="field in default_fields">
+                    <h1>{{field.key}} <small>{{field.type}}</small></h1>
+                    <div class="form-group row">
+                        <label class="col-xs-4 col-form-label" for="{{field.key}}_key">Key:</label>
+                        <div class="col-xs-8">
+                            <input class="form-control" type="text" id="{{field.key}}_key">
+                        </div>
+                    </div>
+                    <div class="form-group row" ng-repeat="option in field.options">
+                        <label class="col-xs-4 col-form-label" for="{{field.key}}_{{option.id}}">{{option.label}}:</label>
+                        <div class="col-xs-8">
+                            <input ng-class="{'form-control': option.type != 'checkbox'}" type="{{ option.type }}" id="{{field.key}}_{{option.id}}" value="{{ option.value }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
