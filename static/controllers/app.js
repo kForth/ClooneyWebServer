@@ -119,7 +119,10 @@ app.directive('multiSortTable', function ($location, $cookies) {
 });
 
 app.controller('ApplicationController', function ($scope, $location, $http, $rootScope) {
+    $scope.data_loading = false;
+
     $scope.$on('$routeChangeStart', function () {
+        $scope.data_loading = false;
         $scope.tracking_input_data.event = $scope.tracked_event;
         if($rootScope.globals != undefined && $rootScope.globals.currentUser != undefined){
             $scope.user_data = $rootScope.globals.currentUser;
@@ -252,7 +255,7 @@ app.controller('UserLoginController', function ($scope, $location, Authenticatio
     };
 
     $scope.login = function () {
-        $scope.dataLoading = true;
+        $scope.data_loading = true;
         AuthenticationService.Login($scope.input.username, $scope.input.password,
             function (response) {
                 AuthenticationService.SetCredentials(response.data);
@@ -260,7 +263,7 @@ app.controller('UserLoginController', function ($scope, $location, Authenticatio
             },
             function (ignored) {
                 $scope.alert = 'Error. Try Again.';
-                $scope.dataLoading = false;
+                $scope.data_loading = false;
             });
     }
 
@@ -279,13 +282,14 @@ app.controller('UserRegisterController', function ($scope, $location, UserServic
     };
 
     $scope.register = function () {
-        $scope.dataLoading = true;
+        $scope.data_loading = true;
         UserService.Create($scope.input)
             .then(function (ignored) {
                     $location.path('/login');
                 },
                 function (ignored) {
                     $scope.alert = 'Error. Try Again.';
+                    $scope.data_loading = false;
                 });
     }
 });

@@ -12,6 +12,11 @@
 
 <div class="content" ng-view ng-cloak></div>
 
+<div class="loading-icon-holder" ng-show="data_loading">
+  <h1>Loading...</h1>
+  <img src="../../static/img/celtx_717x717.png">
+</div>
+
 <script src="../../static/node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../../static/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
 <script src="../../static/node_modules/angular/angular.min.js"></script>
