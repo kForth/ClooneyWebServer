@@ -20,8 +20,8 @@
             <input type="password" name="password" id="password" class="form-control" ng-model="input.password" required />
         </div>
         <div class="form-actions">
-            <button ng-click="register()" ng-disabled="dataLoading" class="btn btn-primary">Register</button>
-            <a href="#/login" class="btn btn-link">Cancel</a>
+            <button ng-click="register()" ng-disabled="data_loading" class="btn btn-primary">Register</button>
+            <a href="/login" class="btn btn-link">Cancel</a>
         </div>
         <div uib-alert ng-if="alert != undefined" class="alert-danger" close="closeAlert()" style="margin-top: 5px">{{ alert }}</div>
     </div>

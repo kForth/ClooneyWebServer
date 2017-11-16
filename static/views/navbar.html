@@ -25,6 +25,7 @@
                     <a uib-dropdown-toggle><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a>
                     <ul uib-dropdown-menu>
                         <li><a href="#/login" ng-if="user_data == undefined">Login</a></li>
+                        <li><a href="#/register" ng-if="user_data == undefined">Register</a></li>
                         <li><a href="#/logout" ng-if="user_data != undefined">Logout</a></li>
                         <li role="separator" class="divider" ng-if="user_data.user.role >= 2"></li>
                         <li><a href="#/sheets" ng-if="user_data != undefined">Edit Scouting Sheets</a></li>
