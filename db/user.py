@@ -11,6 +11,7 @@ class UserDatabaseInteractor:
         self._app = app
 
         self._app.add_url_rule('/login', '/login', view_func=self.login_user, methods=('POST',))
+        self._app.add_url_rule('/logout', '/logout', view_func=self.logout_user, methods=('POST',))
         self._app.add_url_rule('/users/create/', '/users/create/', self.register_user, methods=('POST',))
         self._app.add_url_rule('/users/update/<id>', '/users/update/<id>', self.get_user_by_name, methods=('POST',))
 
@@ -65,7 +66,6 @@ class UserDatabaseInteractor:
             username = credentials['username']
             password = credentials['password']
             user = self._db.get_user_by_name(username)
-            print(user)
             if user and self._verify_password(password, user['password']):
                 response = {
                     'id': user['id'],
@@ -83,3 +83,6 @@ class UserDatabaseInteractor:
                 return make_response(jsonify(), 400)
         else:
             return make_response(jsonify(), 409)
+
+    def logout_user(self):
+        return make_response(jsonify(), 200)
