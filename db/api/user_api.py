@@ -1,9 +1,7 @@
-from flask import jsonify, make_response, request
-from hashlib import sha1
-import hmac
+from flask import make_response, jsonify, request
 
 
-class UserDatabaseInteractor:
+class UserDatabaseEndpoints:
     ROLES = ['Guest', 'User', 'Editor', 'Admin']
 
     def __init__(self, db, app):
@@ -14,14 +12,6 @@ class UserDatabaseInteractor:
         self._app.add_url_rule('/logout', '/logout', view_func=self.logout_user, methods=('POST',))
         self._app.add_url_rule('/users/create/', '/users/create/', self.register_user, methods=('POST',))
         self._app.add_url_rule('/users/update/<id>', '/users/update/<id>', self.get_user_by_name, methods=('POST',))
-
-    def _encrypt_password(self, pwd):
-        hash = hmac.new(str(self._app.config['PASSWORD_KEY']).encode('UTF-8'), msg=str(pwd).encode('UTF-8'), digestmod=sha1)
-        return hash.hexdigest()
-
-    def _verify_password(self, pwd, hash):
-        pwd = self._encrypt_password(pwd)
-        return hmac.compare_digest(str(pwd).encode('UTF-8'), str(hash).encode('UTF-8'))
 
     def get_user_by_id(self, id):
         user = self._db.get_user_by_id(id)
@@ -44,7 +34,7 @@ class UserDatabaseInteractor:
             if not existing:
                 if 'password' in user.keys():
                     user['role'] = self.ROLES[0]
-                    user['password'] = self._encrypt_password(user['password'])
+                    user['password'] = self._db.encrypt_password(user['password'])
                     self._db.add_user(user)
                     self._db.commit()
                     return make_response(jsonify(), 200)
@@ -54,7 +44,7 @@ class UserDatabaseInteractor:
         user = request.json()
         existing = self._db.get_user_by_id(id)
         if existing:
-            if self._verify_password(user['password'], existing['password']):
+            if self._db.verify_password(user['password'], existing['password']):
                 self._db.update_user(id, user)
                 self._db.commit()
                 return make_response(jsonify(), 200)
@@ -66,7 +56,7 @@ class UserDatabaseInteractor:
             username = credentials['username']
             password = credentials['password']
             user = self._db.get_user_by_name(username)
-            if user and self._verify_password(password, user['password']):
+            if user and self._db.verify_password(password, user['password']):
                 response = {
                     'id': user['id'],
                     'key': 1234567890,
