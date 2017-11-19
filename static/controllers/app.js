@@ -256,6 +256,7 @@ app.controller('UserLogoutController', function ($scope, $location, Authenticati
 });
 
 app.controller('UserLoginController', function ($scope, $location, AuthenticationService) {
+    if (AuthenticationService.isAuthorized(0)) $location.path("/");
     $scope.input = {
         'username': '',
         'password': ''
@@ -437,9 +438,62 @@ app.controller('SheetsEditController', function ($scope, $location, $http, Authe
 
 app.controller('SheetsCreateController', function ($scope, $location, $http, AuthenticationService) {
     $scope.sheet_mode = 'create';
+    $scope.expanded = {};
+
+    $scope.fields = [];
+
+    $scope.saveEditField = function(){
+        $scope.fields[$scope.selected_field_index] = $scope.selected_field;
+        $scope.cancelEditField();
+    };
+
+    $scope.cancelEditField = function(){
+        $scope.selected_field = undefined;
+    };
+
+    $scope.editField = function(field){
+        $scope.selected_field_index = $scope.fields.indexOf(field);
+        $scope.selected_field = angular.copy(field);
+    };
+
+    $scope.addField = function(type, field){
+        var new_field = {
+            'type': type
+        };
+        for(var i in field){
+            var option = field[i];
+            switch(option.type){
+                default:
+                case 'text':
+                    new_field[option.id] = option.value || "";
+                    break;
+                case 'number':
+                    new_field[option.id] = option.value || 0;
+                    break;
+                case 'checkbox':
+                    new_field[option.id] = option.value || false;
+                    break;
+            }
+        }
+
+        var existing_keys = [];
+        $scope.fields.forEach(function(e){ existing_keys.push(e.key || []);});
+        var i = 0;
+        if(existing_keys.indexOf(new_field.key) !== -1) new_field.key = new_field.key + "_" + (++i);
+        while(existing_keys.indexOf(new_field.key) !== -1){
+            new_field.key = new_field.key.substring(0, new_field.key.length - 1 - (++i).toString().length) + "_" + i.toString();
+        }
+        new_field.name = new_field.key.replace(/_/g, " ").toProperCase();
+
+        $scope.fields.push(new_field);
+    };
 
     $http.get("/get/default_fields")
         .then(function(resp){
             $scope.default_fields = resp.data;
         });
+
+    String.prototype.toProperCase = function () {
+        return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    };
 });
