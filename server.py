@@ -11,8 +11,8 @@ def add_route(route, func, methods=('GET',), url_prefix=""):
     app.add_url_rule(url_prefix + route, url_prefix + route, func, methods=methods)
 
 db = DatabaseInteractor(app)
-
-user_endpoints = UserDatabaseEndpoints(db.users, add_route)
+active_users = {}
+user_endpoints = UserDatabaseEndpoints(db.users, add_route, active_users)
 sheet_endpoints = SheetDatabaseEndpoints(db.sheets, add_route)
 event_endpoints = EventDatabaseEndpoints(db.events, add_route)
 entry_endpoints = EntryDatabaseEndpoints(db.entries, add_route)

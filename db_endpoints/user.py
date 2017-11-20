@@ -1,3 +1,4 @@
+import time
 from flask import make_response, jsonify, request
 
 from models import User
@@ -6,8 +7,9 @@ from models import User
 class UserDatabaseEndpoints:
     ROLES = ['Guest', 'User', 'Editor', 'Admin']
 
-    def __init__(self, db_interactor, add_route):
+    def __init__(self, db_interactor, add_route, active_users):
         self._db_interactor = db_interactor
+        self._active_users = active_users
 
         add_route('/login', self.login_user, ('POST',))
         add_route('/logout', self.logout_user, ('POST',))
@@ -61,7 +63,7 @@ class UserDatabaseEndpoints:
             if user and self._db_interactor.verify_password(password, user.password):
                 response = {
                     'id': user.id,
-                    'key': 1234567890,
+                    'key': self._db_interactor.encrypt_password(username + str(time.time())),
                     'user': {
                         'id': user.id,
                         'username': username,
@@ -69,6 +71,10 @@ class UserDatabaseEndpoints:
                         'first_name': user.first_name,
                         'last_name': user.last_name
                     }
+                }
+                self._active_users[username] = {
+                    'key': response['key'],
+                    'expiration': time.time() + 604800
                 }
                 return make_response(jsonify(response), 200)
             else:
