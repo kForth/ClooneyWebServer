@@ -1,6 +1,6 @@
 from flask import Flask
 
-from db import DatabaseInteractor
+from db_interactors import DatabaseInteractor
 
 app = Flask(__name__)
 app.config.from_pyfile('server.cfg')

@@ -1,4 +1,4 @@
-from db.models import ScoutingEntry
+from models import ScoutingEntry
 
 
 class EntryDatabaseInteractor:

@@ -1,19 +1,21 @@
 import json
 from os import path
 
-from db.api.event_api import EventDatabaseEndpoints
-from db.api.sheet_api import SheetDatabaseEndpoints
-from db.api.user_api import UserDatabaseEndpoints
-from db.interactors.event import EventDatabaseInteractor
-from db.interactors.sheet import SheetDatabaseInteractor
-from db.interactors.tba import TbaInteractor
-from db.interactors.user import UserDatabaseInteractor
+from db_endpoints.event_api import EventDatabaseEndpoints
+from db_endpoints.sheet_api import SheetDatabaseEndpoints
+from db_endpoints.user_api import UserDatabaseEndpoints
+from db_interactors.event import EventDatabaseInteractor
+from db_interactors.sheet import SheetDatabaseInteractor
+from db_interactors.tba import TbaInteractor
+from db_interactors.user import UserDatabaseInteractor
 
 
 class DatabaseInteractor:
-    DEFAULT_DB = {'events': {}, 'users': {'users': [], 'max_id': -1}, 'sheets': [], 'entry': {'entry': [], 'max_id': -1}}
+    DEFAULT_DB = {
+        'events': {}, 'users': {'users': [], 'max_id': -1}, 'sheets': [], 'entry': {'entry': [], 'max_id': -1}
+    }
 
-    def __init__(self, app, filename="db.json"):
+    def __init__(self, app, filename="db/db.json"):
         self._filepath = app.root_path + "/" + filename
         self._app = app
         self._read_db()

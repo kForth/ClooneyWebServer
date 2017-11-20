@@ -1,7 +1,7 @@
 import hmac
 from hashlib import sha1
 
-from db.models import User
+from models import User
 
 
 class UserDatabaseInteractor:

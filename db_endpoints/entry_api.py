@@ -1,6 +1,6 @@
-from flask import request, jsonify, make_response
+from flask import jsonify, make_response, request
 
-from db.models import ScoutingEntry
+from models import ScoutingEntry
 
 
 class EntryDatabaseEndpoints:

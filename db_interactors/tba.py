@@ -7,7 +7,7 @@ class TbaInteractor:
     def __init__(self, db, app):
         self._db = db
         self._app = app
-        self._tba = TBA(app.config['TBA_AUTH_KEY'])
+        self._tba = TBA(app.config['TBA_AUTH_KEY'], cache_filename=app.config['TBA_CACHE_FILE'])
 
         self._app.add_url_rule('/get/search_events', '/get/search_events', view_func=self.get_search_events, methods=('GET',))
 
