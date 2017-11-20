@@ -1,11 +1,13 @@
 <link rel="stylesheet" type="text/css" href="../../../../static/css/sheets.css">
 
 <div class="inner-content">
-    <div class="info-holder col-xs-12 col-sm-10 col-xs-offset-0 col-sm-offset-1">
+    <div class="info-holder scrollable col-xs-12 col-sm-10 col-xs-offset-0 col-sm-offset-1">
+        <div class="row sheet-edit-header">
             <div class="col-xs-12">
                 <b class="page-header" ng-if="sheet_mode == 'edit'">Edit Sheet</b>
                 <b class="page-header" ng-if="sheet_mode == 'create'">Create Sheet</b>
             </div>
+        </div>
 
         <div class="row sheet-edit-holder">
             <div class="col-xs-6 sheet-area">
@@ -13,6 +15,7 @@
             </div>
 
             <div class="col-xs-6">
+                <input ng-model="sheet.name" type="text" class="form-control" placeholder="Sheet Name">
                 <ul class="list-inline">
                     <li uib-dropdown>
                         <a class="btn btn-default" uib-dropdown-toggle><span class="glyphicon glyphicon-plus"></span> Add Field</a>
@@ -23,16 +26,19 @@
                         </ul>
                     </li>
                     <li style="float: right">
-                        <a class="btn btn-success">Save</a>
+                        <a class="btn btn-success" ng-click="saveSheet()">Save</a>
                     </li>
                     <li style="float: right">
-                        <a class="btn btn-danger">Cancel</a>
+                        <a class="btn btn-danger" ng-click="cancelSheet()">Cancel</a>
+                    </li>
+                    <li style="float: right" ng-if="sheet_mode == 'edit'">
+                        <a class="btn btn-warning" ng-click="revertSheet()">Revert</a>
                     </li>
                 </ul>
                 <div class="field-area">
                     <table class="table">
-                        <tbody ui-sortable ng-model="fields">
-                            <tr ng-repeat="field in fields">
+                        <tbody ui-sortable ng-model="sheet.data">
+                            <tr ng-repeat="field in sheet.data">
                                 <td style="border:none">
                                     <div class="field-section row">
                                         <div class="col-xs-10" style="text-overflow: ellipsis">

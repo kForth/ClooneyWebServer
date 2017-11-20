@@ -44,11 +44,21 @@ var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngCook
             })
             .when('/sheets/create', {
                 templateUrl: '../../../static/views/pages/sheets/edit.html',
-                controller: 'SheetsCreateController'
+                controller: 'SheetsEditController',
+                resolve: {
+                    appPath: function ($route) {
+                        return {'mode': 'create'};
+                    }
+                }
             })
-            .when('/sheets/edit', {
+            .when('/sheets/edit/:id', {
                 templateUrl: '../../../static/views/pages/sheets/edit.html',
-                controller: 'SheetsEditController'
+                controller: 'SheetsEditController',
+                resolve: {
+                    appPath: function ($route) {
+                        return {'mode': 'edit', 'id': $route.current.params.id};
+                    }
+                }
             })
             .when('/login', {
                 templateUrl: '../../../static/views/pages/user/login.html',
@@ -401,22 +411,58 @@ app.controller('SheetsHomeController', function ($scope, $location, $http, Authe
     $http.get('/get/sheets')
         .then(function (resp) {
             $scope.sheets = resp.data;
-
         });
 });
 
-app.controller('SheetsEditController', function ($scope, $location, $http, AuthenticationService) {
-    $scope.sheet_mode = 'edit';
-});
-
-app.controller('SheetsCreateController', function ($scope, $location, $http, AuthenticationService) {
-    $scope.sheet_mode = 'create';
+app.controller('SheetsEditController', function ($scope, $location, $http, AuthenticationService, appPath) {
+    // if (!AuthenticationService.isAuthorized(2)) $location.path("/");
+    $scope.sheet_mode = appPath.mode;
     $scope.expanded = {};
 
-    $scope.fields = [];
+    if(appPath.id != undefined){
+        $scope.data_loading = true;
+        $http.get('/get/sheet/' + appPath.id)
+            .then(function(resp){
+                $scope.sheet = resp.data;
+                $scope.backup_sheet = angular.copy($scope.sheet);
+            },
+            function(ignored){
+                $location.path('/sheets');
+            });
+    }
+    else{
+        $scope.sheet = {
+            'name': '',
+            'id': undefined,
+            'data': []
+        };
+    }
+
+    $scope.saveSheet = function(){
+        if($scope.sheet.name.length < 5){
+            return;
+        }
+        $scope.data_loading = true;
+        $http.post('/save/sheet', $scope.sheet)
+            .then(function(ignored){
+                $scope.data_loading = false;
+            },
+            function(ignored){
+                $scope.data_loading = false;
+                console.log('Failed to save sheet.');
+            });
+    };
+
+    $scope.cancelSheet = function(){
+        // $location.path('/sheets');
+    };
+
+    $scope.revertSheet = function(){
+        // $scope.sheet = angular.copy($scope.backup_sheet);
+    };
 
     $scope.saveEditField = function(){
-        $scope.fields[$scope.selected_field_index] = $scope.selected_field;
+        $scope.sheet.data[$scope.selected_field_index] = $scope.selected_field;
         $scope.cancelEditField();
     };
 
@@ -425,7 +471,7 @@ app.controller('SheetsCreateController', function ($scope, $location, $http, Aut
     };
 
     $scope.editField = function(field){
-        $scope.selected_field_index = $scope.fields.indexOf(field);
+        $scope.selected_field_index = $scope.sheet.data.indexOf(field);
         $scope.selected_field = angular.copy(field);
     };
 
@@ -450,20 +496,22 @@ app.controller('SheetsCreateController', function ($scope, $location, $http, Aut
         }
 
         var existing_keys = [];
-        $scope.fields.forEach(function(e){ existing_keys.push(e.key || []);});
-        var i = 0;
-        if(existing_keys.indexOf(new_field.key) !== -1) new_field.key = new_field.key + "_" + (++i);
+        $scope.sheet.data.forEach(function(e){ existing_keys.push(e.key || []);});
+        var suffix_num = 0;
+        if(existing_keys.indexOf(new_field.key) !== -1) new_field.key = new_field.key + "_" + (++suffix_num);
         while(existing_keys.indexOf(new_field.key) !== -1){
-            new_field.key = new_field.key.substring(0, new_field.key.length - 1 - (++i).toString().length) + "_" + i.toString();
+            new_field.key = new_field.key.substring(0, new_field.key.length - 1 - (++suffix_num).toString().length) + "_" + suffix_num.toString();
         }
-        new_field.name = new_field.key.replace(/_/g, " ").toProperCase();
+        new_field.name = new_field.key.replace(/_/g, " ").toProperCase(); //Replace all '_' with ' '
 
-        $scope.fields.push(new_field);
+        $scope.sheet.data.push(new_field);
     };
 
+    $scope.data_loading = true;
     $http.get("/get/default_fields")
         .then(function(resp){
             $scope.default_fields = resp.data;
+            $scope.data_loading = false;
         });
 
     String.prototype.toProperCase = function () {
