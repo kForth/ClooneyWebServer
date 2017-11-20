@@ -18,11 +18,11 @@ class DatabaseInteractor:
         self._app = app
         self._read_db()
 
-        self.tba_interactor = TbaInteractor(self, app)
-        self.user_interactor = UserDatabaseInteractor(self, app)
-        self.sheet_interactor = SheetDatabaseInteractor(self, app)
-        self.event_interactor = EventDatabaseInteractor(self)
-        self.entry_interactor = EntryDatabaseInteractor(self)
+        self.tba = TbaInteractor(self, app)
+        self.users = UserDatabaseInteractor(self, app)
+        self.sheets = SheetDatabaseInteractor(self, app)
+        self.events = EventDatabaseInteractor(self)
+        self.entries = EntryDatabaseInteractor(self)
 
     def _read_db(self):
         if path.isfile(self._filepath):

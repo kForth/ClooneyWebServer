@@ -12,12 +12,10 @@ def add_route(route, func, methods=('GET',), url_prefix=""):
 
 db = DatabaseInteractor(app)
 
-user_endpoints = UserDatabaseEndpoints(db.user_interactor, add_route)
-sheet_endpoints = SheetDatabaseEndpoints(db.sheet_interactor, add_route)
-event_endpoints = EventDatabaseEndpoints(db.event_interactor, add_route)
-entry_endpoints = EntryDatabaseEndpoints(db.entry_interactor, add_route)
-
-
+user_endpoints = UserDatabaseEndpoints(db.users, add_route)
+sheet_endpoints = SheetDatabaseEndpoints(db.sheets, add_route)
+event_endpoints = EventDatabaseEndpoints(db.events, add_route)
+entry_endpoints = EntryDatabaseEndpoints(db.entries, add_route)
 # tba_endpoints = TbaDatabaseEndpoints(db.tba_interactor, app)
 
 
