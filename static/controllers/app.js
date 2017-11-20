@@ -406,7 +406,7 @@ app.controller('SetupEventController', function ($scope, $rootScope, $location, 
 
 
 app.controller('SheetsHomeController', function ($scope, $rootScope, $location, $http, AuthenticationService, FileSaver, Blob) {
-    // if (!AuthenticationService.isAuthorized(2)) $location.path("/");
+    if (!AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.sheets = [];
 
     $scope.showDownloadDialog = function(sheet){
@@ -443,7 +443,7 @@ app.controller('SheetsHomeController', function ($scope, $rootScope, $location, 
 });
 
 app.controller('SheetsEditController', function ($scope, $rootScope, $location, $http, AuthenticationService, appPath) {
-    // if (!AuthenticationService.isAuthorized(2)) $location.path("/");
+    if (!AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.sheet_mode = appPath.mode;
     $scope.expanded = {};
 
