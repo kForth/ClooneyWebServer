@@ -6,7 +6,7 @@ class UploadDatabaseEndpoints:
         self._db = db
         self._app = app
 
-        self._app.add_url_rule('/add/entry')
+        # self._app.add_url_rule('/add/entry')
 
     def add_entry(self):
         if request.json():

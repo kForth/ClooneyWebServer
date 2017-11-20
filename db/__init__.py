@@ -18,7 +18,7 @@ class DatabaseInteractor:
         self._app = app
         self.db = self._read()
 
-        self._user_interactor = UserDatabaseInteractor(self.db, self._app)
+        self._user_interactor = UserDatabaseInteractor(self, self._app)
         self._user_endpoints = UserDatabaseEndpoints(self._user_interactor, self._app)
 
         self._sheet_interactor = SheetDatabaseInteractor(self, self._app)
@@ -27,8 +27,8 @@ class DatabaseInteractor:
         self._tba_interactor = TbaInteractor(self, self._app)
         # self._tba_endpoints = TbaDatabaseEndpoints(self._tba_interactor, self._app)
 
-        self._event_interactor = EventDatabaseInteractor(self.db, self._app)
-        self._event_endpoints = EventDatabaseEndpoints(self.db, self._app)
+        self._event_interactor = EventDatabaseInteractor(self, self._app)
+        self._event_endpoints = EventDatabaseEndpoints(self, self._app)
 
     def get_users(self):
         return self.db['users']
