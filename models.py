@@ -51,4 +51,32 @@ class ScoutingEntry:
 
     @staticmethod
     def from_json(data):
-        return User(**data) if User.verify_json(data) else None
+        return ScoutingEntry(**data) if ScoutingEntry.verify_json(data) else None
+
+
+class ScoutingSheetConfig:
+    def __init__(self, id, name, data, date_created="", date_modified=""):
+        self.id = id
+        self.name = name
+        self.data = data
+        self.date_created = date_created
+        self.date_modified = date_modified
+
+    def to_dict(self):
+        return {
+            'id':    self.id,
+            'name': self.name,
+            'data':  self.data,
+            'date_created':  self.date_created,
+            'date_modified':  self.date_modified
+        }
+
+    @staticmethod
+    def verify_json(data):
+        req_keys = ['id', 'name', 'data']
+        opt_keys = ['date_created', 'date_modified']
+        return all([k in data.keys() for k in req_keys]) and all([k in opt_keys or k in req_keys for k in data.keys()])
+
+    @staticmethod
+    def from_json(data):
+        return ScoutingSheetConfig(**data) if ScoutingSheetConfig.verify_json(data) else None

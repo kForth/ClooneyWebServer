@@ -20,32 +20,36 @@ class UserDatabaseInteractor:
         pwd = self.encrypt_password(pwd)
         return hmac.compare_digest(str(pwd).encode('UTF-8'), str(hash).encode('UTF-8'))
 
+    def get_users(self):
+        return self._db.db['users']['users']
+
     def get_user_by_id(self, user_id):
-        user = [e for e in self._db.db['users']['users'] if e['id'] == user_id]
+        user = [e for e in self.get_users() if e['id'] == user_id]
         return User.from_json(user[0]) if user else None
 
     def get_user_by_username(self, username):
-        user = [e for e in self._db.db['users']['users'] if e['username'].lower() == username.lower()]
+        user = [e for e in self.get_users() if e['username'].lower() == username.lower()]
         return User.from_json(user[0]) if user else None
 
     def add_user(self, user):
         user = user.to_dict()
-        self._db.db['users']['users'].append(user)
+        self.get_users().append(user)
         self._db.commit()
 
     def remove_user(self, user_id):
         user = self.get_user_by_id(user_id)
         if user:
-            self._db.db['users']['users'].remove(user)
+            self.get_users().remove(user)
         self._db.commit()
 
     def update_user(self, user_id, user):
         old = self.get_user_by_id(user_id).to_dict()
         old.update(user.to_dict)
-        self._db.db['users']['users'].remove(user)
-        self._db.db['users']['users'].append(old)
+        self.get_users().remove(user)
+        self.get_users().append(old)
         self._db.commit()
 
     def get_next_user_id(self):
         self._db.db['users']['max_id'] += 1
+        self._db.commit()
         return self._db.db['users']['max_id']
