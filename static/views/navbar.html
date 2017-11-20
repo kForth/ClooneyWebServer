@@ -17,21 +17,20 @@
                 <input type="text" class="form-control" style="width: 250px" ng-model="tracking_input_data.event" placeholder="Select Event" uib-typeahead="e as (e.year + ' ' + e.name) for e in available_events | filter:$viewValue | limitTo: 8">
                 <button ng-click="select_event_button()" class="btn btn-default">Go</button>
             </div>
+
             <ul class="nav navbar-nav navbar-right">
                 <li ng-if="tracked_event_okay"><a href="#/a">Analysis</a></li>
                 <li ng-if="tracked_event_okay && user_data.user.role >= 2"><a href="#/s">Settings</a></li>
                 <li uib-dropdown>
                     <a uib-dropdown-toggle><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a>
                     <ul uib-dropdown-menu>
-                        <li ng-if="user_data == undefined"><a href="#/login">Login</a></li>
-                        <li ng-if="user_data == undefined"><a href="#/register">Register</a></li>
-
-                        <li ng-if="user_data != undefined"><a href="#/logout">Logout</a></li>
-
-                        <li ng-if="user_data.user.role >= 2" role="separator" class="divider"></li>
-                        <li ng-if="user_data.user.role >= 2"><a href="#/sheets">Edit Scouting Sheets</a></li>
-                        <li ng-if="user_data.user.role >= 2" role="separator" class="divider"></li>
-                        <li ng-if="user_data.user.role >= 2"><a href="#/setup">Setup New Event</a></li>
+                        <li><a href="#/login" ng-if="user_data == undefined">Login</a></li>
+                        <li><a href="#/register" ng-if="user_data == undefined">Register</a></li>
+                        <li><a href="#/logout" ng-if="user_data != undefined">Logout</a></li>
+                        <li role="separator" class="divider" ng-if="user_data.user.role >= 2"></li>
+                        <li><a href="#/sheets" ng-if="user_data != undefined">Edit Scouting Sheets</a></li>
+                        <li role="separator" class="divider" ng-if="user_data.user.role >= 2"></li>
+                        <li><a href="#/setup" ng-if="user_data.user.role >= 2">Setup New Event</a></li>
                     </ul>
                 </li>
             </ul>
