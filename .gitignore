@@ -6,6 +6,7 @@ env/
 static/node_modules/*
 static/yarn.lock
 static/package.json
+static/js/Blob-js/
 db/db.json
 db/tba_cache.json
 sheets/
