@@ -233,6 +233,20 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
     }
 });
 
+app.controller('SettingsSidebarController', function($scope, $rootScope, $location){
+    $scope.nav = function (path) {
+        $location.path(path);
+    };
+
+    $scope.update_event = function(){
+        console.log("update");
+    };
+
+    $scope.update_tba = function(){
+        console.log("update_tba");
+    };
+});
+
 app.controller('UserLogoutController', function ($scope, $rootScope, $location, AuthenticationService) {
     AuthenticationService.ClearCredentials();
     $location.path("/login");
