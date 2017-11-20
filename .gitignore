@@ -8,3 +8,5 @@ static/yarn.lock
 static/package.json
 db/db.json
 db/tba_cache.json
+
+resources/OpenSansEmoji.ttf
