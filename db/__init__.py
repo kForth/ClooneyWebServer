@@ -28,7 +28,7 @@ class DatabaseInteractor:
         # self._tba_endpoints = TbaDatabaseEndpoints(self._tba_interactor, self._app)
 
         self._event_interactor = EventDatabaseInteractor(self, self._app)
-        self._event_endpoints = EventDatabaseEndpoints(self, self._app)
+        self._event_endpoints = EventDatabaseEndpoints(self._event_interactor, self._app)
 
     def get_users(self):
         return self.db['users']

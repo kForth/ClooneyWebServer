@@ -6,10 +6,10 @@ class EventDatabaseEndpoints:
         self._db = db
         self._app = app
 
-        self._app.add_url_rule('/get/available_events', '/get/available_events', view_func=self.get_available_events, methods=('GET',))
+        self._app.add_route('/get/available_events', self.get_available_events)
 
-        self._app.add_url_rule('/setup_tba_event', '/setup_tba_event', view_func=lambda: self.setup_event(use_tba=True), methods=('POST',))
-        self._app.add_url_rule('/setup_event', '/setup_event', view_func=self.setup_event, methods=('POST',))
+        self._app.add_route('/setup_tba_event', lambda: self.setup_event(use_tba=True), ('POST',))
+        self._app.add_route('/setup_event', self.setup_event, ('POST',))
 
     def get_available_events(self):
         return make_response(jsonify(sorted(self._db.get_events(), key=lambda k: k['name'])), 200)

@@ -10,10 +10,10 @@ class UserDatabaseEndpoints:
         self._db = db
         self._app = app
 
-        self._app.add_url_rule('/login', '/login', self.login_user, methods=('POST',))
-        self._app.add_url_rule('/logout', '/logout', self.logout_user, methods=('POST',))
-        self._app.add_url_rule('/users/create/', '/users/create/', self.register_user, methods=('POST',))
-        self._app.add_url_rule('/users/update/<id>', '/users/update/<id>', self.get_user_by_username, methods=('POST',))
+        self._app.add_route('/login', self.login_user, ('POST',))
+        self._app.add_route('/logout', self.logout_user, ('POST',))
+        self._app.add_route('/users/create/', self.register_user, ('POST',))
+        self._app.add_route('/users/update/<id>', self.get_user_by_username, ('POST',))
 
     def get_user_by_id(self, id):
         user = self._db.get_user_by_id(id)

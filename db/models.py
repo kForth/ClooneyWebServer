@@ -1,7 +1,7 @@
 class User:
-    def __init__(self, username, password_hash, first_name, last_name, id, role="Guest"):
+    def __init__(self, username, password, first_name, last_name, id, role="Guest"):
         self.username = username
-        self.password_hash = password_hash
+        self.password_hash = password
         self.first_name = first_name
         self.last_name = last_name
         self.id = id
@@ -9,12 +9,12 @@ class User:
 
     def to_dict(self):
         return {
-            'username': self.username,
-            'password': self.password_hash,
+            'username':   self.username,
+            'password':   self.password_hash,
             'first_name': self.first_name,
-            'last_name': self.last_name,
-            'id': self.id,
-            'role': self.role
+            'last_name':  self.last_name,
+            'id':         self.id,
+            'role':       self.role
         }
 
     @staticmethod

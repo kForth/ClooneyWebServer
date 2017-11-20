@@ -24,7 +24,7 @@ class UserDatabaseInteractor:
         user = [e for e in self._db.db['users'] if e['id'] == user_id]
         return User.from_json(user[0]) if user else None
 
-    def get_user_by_name(self, username):
+    def get_user_by_username(self, username):
         user = [e for e in self._db.db['users']['users'] if e['username'].lower() == username.lower()]
         return User.from_json(user[0]) if user else None
 
