@@ -16,7 +16,7 @@
         </div>
         <div class="form-actions">
             <button ng-click="login()" ng-disabled="form.$invalid || data_loading" class="btn btn-primary">Login</button>
-            <a href="/register" class="btn btn-link">Register</a>
+            <a href="#/register" class="btn btn-link">Register</a>
         </div>
         <div uib-alert ng-if="alert != undefined" class="alert-danger" close="closeAlert()" style="margin-top: 5px">{{ alert }}</div>
     </div>

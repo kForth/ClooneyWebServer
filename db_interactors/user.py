@@ -30,8 +30,6 @@ class UserDatabaseInteractor:
 
     def add_user(self, user):
         user = user.to_dict()
-        user['id'] = self.get_next_user_id()
-        self._db.db['users']['max_id'] += 1
         self._db.db['users']['users'].append(user)
         self._db.commit()
 
@@ -49,4 +47,5 @@ class UserDatabaseInteractor:
         self._db.commit()
 
     def get_next_user_id(self):
-        return int(self._db.db['users']['max_id'] + 1)
+        self._db.db['users']['max_id'] += 1
+        return self._db.db['users']['max_id']

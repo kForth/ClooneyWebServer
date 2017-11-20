@@ -223,33 +223,6 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
     }
 });
 
-app.factory('UserService', function ($http) {
-    var service = {};
-
-    service.Create = Create;
-    service.Update = Update;
-
-    return service;
-
-    function Create(user) {
-        return $http.post('/users/create/', user).then(handleSuccess, handleError('Error creating user'));
-    }
-
-    function Update(user) {
-        return $http.put('/users/update/' + user.id, user).then(handleSuccess, handleError('Error updating user'));
-    }
-
-    function handleSuccess(res) {
-        return res.data;
-    }
-
-    function handleError(error) {
-        return function () {
-            return {success: false, message: error};
-        };
-    }
-});
-
 app.controller('UserLogoutController', function ($scope, $location, AuthenticationService) {
     AuthenticationService.ClearCredentials();
     $location.path("/login");
@@ -282,7 +255,7 @@ app.controller('UserLoginController', function ($scope, $location, Authenticatio
 
 });
 
-app.controller('UserRegisterController', function ($scope, $location, UserService) {
+app.controller('UserRegisterController', function ($scope, $location, $http) {
     $scope.input = {
         'first_name': '',
         'last_name': '',
@@ -296,7 +269,7 @@ app.controller('UserRegisterController', function ($scope, $location, UserServic
 
     $scope.register = function () {
         $scope.data_loading = true;
-        UserService.Create($scope.input)
+        $http.post('/users/create/', $scope.input)
             .then(function (ignored) {
                     $location.path('/login');
                 },

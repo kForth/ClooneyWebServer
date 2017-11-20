@@ -1,7 +1,7 @@
 class User:
     def __init__(self, username, password, first_name, last_name, id, role="Guest"):
         self.username = username
-        self.password_hash = password
+        self.password = password
         self.first_name = first_name
         self.last_name = last_name
         self.id = id
@@ -10,7 +10,7 @@ class User:
     def to_dict(self):
         return {
             'username':   self.username,
-            'password':   self.password_hash,
+            'password':   self.password,
             'first_name': self.first_name,
             'last_name':  self.last_name,
             'id':         self.id,

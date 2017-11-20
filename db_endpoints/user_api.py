@@ -31,12 +31,14 @@ class UserDatabaseEndpoints:
         return make_response(jsonify(), 404)
 
     def register_user(self):
+        user_data = request.json
+        user_data['id'] = self._db_interactor.get_next_user_id()
         user = User.from_json(request.json)
         if user:
             existing = self._db_interactor.get_user_by_username(user.username)
             if not existing:
                 user.role = self.ROLES[0]
-                user.password_hash = self._db_interactor.encrypt_password(user['password'])
+                user.password = self._db_interactor.encrypt_password(user.password)
                 self._db_interactor.add_user(user)
                 return make_response(jsonify(), 200)
         return make_response(jsonify(), 400)
@@ -56,7 +58,7 @@ class UserDatabaseEndpoints:
             username = credentials['username']
             password = credentials['password']
             user = self._db_interactor.get_user_by_username(username)
-            if user and self._db_interactor.verify_password(password, user.password_hash):
+            if user and self._db_interactor.verify_password(password, user.password):
                 response = {
                     'id': user.id,
                     'key': 1234567890,
