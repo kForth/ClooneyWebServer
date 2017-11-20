@@ -37,9 +37,9 @@ class ScoutingEntry:
 
     def to_dict(self):
         return {
-            'id':    self.id,
-            'event': self.event,
-            'data':  self.data,
+            'id':       self.id,
+            'event':    self.event,
+            'data':     self.data,
             'filename': self.filename
         }
 
@@ -65,12 +65,12 @@ class ScoutingSheetConfig:
 
     def to_dict(self):
         return {
-            'id':    self.id,
-            'name': self.name,
-            'data':  self.data,
+            'id':            self.id,
+            'name':          self.name,
+            'data':          self.data,
             'date_created':  self.date_created,
-            'date_modified':  self.date_modified,
-            'scan_data':  self.scan_data
+            'date_modified': self.date_modified,
+            'scan_data':     self.scan_data
         }
 
     @staticmethod
@@ -82,3 +82,57 @@ class ScoutingSheetConfig:
     @staticmethod
     def from_json(data):
         return ScoutingSheetConfig(**data) if ScoutingSheetConfig.verify_json(data) else None
+
+
+class Event:
+    def __init__(self, key, info, teams=[], matches=[]):
+        self.key = key
+        self.info = info
+        self.teams = teams
+        self.matches = matches
+
+    def to_dict(self):
+        return {
+            'key':     self.key,
+            'info':    self.info.to_dict(),
+            'teams':   self.teams,
+            'matches': self.matches
+        }
+
+    @staticmethod
+    def verify_json(data):
+        if 'info' in data.keys() and type(data['info']) == EventInfo:
+            data['info'] = data['info'].to_dict()
+        req_keys = ['key', 'info']
+        opt_keys = ['teams', 'matches']
+        return all([k in data.keys() for k in req_keys]) and all([k in opt_keys or k in req_keys for k in data.keys()])
+
+    @staticmethod
+    def from_json(data):
+        if Event.verify_json(data):
+            data['info'] = EventInfo.from_json(data['info']) if EventInfo.verify_json(data['info']) else None
+            if data['info']:
+                return Event(**data)
+        return None
+
+
+class EventInfo:
+    def __init__(self, is_tba, data):
+        self.is_tba = is_tba
+        self.data = data
+
+    def to_dict(self):
+        return {
+            'is_tba': self.is_tba,
+            'data':   self.data
+        }
+
+    @staticmethod
+    def verify_json(data):
+        req_keys = ['is_tba', 'data']
+        opt_keys = []
+        return all([k in data.keys() for k in req_keys]) and all([k in opt_keys or k in req_keys for k in data.keys()])
+
+    @staticmethod
+    def from_json(data):
+        return EventInfo(**data) if EventInfo.verify_json(data) else None

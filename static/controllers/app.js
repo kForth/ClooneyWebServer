@@ -140,52 +140,6 @@ app.directive('multiSortTable', function ($location, $cookies) {
     };
 });
 
-app.controller('ApplicationController', function ($scope, $rootScope, $location, $http) {
-    $rootScope.data_loading = false;
-
-    $scope.$on('$routeChangeStart', function () {
-        $rootScope.data_loading = false;
-        $scope.tracking_input_data.event = $scope.tracked_event;
-        if ($rootScope.globals != undefined && $rootScope.globals.currentUser != undefined) {
-            $scope.user_data = $rootScope.globals.currentUser;
-        }
-    });
-
-    $scope.available_events = [];
-    $scope.update_available_events = function () {
-        $http.get('/get/available_events').then(function (resp) {
-            $scope.available_events = resp.data;
-        });
-    };
-    $scope.update_available_events();
-
-    $scope.tracking_input_data = {
-        'event': '',
-        'team': ''
-    };
-
-    $scope.isNavCollapsed = true;
-    $scope.tracked_event_okay = false;
-    $scope.select_event_button = function () {
-        if (typeof($scope.tracking_input_data.event) == 'object') {
-            $scope.tracked_event = $scope.tracking_input_data.event;
-            $scope.tracked_event_okay = true;
-            $location.path('/a');
-        }
-    };
-
-});
-
-app.controller('SidebarController', function ($scope, $rootScope, $location) {
-    $scope.nav = function (path) {
-        $location.path(path);
-    }
-});
-
-app.controller('HomeController', function ($scope, $rootScope) {
-
-});
-
 app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
     var service = {};
 
@@ -233,6 +187,60 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
     }
 });
 
+app.controller('ApplicationController', function ($scope, $rootScope, $location, $http) {
+    $rootScope.data_loading = false;
+
+    $scope.$on('$routeChangeStart', function () {
+        $rootScope.data_loading = false;
+        console.log($scope.tracked_event);
+        $scope.tracking_input_data.event = ($scope.tracked_event === undefined ? undefined : $scope.tracked_event.info.data);
+        console.log($scope.tracking_input_data);
+        if ($rootScope.globals != undefined && $rootScope.globals.currentUser != undefined) {
+            $scope.user_data = $rootScope.globals.currentUser;
+        }
+    });
+
+    $scope.available_events = [];
+    $scope.update_available_events = function () {
+        $http.get('/get/available_events').then(function (resp) {
+            $scope.available_events = resp.data;
+        });
+    };
+    $scope.update_available_events();
+
+    $scope.tracking_input_data = {
+        'event': '',
+        'team': ''
+    };
+
+    $scope.isNavCollapsed = true;
+    $scope.tracked_event_okay = false;
+    $scope.select_event_button = function () {
+        if (typeof($scope.tracking_input_data.event) == 'object') {
+            $http.get('/get/event/' + $scope.tracking_input_data.event.key)
+                .then(function(resp){
+                    $scope.tracked_event = resp.data;
+                    $scope.tracked_event_okay = true;
+                    $location.path('/a');
+                },
+                function(ignored){
+                    console.log("Couldn't get event" + $scope.tracking_input_data.event.key);
+                });
+        }
+    };
+
+});
+
+app.controller('HomeController', function ($scope, $rootScope) {
+
+});
+
+app.controller('SidebarController', function ($scope, $rootScope, $location) {
+    $scope.nav = function (path) {
+        $location.path(path);
+    }
+});
+
 app.controller('SettingsSidebarController', function($scope, $rootScope, $location){
     $scope.nav = function (path) {
         $location.path(path);
@@ -248,6 +256,7 @@ app.controller('SettingsSidebarController', function($scope, $rootScope, $locati
 });
 
 app.controller('UserLogoutController', function ($scope, $rootScope, $location, AuthenticationService) {
+    $http.post('/logout');
     AuthenticationService.ClearCredentials();
     $location.path("/login");
 });
@@ -390,7 +399,7 @@ app.controller('SetupEventController', function ($scope, $rootScope, $location, 
             .then(function (resp) {
                     if (resp.status === 200) {
                         $scope.update_available_events();
-                        $scope.tracked_event = event;
+                        $scope.tracked_event = resp.data;
                         $scope.tracked_event_okay = true;
                         $location.path('/s');
                     }
