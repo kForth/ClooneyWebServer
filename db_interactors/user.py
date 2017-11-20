@@ -21,7 +21,7 @@ class UserDatabaseInteractor:
         return hmac.compare_digest(str(pwd).encode('UTF-8'), str(hash).encode('UTF-8'))
 
     def get_user_by_id(self, user_id):
-        user = [e for e in self._db.db['users'] if e['id'] == user_id]
+        user = [e for e in self._db.db['users']['users'] if e['id'] == user_id]
         return User.from_json(user[0]) if user else None
 
     def get_user_by_username(self, username):

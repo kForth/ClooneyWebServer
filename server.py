@@ -16,7 +16,7 @@ user_endpoints = UserDatabaseEndpoints(db.users, add_route)
 sheet_endpoints = SheetDatabaseEndpoints(db.sheets, add_route)
 event_endpoints = EventDatabaseEndpoints(db.events, add_route)
 entry_endpoints = EntryDatabaseEndpoints(db.entries, add_route)
-# tba_endpoints = TbaDatabaseEndpoints(db.tba_interactor, app)
+# tba_endpoints = TbaDatabaseEndpoints(db.tba_interactor, add_route)
 
 
 @app.route('/')

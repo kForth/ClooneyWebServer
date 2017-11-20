@@ -25,11 +25,10 @@ class DatabaseInteractor:
         self.entries = EntryDatabaseInteractor(self)
 
     def _read_db(self):
+        self.db = self.DEFAULT_DB
         if path.isfile(self._filepath):
-            self.db = self.DEFAULT_DB.update(json.load(open(self._filepath)))
-        else:
-            self.db = self.DEFAULT_DB
-            self.commit()
+            self.db.update(json.load(open(self._filepath)))
+        self.commit()
 
     def commit(self):
         json.dump(self.db, open(self._filepath, "w+"))
