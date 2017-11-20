@@ -4,7 +4,6 @@ from os import path
 from db_interactors.entry import EntryDatabaseInteractor
 from db_interactors.event import EventDatabaseInteractor
 from db_interactors.sheet import SheetDatabaseInteractor
-from db_interactors.tba import TbaInteractor
 from db_interactors.user import UserDatabaseInteractor
 
 
@@ -18,10 +17,9 @@ class DatabaseInteractor:
         self._app = app
         self._read_db()
 
-        self.tba = TbaInteractor(self, app)
         self.users = UserDatabaseInteractor(self, app)
         self.sheets = SheetDatabaseInteractor(self, app)
-        self.events = EventDatabaseInteractor(self)
+        self.events = EventDatabaseInteractor(self, app)
         self.entries = EntryDatabaseInteractor(self)
 
     def _read_db(self):

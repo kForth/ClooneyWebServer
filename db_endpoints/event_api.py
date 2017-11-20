@@ -7,16 +7,20 @@ class EventDatabaseEndpoints:
 
         add_route('/get/available_events', self.get_available_events)
 
+        add_route('/get/search_events', self.get_search_events, methods=('GET',))
         add_route('/setup_tba_event', lambda: self.setup_event(use_tba=True), ('POST',))
         add_route('/setup_event', self.setup_event, ('POST',))
 
+    def get_search_events(self):
+        return make_response(jsonify(self._db_interactor.get_search_events()), 200)
+
     def get_available_events(self):
-        return make_response(jsonify(sorted(self._db_interactor.get_events(), key=lambda k: k['name'])), 200)
+        return make_response(jsonify(self._db_interactor.get_events()), 200)
 
     def setup_event(self, use_tba=False):
         if request.json:
             data = request.json
-            if data['key'] not in self._db_interactor.db['events'].keys():
+            if data['key'] not in self._db_interactor.get_event_keys():
                 event = {
                     'key': data['key'],
                     'entries': [],
@@ -30,8 +34,7 @@ class EventDatabaseEndpoints:
                         'matches': data['matches'] if 'matches' in data.keys() else []
                     }
                 }
-                self._db_interactor.db['events'][data['key']] = event
-                self._db_interactor.commit()
+                self._db_interactor.set_event(data['key'], event)
                 if use_tba:
                     self._db_interactor.update_event_details(data['key'])
                     self._db_interactor.update_event_teams(data['key'])
