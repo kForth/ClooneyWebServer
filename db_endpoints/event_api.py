@@ -2,14 +2,13 @@ from flask import jsonify, make_response, request
 
 
 class EventDatabaseEndpoints:
-    def __init__(self, db_interactor, app):
+    def __init__(self, db_interactor, add_route):
         self._db_interactor = db_interactor
-        self._app = app
 
-        self._app.add_route('/get/available_events', self.get_available_events)
+        add_route('/get/available_events', self.get_available_events)
 
-        self._app.add_route('/setup_tba_event', lambda: self.setup_event(use_tba=True), ('POST',))
-        self._app.add_route('/setup_event', self.setup_event, ('POST',))
+        add_route('/setup_tba_event', lambda: self.setup_event(use_tba=True), ('POST',))
+        add_route('/setup_event', self.setup_event, ('POST',))
 
     def get_available_events(self):
         return make_response(jsonify(sorted(self._db_interactor.get_events(), key=lambda k: k['name'])), 200)

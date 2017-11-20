@@ -4,11 +4,10 @@ from models import ScoutingEntry
 
 
 class EntryDatabaseEndpoints:
-    def __init__(self, db_interactor, app):
+    def __init__(self, db_interactor, add_route):
         self._db_interactor = db_interactor
-        self._app = app
 
-        self._app.add_route('/add/entry', self.add_entry(), ('POST',))
+        add_route('/add/entry', self.add_entry, ('POST',))
 
     def add_entry(self):
         entry = ScoutingEntry.from_json(request.json)

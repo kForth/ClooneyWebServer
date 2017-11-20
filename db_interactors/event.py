@@ -1,7 +1,6 @@
 class EventDatabaseInteractor:
-    def __init__(self, db, app):
+    def __init__(self, db):
         self._db = db
-        self._app = app
 
     def get_events(self):
         return list(map(lambda x: x['info']['data'], self._db.db['events'].values()))

@@ -1,19 +1,18 @@
 from flask import make_response, jsonify, request
 
-from db.models import User
+from models import User
 
 
 class UserDatabaseEndpoints:
     ROLES = ['Guest', 'User', 'Editor', 'Admin']
 
-    def __init__(self, db_interactor, app):
+    def __init__(self, db_interactor, add_route):
         self._db_interactor = db_interactor
-        self._app = app
 
-        self._app.add_route('/login', self.login_user, ('POST',))
-        self._app.add_route('/logout', self.logout_user, ('POST',))
-        self._app.add_route('/users/create/', self.register_user, ('POST',))
-        self._app.add_route('/users/update/<id>', self.get_user_by_username, ('POST',))
+        add_route('/login', self.login_user, ('POST',))
+        add_route('/logout', self.logout_user, ('POST',))
+        add_route('/users/create/', self.register_user, ('POST',))
+        add_route('/users/update/<id>', self.get_user_by_username, ('POST',))
 
     def get_user_by_id(self, id):
         user = self._db_interactor.get_user_by_id(id)

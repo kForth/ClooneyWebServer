@@ -2,9 +2,8 @@ from models import ScoutingEntry
 
 
 class EntryDatabaseInteractor:
-    def __init__(self, db, app):
+    def __init__(self, db):
         self._db = db
-        self._app = app
 
     def get_entry_by_id(self, id):
         return ScoutingEntry.from_json(self._db.db['entry']['entry'][id]) if id in self._db.db['entry']['entry'].keys() else None
