@@ -10,7 +10,7 @@ class EventDatabaseInteractor:
         return self._db.db['events'].keys()
 
     def get_events(self):
-        return list(map(lambda x: x['info'], self._db.db['events'].values()))
+        return list(map(lambda x: x['info']['data'], self._db.db['events'].values()))
 
     def get_event(self, key):
         return dict(self._db.db['events'][key])
@@ -26,20 +26,20 @@ class EventDatabaseInteractor:
         return events
 
     def update_event_details(self, key):
-        event = self._db.get_event(key)
+        event = self.get_event(key)
         event['info']['data'] = self._tba.get_event_info(key)
         event['info']['data']['is_tba'] = True
-        self._db.set_event(key, event)
+        self.set_event(key, event)
         self._db.commit()
 
     def update_event_teams(self, key):
-        event = self._db.get_event(key)
+        event = self.get_event(key)
         event['info']['teams'] = self._tba.get_event_teams(key)
-        self._db.set_event(key, event)
+        self.set_event(key, event)
         self._db.commit()
 
     def update_event_matches(self, key):
-        event = self._db.get_event(key)
+        event = self.get_event(key)
         event['info']['matches'] = self._tba.get_event_matches(key)
-        self._db.set_event(key, event)
+        self.set_event(key, event)
         self._db.commit()
