@@ -21,6 +21,7 @@
     padding: 0;
     overflow-y: scroll;
     height: auto;
+    max-height: 300px;
     border: 1px solid #ddd;
     border-radius: 5px;
     background: #eee;

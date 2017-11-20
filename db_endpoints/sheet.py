@@ -1,6 +1,8 @@
-from flask import jsonify, make_response, request
+from flask import jsonify, make_response, request, send_file
+from flask import send_from_directory
 
 from models import ScoutingSheetConfig
+from sheet_gen import SheetGenerator
 
 
 class SheetDatabaseEndpoints:
@@ -11,6 +13,16 @@ class SheetDatabaseEndpoints:
         add_route('/get/sheets', self.get_sheets)
         add_route('/get/default_fields', self.get_default_fields)
         add_route('/save/sheet', self.save_sheet, methods=('POST',))
+        add_route('/download_sheet/<int:id>/<int:min_sheet>/<int:max_sheet>', self.download_sheet)
+
+    def download_sheet(self, id, min_sheet, max_sheet):
+        sheet = self._db_interactor.get_sheet_by_id(id)
+        sheet_gen = SheetGenerator(min_sheet, max_sheet)
+        try:
+            sheet_gen.create_from_json(sheet.data)
+            return send_file(sheet_gen.get_filename())
+        except:
+            return make_response(jsonify(), 400)
 
     def get_sheet(self, id):
         sheet = self._db_interactor.get_sheet_by_id(id)

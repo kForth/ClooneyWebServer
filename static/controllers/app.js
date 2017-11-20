@@ -405,9 +405,37 @@ app.controller('SetupEventController', function ($scope, $rootScope, $location, 
 });
 
 
-app.controller('SheetsHomeController', function ($scope, $location, $http, AuthenticationService) {
+app.controller('SheetsHomeController', function ($scope, $rootScope, $location, $http, AuthenticationService, FileSaver, Blob) {
     // if (!AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.sheets = [];
+
+    $scope.showDownloadDialog = function(sheet){
+        console.log(sheet);
+        $scope.selected_sheet = sheet;
+        $scope.start_match_number = 0;
+        $scope.end_match_number = 100;
+
+    };
+
+    $scope.downloadSheet = function(){
+        $rootScope.data_loading = true;
+        $http.get('/download_sheet/' + $scope.selected_sheet.id + "/" + $scope.start_match_number + "/" + $scope.end_match_number)
+            .then(function(resp){
+                console.log(resp);
+                var data = new Blob([resp.data], { type: 'text/plain;charset=utf-8' });
+                FileSaver.saveAs(data, $scope.selected_sheet.name + '.pdf');
+                $rootScope.data_loading = false;
+                $scope.cancelDownload();
+            },
+            function(ignored){
+                $rootScope.data_loading = false;
+            });
+    };
+
+    $scope.cancelDownload = function(){
+        $scope.selected_sheet = undefined;
+    };
+
     $http.get('/get/sheets')
         .then(function (resp) {
             $scope.sheets = resp.data;
