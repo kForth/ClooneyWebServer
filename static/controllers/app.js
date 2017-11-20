@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'ui.sortable'])
+var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.bootstrap', 'ngCookies', 'ui.sortable'])
     .config(function ($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(false).hashPrefix('');
         $routeProvider
@@ -140,11 +140,11 @@ app.directive('multiSortTable', function ($location, $cookies) {
     };
 });
 
-app.controller('ApplicationController', function ($scope, $location, $http, $rootScope) {
-    $scope.data_loading = false;
+app.controller('ApplicationController', function ($scope, $rootScope, $location, $http) {
+    $rootScope.data_loading = false;
 
     $scope.$on('$routeChangeStart', function () {
-        $scope.data_loading = false;
+        $rootScope.data_loading = false;
         $scope.tracking_input_data.event = $scope.tracked_event;
         if ($rootScope.globals != undefined && $rootScope.globals.currentUser != undefined) {
             $scope.user_data = $rootScope.globals.currentUser;
@@ -176,13 +176,13 @@ app.controller('ApplicationController', function ($scope, $location, $http, $roo
 
 });
 
-app.controller('SidebarController', function ($scope, $location) {
+app.controller('SidebarController', function ($scope, $rootScope, $location) {
     $scope.nav = function (path) {
         $location.path(path);
     }
 });
 
-app.controller('HomeController', function ($scope) {
+app.controller('HomeController', function ($scope, $rootScope) {
 
 });
 
@@ -233,12 +233,12 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
     }
 });
 
-app.controller('UserLogoutController', function ($scope, $location, AuthenticationService) {
+app.controller('UserLogoutController', function ($scope, $rootScope, $location, AuthenticationService) {
     AuthenticationService.ClearCredentials();
     $location.path("/login");
 });
 
-app.controller('UserLoginController', function ($scope, $location, AuthenticationService) {
+app.controller('UserLoginController', function ($scope, $rootScope, $location, AuthenticationService) {
     if (AuthenticationService.isAuthorized(0)) $location.path("/");
     $scope.input = {
         'username': '',
@@ -251,7 +251,7 @@ app.controller('UserLoginController', function ($scope, $location, Authenticatio
     };
 
     $scope.login = function () {
-        $scope.data_loading = true;
+        $rootScope.data_loading = true;
         AuthenticationService.Login($scope.input.username, $scope.input.password,
             function (response) {
                 AuthenticationService.SetCredentials(response.data);
@@ -259,13 +259,13 @@ app.controller('UserLoginController', function ($scope, $location, Authenticatio
             },
             function (ignored) {
                 $scope.alert = 'Error. Try Again.';
-                $scope.data_loading = false;
+                $rootScope.data_loading = false;
             });
     }
 
 });
 
-app.controller('UserRegisterController', function ($scope, $location, $http) {
+app.controller('UserRegisterController', function ($scope, $rootScope, $location, $http) {
     $scope.input = {
         'first_name': '',
         'last_name': '',
@@ -278,43 +278,43 @@ app.controller('UserRegisterController', function ($scope, $location, $http) {
     };
 
     $scope.register = function () {
-        $scope.data_loading = true;
+        $rootScope.data_loading = true;
         $http.post('/users/create/', $scope.input)
             .then(function (ignored) {
                     $location.path('/login');
                 },
                 function (ignored) {
                     $scope.alert = 'Error. Try Again.';
-                    $scope.data_loading = false;
+                    $rootScope.data_loading = false;
                 });
     }
 });
 
-app.controller('AnalysisHomeController', function ($scope, $location) {
+app.controller('AnalysisHomeController', function ($scope, $rootScope, $location) {
     if ($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisAveragesController', function ($scope, $location) {
+app.controller('AnalysisAveragesController', function ($scope, $rootScope, $location) {
     if ($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisInsightsController', function ($scope, $location) {
+app.controller('AnalysisInsightsController', function ($scope, $rootScope, $location) {
     if ($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisMatchesController', function ($scope, $location) {
+app.controller('AnalysisMatchesController', function ($scope, $rootScope, $location) {
     if ($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisEntriesController', function ($scope, $location) {
+app.controller('AnalysisEntriesController', function ($scope, $rootScope, $location) {
     if ($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('SettingsHomeController', function ($scope, $location, AuthenticationService) {
+app.controller('SettingsHomeController', function ($scope, $rootScope, $location, AuthenticationService) {
     if ($scope.tracked_event === undefined || !AuthenticationService.isAuthorized(2)) $location.path("/");
 });
 
-app.controller('SettingsCalculationsController', function ($scope, $location, AuthenticationService) {
+app.controller('SettingsCalculationsController', function ($scope, $rootScope, $location, AuthenticationService) {
     if ($scope.tracked_event === undefined || !AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.calculations = [
         {'name': 'a', 'key': 'a', 'formula': 'x*x', 'type': 'float'},
@@ -324,7 +324,7 @@ app.controller('SettingsCalculationsController', function ($scope, $location, Au
     ];
 });
 
-app.controller('SetupEventController', function ($scope, $location, $http, AuthenticationService) {
+app.controller('SetupEventController', function ($scope, $rootScope, $location, $http, AuthenticationService) {
     if (!AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.setup_step = 0;
     $scope.default_data =
@@ -414,13 +414,13 @@ app.controller('SheetsHomeController', function ($scope, $location, $http, Authe
         });
 });
 
-app.controller('SheetsEditController', function ($scope, $location, $http, AuthenticationService, appPath) {
+app.controller('SheetsEditController', function ($scope, $rootScope, $location, $http, AuthenticationService, appPath) {
     // if (!AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.sheet_mode = appPath.mode;
     $scope.expanded = {};
 
     if(appPath.id != undefined){
-        $scope.data_loading = true;
+        $rootScope.data_loading = true;
         $http.get('/get/sheet/' + appPath.id)
             .then(function(resp){
                 $scope.sheet = resp.data;
@@ -442,19 +442,19 @@ app.controller('SheetsEditController', function ($scope, $location, $http, Authe
         if($scope.sheet.name.length < 5){
             return;
         }
-        $scope.data_loading = true;
+        $rootScope.data_loading = true;
         $http.post('/save/sheet', $scope.sheet)
             .then(function(ignored){
-                $scope.data_loading = false;
+                $rootScope.data_loading = false;
             },
             function(ignored){
-                $scope.data_loading = false;
+                $rootScope.data_loading = false;
                 console.log('Failed to save sheet.');
             });
     };
 
     $scope.cancelSheet = function(){
-        // $location.path('/sheets');
+        $location.path('/sheets');
     };
 
     $scope.revertSheet = function(){
@@ -507,11 +507,11 @@ app.controller('SheetsEditController', function ($scope, $location, $http, Authe
         $scope.sheet.data.push(new_field);
     };
 
-    $scope.data_loading = true;
+    $rootScope.data_loading = true;
     $http.get("/get/default_fields")
         .then(function(resp){
             $scope.default_fields = resp.data;
-            $scope.data_loading = false;
+            $rootScope.data_loading = false;
         });
 
     String.prototype.toProperCase = function () {
