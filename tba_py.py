@@ -25,6 +25,9 @@ class TBA:
         json.dump(self._cache, open(self.__cache_filename, "w+"))
 
     def _setup_methods(self):
+        # TBA
+        self.get_status = lambda: self._get('/status')
+
         # Teams
         self._get_team = lambda team, suffix='': self._get('/team/frc{0}{1}'.format(str(team), suffix))
 
