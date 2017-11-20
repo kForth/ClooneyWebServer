@@ -31,12 +31,9 @@ class TBA:
         # Teams
         self._get_team = lambda team, suffix='': self._get('/team/frc{0}{1}'.format(str(team), suffix))
 
-        self.get_teams = \
-            lambda page, year='': self._get('/teams/{0}{1}{2}'.format(str(year), '/' if year else '', page))
-        self.get_teams_simple = \
-            lambda page, year='': self._get('/teams/{0}{1}{2}/simple'.format(str(year), '/' if year else '', page))
-        self.get_teams_keys = \
-            lambda page, year='': self._get('/teams/{0}{1}{2}/keys'.format(str(year), '/' if year else '', page))
+        self.get_teams = lambda page, year='': self._get('/teams/{}'.format('/'.join([str(year), page])))
+        self.get_teams_simple = lambda page, year='': self._get('/teams/{}/simple'.format('/'.join([str(year), page])))
+        self.get_teams_keys = lambda page, year='': self._get('/teams/{}/keys'.format('/'.join([str(year), page])))
 
         self.get_team_info = lambda team: self._get_team(str(team))
         self.get_team_info_simple = lambda team: self._get_team(str(team), '/simple')
