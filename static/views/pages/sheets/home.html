@@ -22,16 +22,16 @@
                         <th class="col-xs-2"></th>
                     </tr>
                 </thead>
-                <tbody ui-sortable ng-model="sheets">
-                    <tr ng-repeat="sheet in sheets">
+                <tbody>
+                    <tr ng-repeat="sheet in sheets | orderBy:sheet.date_modified:true">
                         <td style="font-weight: bold">{{ sheet.name }}</td>
                         <td>{{ sheet.data.length }}</td>
                         <td>{{ sheet.date_created }}</td>
                         <td>{{ sheet.date_modified }}</td>
                         <td style="text-align: right">
                             <ul class="list-inline">
-                                <li><a href="#/sheets/edit/{{ sheet.id }}"><span class="glyphicon glyphicon-cog sheet-list-icon clickable"></span></a></li>
-                                <li><span class="glyphicon glyphicon-menu-hamburger sheet-list-icon"></span></li>
+                                <li><a ng-click="showDownloadDialog(sheet)"><span class="glyphicon glyphicon-download-alt sheet-list-icon"></span></a></li>
+                                <li><a href="#/sheets/edit/{{ sheet.id }}"><span class="glyphicon glyphicon-cog sheet-list-icon"></span></a></li>
                             </ul>
                         </td>
                     </tr>
@@ -39,4 +39,21 @@
             </table>
         </div>
     </div>
+</div>
+
+<div class="field-edit-popup" ng-if="selected_sheet != undefined">
+    <div class="field-edit-holder col-xs-10 col-sm-4 col-xs-offset-1 col-sm-offset-4" style="text-align: center">
+        <h3>Download<br><b>{{ selected_sheet.name }}</b></h3>
+        <br>
+        <b>Match Range:</b>
+        <div class="form-inline">
+            <input class="form-control" style="width: 80px" type="number" max="300" min="0" ng-model="start_match_number">
+            :
+            <input class="form-control" style="width: 80px" type="number" max="300" min="1" ng-model="end_match_number">
+        </div>
+        <br>
+        <button ng-click="downloadSheet()" class="btn btn-primary btn-block">Download</button>
+        <button ng-click="cancelDownload()" class="btn btn-danger btn-block">Cancel</button>
+    </div>
+</div>
 </div>
