@@ -2,8 +2,8 @@ from flask import jsonify, make_response, request
 
 
 class EventDatabaseEndpoints:
-    def __init__(self, db, app):
-        self._db = db
+    def __init__(self, db_interactor, app):
+        self._db_interactor = db_interactor
         self._app = app
 
         self._app.add_route('/get/available_events', self.get_available_events)
@@ -12,12 +12,12 @@ class EventDatabaseEndpoints:
         self._app.add_route('/setup_event', self.setup_event, ('POST',))
 
     def get_available_events(self):
-        return make_response(jsonify(sorted(self._db.get_events(), key=lambda k: k['name'])), 200)
+        return make_response(jsonify(sorted(self._db_interactor.get_events(), key=lambda k: k['name'])), 200)
 
     def setup_event(self, use_tba=False):
         if request.json:
             data = request.json
-            if data['key'] not in self._db.db['events'].keys():
+            if data['key'] not in self._db_interactor.db['events'].keys():
                 event = {
                     'key': data['key'],
                     'entries': [],
@@ -31,12 +31,12 @@ class EventDatabaseEndpoints:
                         'matches': data['matches'] if 'matches' in data.keys() else []
                     }
                 }
-                self._db.db['events'][data['key']] = event
-                self._db.commit()
+                self._db_interactor.db['events'][data['key']] = event
+                self._db_interactor.commit()
                 if use_tba:
-                    self._db.update_event_details(data['key'])
-                    self._db.update_event_teams(data['key'])
-                    self._db.update_event_matches(data['key'])
+                    self._db_interactor.update_event_details(data['key'])
+                    self._db_interactor.update_event_teams(data['key'])
+                    self._db_interactor.update_event_matches(data['key'])
                 return make_response(jsonify(), 200)
             else:
                 return make_response(jsonify(), 409)

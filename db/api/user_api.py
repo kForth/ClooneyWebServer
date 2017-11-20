@@ -6,8 +6,8 @@ from db.models import User
 class UserDatabaseEndpoints:
     ROLES = ['Guest', 'User', 'Editor', 'Admin']
 
-    def __init__(self, db, app):
-        self._db = db
+    def __init__(self, db_interactor, app):
+        self._db_interactor = db_interactor
         self._app = app
 
         self._app.add_route('/login', self.login_user, ('POST',))
@@ -16,7 +16,7 @@ class UserDatabaseEndpoints:
         self._app.add_route('/users/update/<id>', self.get_user_by_username, ('POST',))
 
     def get_user_by_id(self, id):
-        user = self._db.get_user_by_id(id)
+        user = self._db_interactor.get_user_by_id(id)
         if user:
             user = user.to_json()
             user['password'] = ''
@@ -24,7 +24,7 @@ class UserDatabaseEndpoints:
         return make_response(jsonify(), 404)
 
     def get_user_by_username(self, username):
-        user = self._db.get_user_by_username(username)
+        user = self._db_interactor.get_user_by_username(username)
         if user:
             user = user.to_json()
             user['password'] = ''
@@ -34,20 +34,20 @@ class UserDatabaseEndpoints:
     def register_user(self):
         user = User.from_json(request.json)
         if user:
-            existing = self._db.get_user_by_username(user.username)
+            existing = self._db_interactor.get_user_by_username(user.username)
             if not existing:
                 user.role = self.ROLES[0]
-                user.password_hash = self._db.encrypt_password(user['password'])
-                self._db.add_user(user)
+                user.password_hash = self._db_interactor.encrypt_password(user['password'])
+                self._db_interactor.add_user(user)
                 return make_response(jsonify(), 200)
         return make_response(jsonify(), 400)
 
     def update_user(self, id):
         user = User.from_json(request.json())
-        existing = self._db.get_user_by_id(id)
+        existing = self._db_interactor.get_user_by_id(id)
         if user and existing:
-            if self._db.verify_password(user.password_hash, existing.password_hash):
-                self._db.update_user(id, user)
+            if self._db_interactor.verify_password(user.password_hash, existing.password_hash):
+                self._db_interactor.update_user(id, user)
                 return make_response(jsonify(), 200)
         return make_response(jsonify(), 400)
 
@@ -56,8 +56,8 @@ class UserDatabaseEndpoints:
         if all([e in credentials.keys() for e in ['username', 'password']]):
             username = credentials['username']
             password = credentials['password']
-            user = self._db.get_user_by_username(username)
-            if user and self._db.verify_password(password, user.password_hash):
+            user = self._db_interactor.get_user_by_username(username)
+            if user and self._db_interactor.verify_password(password, user.password_hash):
                 response = {
                     'id': user.id,
                     'key': 1234567890,
