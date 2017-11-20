@@ -55,12 +55,13 @@ class ScoutingEntry:
 
 
 class ScoutingSheetConfig:
-    def __init__(self, id, name, data, date_created="", date_modified=""):
+    def __init__(self, id, name, data, date_created="", date_modified="", scan_data=[]):
         self.id = id
         self.name = name
         self.data = data
         self.date_created = date_created
         self.date_modified = date_modified
+        self.scan_data = scan_data
 
     def to_dict(self):
         return {
@@ -68,13 +69,14 @@ class ScoutingSheetConfig:
             'name': self.name,
             'data':  self.data,
             'date_created':  self.date_created,
-            'date_modified':  self.date_modified
+            'date_modified':  self.date_modified,
+            'scan_data':  self.scan_data
         }
 
     @staticmethod
     def verify_json(data):
         req_keys = ['id', 'name', 'data']
-        opt_keys = ['date_created', 'date_modified']
+        opt_keys = ['date_created', 'date_modified', 'scan_data']
         return all([k in data.keys() for k in req_keys]) and all([k in opt_keys or k in req_keys for k in data.keys()])
 
     @staticmethod
