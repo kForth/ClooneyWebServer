@@ -1,0 +1,132 @@
+{
+  "headers": {
+    "/a/e": [
+      {
+        "data_key":   "match",
+        "class":      "",
+        "title":      "Match",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "pos",
+        "class":      "",
+        "title":      "Pos",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "team",
+        "class":      "",
+        "title":      "Team",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_no_move",
+        "class":      "",
+        "title":      "Auto No Move",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_gear_location",
+        "class":      "",
+        "title":      "Auto Gear Location",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_gears_scored",
+        "class":      "",
+        "title":      "Auto Gears Scored",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_scored_high",
+        "class":      "",
+        "title":      "Auto Scored High",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_scored_low",
+        "class":      "",
+        "title":      "Auto Scored Low",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_triggered_hopper",
+        "class":      "",
+        "title":      "Auto Triggered Hopper",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_gears_scored",
+        "class":      "",
+        "title":      "Gears Scored",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_gears_from_far",
+        "class":      "",
+        "title":      "Gears From Far",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_gears_from_near",
+        "class":      "",
+        "title":      "Gears From Near",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_scored_high",
+        "class":      "",
+        "title":      "Scored High",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_climbed",
+        "class":      "",
+        "title":      "Climbed",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_defense",
+        "class":      "",
+        "title":      "Defense",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "disabled",
+        "class":      "",
+        "title":      "Disabled",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "no_move",
+        "class":      "",
+        "title":      "No move",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "no_show",
+        "class":      "",
+        "title":      "No Show",
+        "data_class": "",
+        "tooltip":    ""
+      }
+    ]
+  }
+}

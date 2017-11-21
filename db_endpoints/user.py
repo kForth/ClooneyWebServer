@@ -1,3 +1,4 @@
+import json
 import time
 from flask import make_response, jsonify, request
 
@@ -6,7 +7,7 @@ from models import User, UserSettings
 
 class UserDatabaseEndpoints:
     ROLES = ['Guest', 'User', 'Editor', 'Admin']
-    DEFAULT_USER_SETTINGS = {'headers': {}}
+    DEFAULT_USER_SETTINGS = json.load(open('db/default_user_settings.json'))
 
     def __init__(self, db_interactor, add_route, active_users):
         self._db_interactor = db_interactor
@@ -20,13 +21,12 @@ class UserDatabaseEndpoints:
         add_route('/get/user_settings/', self.get_user_settings)
 
     def get_user_settings(self, username=None):
-        user_settings = self._db_interactor.get_user_settings_by_user_username(username)
-        if not user_settings or not username:
-            self._db_interactor.set_user_settings(username, UserSettings.from_json(self.DEFAULT_USER_SETTINGS))
-            return make_response(jsonify(self.DEFAULT_USER_SETTINGS), 200)
-        elif user_settings:
+        if username:
+            user_settings = self._db_interactor.get_user_settings_by_user_username(username.lower())
             return make_response(jsonify(user_settings.to_dict()), 200)
-        return make_response(jsonify(), 400)
+        elif username:
+            self._db_interactor.set_user_settings(username.lower(), UserSettings.from_json(self.DEFAULT_USER_SETTINGS))
+        return make_response(jsonify(self.DEFAULT_USER_SETTINGS), 200)
 
     def get_user_by_id(self, id):
         user = self._db_interactor.get_user_by_id(id)
@@ -37,7 +37,7 @@ class UserDatabaseEndpoints:
         return make_response(jsonify(), 404)
 
     def get_user_by_username(self, username):
-        user = self._db_interactor.get_user_by_username(username)
+        user = self._db_interactor.get_user_by_username(username.low)
         if user:
             user = user.to_json()
             user['password'] = ''
