@@ -8,9 +8,15 @@ class EntryDatabaseEndpoints:
         self._db_interactor = db_interactor
 
         add_route('/add/entry', self.add_entry, ('POST',))
+        add_route('/get/raw_entries/<event_key>', self.get_entries)
+
+    def get_entries(self, event_key):
+        entries = [e.to_dict() for e in self._db_interactor.get_entries() if e.event == event_key]
+        return make_response(jsonify(entries), 200 if entries else 404)
 
     def add_entry(self):
-        request.json['id'] = self._db_interactor.get_next_entry_id()
+        entry = request.json
+        entry['id'] = self._db_interactor.get_next_entry_id()
         entry = ScoutingEntry.from_json(request.json)
         existing = self._db_interactor.get_entry_by_id(entry.id)
         if entry:
