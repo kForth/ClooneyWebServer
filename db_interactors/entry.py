@@ -16,14 +16,11 @@ class EntryDatabaseInteractor:
         entry = self.get_entry_by_id(id)
         if entry:
             self._db.db['entry']['entry'].remove(entry)
-            self._db.commit()
 
     def set_entry(self, entry):
         self.remove_entry(entry.id)
         self._db.db['entry']['entry'].append(entry.to_dict())
-        self._db.commit()
 
     def get_next_entry_id(self):
         self._db.db['entry']['max_id'] += 1
-        self._db.commit()
         return self._db.db['entry']['max_id']

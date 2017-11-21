@@ -24,9 +24,7 @@ class SheetDatabaseInteractor:
             sheet.date_created = datetime.now().strftime("%Y-%m-%d %H:%M")
         sheet.date_modified = datetime.now().strftime("%Y-%m-%d %H:%M")
         self._db.db['sheets']['sheets'].append(sheet.to_dict())
-        self._db.commit()
 
     def get_next_sheet_id(self):
         self._db.db['sheets']['max_id'] += 1
-        self._db.commit()
         return self._db.db['sheets']['max_id']

@@ -38,27 +38,22 @@ class UserDatabaseInteractor:
 
     def set_user_settings(self, username, settings):
         self._db.db['user_settings'][username] = settings.to_dict()
-        self._db.commit()
 
     def add_user(self, user):
         user = user.to_dict()
         self.get_users().append(user)
-        self._db.commit()
 
     def remove_user(self, user_id):
         user = self.get_user_by_id(user_id)
         if user:
             self.get_users().remove(user)
-        self._db.commit()
 
     def update_user(self, user_id, user):
         old = self.get_user_by_id(user_id).to_dict()
         old.update(user.to_dict)
         self.get_users().remove(user)
         self.get_users().append(old)
-        self._db.commit()
 
     def get_next_user_id(self):
         self._db.db['users']['max_id'] += 1
-        self._db.commit()
         return self._db.db['users']['max_id']

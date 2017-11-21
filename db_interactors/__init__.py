@@ -5,6 +5,7 @@ from db_interactors.entry import EntryDatabaseInteractor
 from db_interactors.event import EventDatabaseInteractor
 from db_interactors.sheet import SheetDatabaseInteractor
 from db_interactors.user import UserDatabaseInteractor
+from util import PeriodicRunner
 
 
 class DatabaseInteractor:
@@ -16,6 +17,8 @@ class DatabaseInteractor:
         self._filepath = app.root_path + "/" + filename
         self._app = app
         self._read_db()
+
+        self.commit_runner = PeriodicRunner(target=self.commit, delay=60)
 
         self.users = UserDatabaseInteractor(self, app)
         self.sheets = SheetDatabaseInteractor(self, app)
@@ -29,4 +32,6 @@ class DatabaseInteractor:
         self.commit()
 
     def commit(self):
+        # from pprint import pprint
+        # pprint(self.db)
         json.dump(self.db, open(self._filepath, "w+"))

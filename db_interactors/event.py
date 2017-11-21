@@ -21,8 +21,8 @@ class EventDatabaseInteractor:
         return events[0] if events else None
 
     def set_event(self, key, data):
+        print(self._db.db['events'][key])
         self._db.db['events'][key] = data.to_dict()
-        self._db.commit()
 
     def get_search_events(self):
         events = []
@@ -35,16 +35,13 @@ class EventDatabaseInteractor:
         event.info.data = self._tba.get_event_info(key)
         event.info.is_tba = True
         self.set_event(key, event)
-        self._db.commit()
 
     def update_event_teams(self, key):
         event = self.get_event(key)
         event.teams = self._tba.get_event_teams(key)
         self.set_event(key, event)
-        self._db.commit()
 
     def update_event_matches(self, key):
         event = self.get_event(key)
         event.matches = self._tba.get_event_matches(key)
         self.set_event(key, event)
-        self._db.commit()
