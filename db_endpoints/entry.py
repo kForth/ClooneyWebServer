@@ -10,6 +10,7 @@ class EntryDatabaseEndpoints:
         add_route('/add/entry', self.add_entry, ('POST',))
 
     def add_entry(self):
+        request.json['id'] = self._db_interactor.get_next_entry_id()
         entry = ScoutingEntry.from_json(request.json)
         existing = self._db_interactor.get_entry_by_id(entry.id)
         if entry:
