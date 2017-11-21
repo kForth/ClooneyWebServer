@@ -22,6 +22,12 @@ class EventDatabaseEndpoints:
             return make_response(jsonify(event.to_dict()), 200)
         return make_response(jsonify(), 404)
 
+    def get_calculations(self):
+        pass
+
+    def set_calculations(self):
+        pass
+
     def get_search_events(self):
         return make_response(jsonify(self._db_interactor.get_search_events()), 200)
 

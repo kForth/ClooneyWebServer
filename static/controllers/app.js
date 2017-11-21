@@ -192,9 +192,7 @@ app.controller('ApplicationController', function ($scope, $rootScope, $location,
 
     $scope.$on('$routeChangeStart', function () {
         $rootScope.data_loading = false;
-        console.log($scope.tracked_event);
         $scope.tracking_input_data.event = ($scope.tracked_event === undefined ? undefined : $scope.tracked_event.info.data);
-        console.log($scope.tracking_input_data);
         if ($rootScope.globals != undefined && $rootScope.globals.currentUser != undefined) {
             $scope.user_data = $rootScope.globals.currentUser;
         }
@@ -224,7 +222,7 @@ app.controller('ApplicationController', function ($scope, $rootScope, $location,
                     $location.path('/a');
                 },
                 function(ignored){
-                    console.log("Couldn't get event" + $scope.tracking_input_data.event.key);
+                    console.error("Couldn't get event" + $scope.tracking_input_data.event.key);
                 });
         }
     };
@@ -433,7 +431,6 @@ app.controller('SheetsHomeController', function ($scope, $rootScope, $location, 
     $scope.sheets = [];
 
     $scope.showDownloadDialog = function(sheet){
-        console.log(sheet);
         $scope.selected_sheet = sheet;
         $scope.start_match_number = 0;
         $scope.end_match_number = 100;
@@ -444,7 +441,6 @@ app.controller('SheetsHomeController', function ($scope, $rootScope, $location, 
         $rootScope.data_loading = true;
         $http.get('/download_sheet/' + $scope.selected_sheet.id + "/" + $scope.start_match_number + "/" + $scope.end_match_number)
             .then(function(resp){
-                console.log(resp);
                 var data = new Blob([resp.data], { type: 'text/plain;charset=utf-8' });
                 FileSaver.saveAs(data, $scope.selected_sheet.name + '.pdf');
                 $rootScope.data_loading = false;
@@ -500,7 +496,7 @@ app.controller('SheetsEditController', function ($scope, $rootScope, $location, 
             },
             function(ignored){
                 $rootScope.data_loading = false;
-                console.log('Failed to save sheet.');
+                console.error('Failed to save sheet.');
             });
     };
 
