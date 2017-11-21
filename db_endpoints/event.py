@@ -11,6 +11,7 @@ class EventDatabaseEndpoints:
         add_route('/get/event/<key>', self.get_event)
         add_route('/get/search_events', self.get_search_events, methods=('GET',))
         add_route('/setup_tba_event', lambda: self.setup_event(use_tba=True), ('POST',))
+        add_route('/update/tba/<event>', self.update_tba_event)
         add_route('/setup_event', self.setup_event, ('POST',))
 
         add_route('/get/calculations', self.get_calculations)
@@ -27,6 +28,16 @@ class EventDatabaseEndpoints:
 
     def set_calculations(self):
         pass
+
+    def update_tba_event(self, event):
+        try:
+            self._db_interactor.update_event_details(event)
+            self._db_interactor.update_event_matches(event)
+            self._db_interactor.update_event_teams(event)
+            return make_response(jsonify(), 200)
+        except Exception as ex:
+            print(ex)
+            return make_response(jsonify(), 400)
 
     def get_search_events(self):
         return make_response(jsonify(self._db_interactor.get_search_events()), 200)
