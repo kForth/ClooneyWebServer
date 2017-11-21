@@ -9,7 +9,7 @@ from db_interactors.user import UserDatabaseInteractor
 
 class DatabaseInteractor:
     DEFAULT_DB = {
-        'events': {}, 'users': {'users': [], 'max_id': -1}, 'sheets': {'sheets': [], 'max_id': -1}, 'entry': {'entry': [], 'max_id': -1}
+        'events': {}, 'user_settings': {}, 'users': {'users': [], 'max_id': -1}, 'sheets': {'sheets': [], 'max_id': -1}, 'entry': {'entry': [], 'max_id': -1}
     }
 
     def __init__(self, app, filename="db/db.json"):

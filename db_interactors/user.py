@@ -1,7 +1,7 @@
 import hmac
 from hashlib import sha1
 
-from models import User
+from models import User, UserSettings
 
 
 class UserDatabaseInteractor:
@@ -30,6 +30,15 @@ class UserDatabaseInteractor:
     def get_user_by_username(self, username):
         user = [e for e in self.get_users() if e['username'].lower() == username.lower()]
         return User.from_json(user[0]) if user else None
+
+    def get_user_settings_by_user_username(self, username):
+        if username in self._db.db['user_settings'].keys():
+            return UserSettings.from_json(self._db.db['user_settings'][username])
+        return None
+
+    def set_user_settings(self, username, settings):
+        self._db.db['user_settings'][username] = settings.to_dict()
+        self._db.commit()
 
     def add_user(self, user):
         user = user.to_dict()

@@ -1,11 +1,12 @@
 import time
 from flask import make_response, jsonify, request
 
-from models import User
+from models import User, UserSettings
 
 
 class UserDatabaseEndpoints:
     ROLES = ['Guest', 'User', 'Editor', 'Admin']
+    DEFAULT_USER_SETTINGS = {'headers': {}}
 
     def __init__(self, db_interactor, add_route, active_users):
         self._db_interactor = db_interactor
@@ -15,6 +16,17 @@ class UserDatabaseEndpoints:
         add_route('/logout', self.logout_user, ('POST',))
         add_route('/users/create/', self.register_user, ('POST',))
         add_route('/users/update/<id>', self.get_user_by_username, ('POST',))
+        add_route('/get/user_settings/<username>', self.get_user_settings)
+        add_route('/get/user_settings/', self.get_user_settings)
+
+    def get_user_settings(self, username=None):
+        user_settings = self._db_interactor.get_user_settings_by_user_username(username)
+        if not user_settings or not username:
+            self._db_interactor.set_user_settings(username, UserSettings.from_json(self.DEFAULT_USER_SETTINGS))
+            return make_response(jsonify(self.DEFAULT_USER_SETTINGS), 200)
+        elif user_settings:
+            return make_response(jsonify(user_settings.to_dict()), 200)
+        return make_response(jsonify(), 400)
 
     def get_user_by_id(self, id):
         user = self._db_interactor.get_user_by_id(id)

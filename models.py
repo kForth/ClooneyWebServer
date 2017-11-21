@@ -28,6 +28,26 @@ class User:
         return User(**data) if User.verify_json(data) else None
 
 
+class UserSettings:
+    def __init__(self, headers={}):
+        self.headers = headers
+
+    def to_dict(self):
+        return {
+            'headers': self.headers
+        }
+
+    @staticmethod
+    def verify_json(data):
+        req_keys = []
+        opt_keys = ['headers']
+        return all([k in data.keys() for k in req_keys]) and all([k in opt_keys or k in req_keys for k in data.keys()])
+
+    @staticmethod
+    def from_json(data):
+        return UserSettings(**data) if UserSettings.verify_json(data) else None
+
+
 class ScoutingEntry:
     def __init__(self, id, event, data, filename=""):
         self.id = id
