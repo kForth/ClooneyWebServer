@@ -11,8 +11,8 @@ class EntryDatabaseEndpoints:
         add_route('/get/raw_entries/<event_key>', self.get_entries)
 
     def get_entries(self, event_key):
-        entries = [e.to_dict() for e in self._db_interactor.get_entries() if e.event == event_key]
-        return make_response(jsonify(entries), 200 if entries else 404)
+        entries = [e for e in self._db_interactor.get_entries() if e.event == event_key]
+        return make_response(jsonify([e.data for e in entries]), 200 if entries else 404)
 
     def add_entry(self):
         entry = request.json
