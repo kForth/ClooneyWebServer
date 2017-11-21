@@ -156,6 +156,7 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
             .then(function (resp) {
                     SetCredentials(resp.data);
                     success_callback(resp);
+                    GetUserSettings(username);
                 },
                 function (resp) {
                     fail_callback(resp);
@@ -203,12 +204,12 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
     }
 });
 
-    $rootScope.data_loading = false;
 app.controller('ApplicationController', function ($scope, $rootScope, $location, $http, AuthenticationService) {
+    $rootScope.data_loading = 0;
     AuthenticationService.GetUserSettings('');
 
     $scope.$on('$routeChangeStart', function () {
-        $rootScope.data_loading = false;
+        $rootScope.data_loading = 0;
         $scope.tracking_input_data.event = ($scope.tracked_event === undefined ? undefined : $scope.tracked_event.info.data);
         if ($rootScope.globals != undefined && $rootScope.globals.currentUser != undefined) {
             $scope.user_data = $rootScope.globals.currentUser;
@@ -289,15 +290,14 @@ app.controller('UserLoginController', function ($scope, $rootScope, $location, A
     };
 
     $scope.login = function () {
-        $rootScope.data_loading = true;
+        $rootScope.data_loading += 1;
         AuthenticationService.Login($scope.input.username, $scope.input.password,
             function (response) {
-                AuthenticationService.SetCredentials(response.data);
                 $location.path('/');
             },
             function (ignored) {
                 $scope.alert = 'Error. Try Again.';
-                $rootScope.data_loading = false;
+                $rootScope.data_loading = 0;
             });
     }
 
@@ -316,14 +316,14 @@ app.controller('UserRegisterController', function ($scope, $rootScope, $location
     };
 
     $scope.register = function () {
-        $rootScope.data_loading = true;
+        $rootScope.data_loading += 1;
         $http.post('/users/create/', $scope.input)
             .then(function (ignored) {
                     $location.path('/login');
                 },
                 function (ignored) {
                     $scope.alert = 'Error. Try Again.';
-                    $rootScope.data_loading = false;
+                    $rootScope.data_loading = 0;
                 });
     }
 });
@@ -344,8 +344,28 @@ app.controller('AnalysisMatchesController', function ($scope, $rootScope, $locat
     if ($scope.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisEntriesController', function ($scope, $rootScope, $location) {
+app.controller('AnalysisEntriesController', function ($scope, $rootScope, $location, $http) {
     if ($scope.tracked_event === undefined) $location.path("/");
+
+    $rootScope.data_loading += 1;
+    $http.get('/get/headers/raw_entries')
+        .then(function(response){
+            $scope.headers = response.data;
+            $rootScope.data_loading -= 1;
+        },
+        function(ignored){
+            $rootScope.data_loading -= 1;
+        });
+
+    $rootScope.data_loading += 1;
+    $http.get('/get/raw_entries/' + $scope.tracked_event.key)
+        .then(function(response){
+            $scope.data = response.data;
+            $rootScope.data_loading -= 1;
+        },
+        function(ignored){
+            $rootScope.data_loading -= 1;
+        });
 });
 
 app.controller('SettingsHomeController', function ($scope, $rootScope, $location, AuthenticationService) {
@@ -455,16 +475,16 @@ app.controller('SheetsHomeController', function ($scope, $rootScope, $location, 
     };
 
     $scope.downloadSheet = function(){
-        $rootScope.data_loading = true;
+        $rootScope.data_loading += 1;
         $http.get('/download_sheet/' + $scope.selected_sheet.id + "/" + $scope.start_match_number + "/" + $scope.end_match_number)
             .then(function(resp){
                 var data = new Blob([resp.data], { type: 'text/plain;charset=utf-8' });
                 FileSaver.saveAs(data, $scope.selected_sheet.name + '.pdf');
-                $rootScope.data_loading = false;
+                $rootScope.data_loading = 0;
                 $scope.cancelDownload();
             },
             function(ignored){
-                $rootScope.data_loading = false;
+                $rootScope.data_loading = 0;
             });
     };
 
@@ -484,7 +504,7 @@ app.controller('SheetsEditController', function ($scope, $rootScope, $location, 
     $scope.expanded = {};
 
     if(appPath.id != undefined){
-        $rootScope.data_loading = true;
+        $rootScope.data_loading += 1;
         $http.get('/get/sheet/' + appPath.id)
             .then(function(resp){
                 $scope.sheet = resp.data;
@@ -506,13 +526,13 @@ app.controller('SheetsEditController', function ($scope, $rootScope, $location, 
         if($scope.sheet.name.length < 5){
             return;
         }
-        $rootScope.data_loading = true;
+        $rootScope.data_loading += 1;
         $http.post('/save/sheet', $scope.sheet)
             .then(function(ignored){
-                $rootScope.data_loading = false;
+                $rootScope.data_loading = 0;
             },
             function(ignored){
-                $rootScope.data_loading = false;
+                $rootScope.data_loading = 0;
                 console.error('Failed to save sheet.');
             });
     };
@@ -571,11 +591,11 @@ app.controller('SheetsEditController', function ($scope, $rootScope, $location, 
         $scope.sheet.data.push(new_field);
     };
 
-    $rootScope.data_loading = true;
+    $rootScope.data_loading += 1;
     $http.get("/get/default_fields")
         .then(function(resp){
             $scope.default_fields = resp.data;
-            $rootScope.data_loading = false;
+            $rootScope.data_loading = 0;
         });
 
     String.prototype.toProperCase = function () {
