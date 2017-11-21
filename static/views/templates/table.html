@@ -3,31 +3,29 @@
         <tr>
             <th></th>
             <th ng-repeat="header in headers" class="data-header clickable {{ header.class }}"
-                ng-click="sortData($event, header.sort_id)">
+                ng-click="sortData($event, header.data_key)">
                 <span uib-tooltip="{{ header.tooltip }}" tooltip-placement="top">{{ header.title }}</span>
-                <span ng-show="sorts.indexOf(header.sort_id) > -1"
-                      class="glyphicon glyphicon-sort">{{ sorts.indexOf(header.sort_id)+1 }}</span>
-                <span ng-show="sorts.indexOf('-' + header.sort_id) > -1"
-                      class="glyphicon glyphicon-sort-by-order">{{ sorts.indexOf("-" + header.sort_id)+1 }}</span>
-                <span ng-show="sorts.indexOf(header.sort_id) < 0 && sorts.indexOf(header.sort_id) < 0"
-                      class="glyphicon glyphicon-sort-by-order-alt"> </span>
+
+                <span ng-if="sorts.indexOf(header.data_key) > -1" class="glyphicon glyphicon-sort-by-attributes">{{ sorts.indexOf(header.data_key)+1 }}</span>
+                <span ng-if="sorts.indexOf('-' + header.data_key) > -1" class="glyphicon glyphicon-sort-by-attributes-alt">{{ sorts.indexOf("-" + header.data_key)+1 }}</span>
+                <span ng-if="sorts.indexOf(header.data_key) < 0 && sorts.indexOf('-' + header.data_key) < 0" class="glyphicon glyphicon-sort"> </span>
             </th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="elem in data | orderBy:sorts">
+        <tr ng-repeat="elem in data | orderBy:sorts | limitTo:10">
             <td ng-click="cycleColour(elem.a)"
                 ng-class="{'highlight-green': colours[elem.a] % 4 == 1, 'highlight-red': colours[elem.a] % 4 == 2, 'highlight-blue': colours[elem.a] % 4 == 3}">
                 <b>{{ $index+1 }}</b>
             </td>
             <td ng-repeat="header in headers" class="data-box {{ header.data_class }}"
-                ng-class="{'highlight-green': colours[elem.a] % 4 == 1 || elem[header.sort_id] == highlight_val, 'highlight-red': colours[elem.a] % 4 == 2, 'highlight-blue': colours[elem.a] % 4 == 3}">
-                <a ng-show="header.title === 'Team'" href="#/team/{{ elem[header.sort_id] }}" class="team-link"
-                   ng-bind="elem[header.sort_id]">
+                ng-class="{'highlight-green': colours[elem.a] % 4 == 1 || elem[header.data_key] == highlight_val, 'highlight-red': colours[elem.a] % 4 == 2, 'highlight-blue': colours[elem.a] % 4 == 3}">
+                <a ng-show="header.title === 'Team'" class="team-link">
+                   {{ elem[header.data_key] }}
                 </a>
-                <span ng-show="header.title != 'Team'" ng-bind="elem[header.sort_id]"
-                      uib-tooltip="{{ header.title }}: {{ elem[header.sort_id + 'tooltip'] }}" tooltip-placement="top"></span>
+                <span ng-show="header.title != 'Team'">{{elem[header.data_key]}}</span>
             </td>
         </tr>
     </tbody>
 </table>
+<ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" force-ellipses="true"></ul>
