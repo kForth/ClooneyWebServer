@@ -11,7 +11,7 @@ class EventDatabaseInteractor:
         return [Event.from_json(e) for e in self._db.db['events'].values()]
 
     def get_event_keys(self):
-        return self.get_events().keys()
+        return [e.key for e in self.get_events()]
 
     def get_events_data(self):
         return list(map(lambda x: x.info.data, self.get_events()))
@@ -21,7 +21,7 @@ class EventDatabaseInteractor:
         return events[0] if events else None
 
     def set_event(self, key, data):
-        self._db.db['events'][key] = Event.to_dict(data)
+        self._db.db['events'][key] = data.to_dict()
         self._db.commit()
 
     def get_search_events(self):
@@ -31,7 +31,7 @@ class EventDatabaseInteractor:
         return events
 
     def update_event_details(self, key):
-        event = self.get_event(key).to_dict()
+        event = self.get_event(key)
         event.info.data = self._tba.get_event_info(key)
         event.info.is_tba = True
         self.set_event(key, event)
