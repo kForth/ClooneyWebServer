@@ -145,6 +145,7 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
 
     service.Login = Login;
     service.SetCredentials = SetCredentials;
+    service.GetUserSettings = GetUserSettings;
     service.ClearCredentials = ClearCredentials;
     service.isAuthorized = isAuthorized;
 
@@ -153,6 +154,7 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
     function Login(username, password, success_callback, fail_callback) {
         $http.post('/login', {username: username, password: password})
             .then(function (resp) {
+                    SetCredentials(resp.data);
                     success_callback(resp);
                 },
                 function (resp) {
@@ -161,11 +163,25 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
 
     }
 
+    function GetUserSettings(username){
+        $http.get('/get/user_settings/' + username)
+            .then(function(response){
+                if($rootScope.globals === undefined){
+                    $rootScope.globals = {}
+                }
+                $rootScope.globals.userSettings = response.data;
+            },
+            function(ignored){
+                console.error("Cannot get user settings");
+            });
+    }
+
     function SetCredentials(user) {
 
-        $rootScope.globals = {
-            currentUser: user
-        };
+        if($rootScope.globals === undefined){
+            $rootScope.globals = {}
+        }
+        $rootScope.globals.currentUser = user;
 
         $http.defaults.headers.common['Authorization'] = 'Basic ' + user.key;
 
@@ -187,8 +203,9 @@ app.factory('AuthenticationService', function ($http, $cookies, $rootScope) {
     }
 });
 
-app.controller('ApplicationController', function ($scope, $rootScope, $location, $http) {
     $rootScope.data_loading = false;
+app.controller('ApplicationController', function ($scope, $rootScope, $location, $http, AuthenticationService) {
+    AuthenticationService.GetUserSettings('');
 
     $scope.$on('$routeChangeStart', function () {
         $rootScope.data_loading = false;
