@@ -348,18 +348,13 @@ app.controller('AnalysisEntriesController', function ($scope, $rootScope, $locat
     if ($scope.tracked_event === undefined) $location.path("/");
 
     $rootScope.data_loading += 1;
-    $http.get('/get/headers/raw_entries')
-        .then(function(response){
-            $scope.headers = response.data;
-            $rootScope.data_loading -= 1;
-        },
-        function(ignored){
-            $rootScope.data_loading -= 1;
-        });
+    console.log($location.path());
+    $scope.headers = $rootScope.globals.userSettings.headers($location.path());
 
     $rootScope.data_loading += 1;
     $http.get('/get/raw_entries/' + $scope.tracked_event.key)
         .then(function(response){
+            console.log(response.data);
             $scope.data = response.data;
             $rootScope.data_loading -= 1;
         },
