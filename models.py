@@ -122,6 +122,7 @@ class Event:
     @staticmethod
     def verify_json(data):
         if 'info' in data.keys() and type(data['info']) == EventInfo:
+            data = dict(data)
             data['info'] = data['info'].to_dict()
         req_keys = ['key', 'info']
         opt_keys = ['teams', 'matches']
@@ -130,6 +131,7 @@ class Event:
     @staticmethod
     def from_json(data):
         if Event.verify_json(data):
+            data = dict(data)
             data['info'] = EventInfo.from_json(data['info']) if EventInfo.verify_json(data['info']) else None
             if data['info']:
                 return Event(**data)
