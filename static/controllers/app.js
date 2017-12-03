@@ -275,7 +275,7 @@ app.controller('SettingsSidebarController', function($scope, $localStorage, $loc
     };
 });
 
-app.controller('UserLogoutController', function ($scope, $localStorage, $location, AuthenticationService) {
+app.controller('UserLogoutController', function ($scope, $localStorage, $sessionStorage, $location, AuthenticationService, $http) {
     $http.post('/logout');
     AuthenticationService.ClearCredentials();
     $location.path("/login");
