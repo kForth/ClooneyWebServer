@@ -114,11 +114,23 @@ app.directive('highlightTable', function ($location, $sessionStorage) {
     };
 });
 
-app.directive('multiSortTable', function ($location) {
+app.directive('multiSortTable', function ($location, $sessionStorage) {
 
     function link(scope) {
+        if($sessionStorage.sorts == undefined) $sessionStorage.sorts = {};
+        scope.sorts = $sessionStorage.sorts[$location.path()];
         if (scope.sorts === undefined)
             scope.sorts = [];
+
+        scope.$watch('sorts', function() {
+            $sessionStorage.sorts[$location.path()] = scope.sorts;
+        });
+
+        scope.$watch(function() {
+            return angular.toJson($sessionStorage);
+        }, function() {
+            scope.sorts = $sessionStorage.sorts[$location.path()];
+        });
 
         scope.sortData = function (event, key) {
             if (event.shiftKey) {
