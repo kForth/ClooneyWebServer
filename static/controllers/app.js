@@ -181,10 +181,7 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
     function GetUserSettings(username){
         $http.get('/get/user_settings/' + username)
             .then(function(response){
-                if($localStorage.globals === undefined){
-                    $localStorage.globals = {}
-                }
-                $localStorage.globals.userSettings = response.data;
+                $localStorage.userSettings = response.data;
             },
             function(ignored){
                 console.error("Cannot get user settings");
@@ -192,26 +189,21 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
     }
 
     function SetCredentials(user) {
+        $localStorage.currentUser = user;
 
-        if($localStorage.globals === undefined){
-            $localStorage.globals = {}
-        }
-        $localStorage.globals.currentUser = user;
-
-        $http.defaults.headers.common['Authorization'] = 'Basic ' + user.key;
-
-        var cookieExp = new Date();
-        cookieExp.setDate(cookieExp.getDate() + 7);
+        $http.defaults.headers.common['Authorization'] = user.key;
     }
 
     function ClearCredentials() {
-        $localStorage.globals = {};
-        $http.defaults.headers.common.Authorization = 'Basic';
+        $localStorage.currentUser = undefined;
+        $localStorage.userSettings = undefined;
+        $http.defaults.headers.common.Authorization = '';
+        GetUserSettings('');
     }
 
     function isAuthorized(min_level) {
-        return $localStorage.globals != undefined && $localStorage.globals.currentUser != undefined &&
-            $localStorage.globals.currentUser.user.role >= min_level;
+        return $localStorage.currentUser != undefined && $localStorage.userSettings != undefined &&
+            $localStorage.currentUser.user.role >= min_level;
 
     }
 });
