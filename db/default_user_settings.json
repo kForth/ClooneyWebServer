@@ -4,14 +4,14 @@
       {
         "data_key":   "match",
         "class":      "",
-        "title":      "Match",
+        "title":      "M#",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "pos",
         "class":      "",
-        "title":      "Pos",
+        "title":      "P#",
         "data_class": "",
         "tooltip":    ""
       },
@@ -25,91 +25,91 @@
       {
         "data_key":   "auto_no_move",
         "class":      "",
-        "title":      "Auto No Move",
+        "title":      "A No Move",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "auto_gear_location",
         "class":      "",
-        "title":      "Auto Gear Location",
+        "title":      "A ⚙️ Loc",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "auto_gears_scored",
         "class":      "",
-        "title":      "Auto Gears Scored",
+        "title":      "A ⚙",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "auto_scored_high",
         "class":      "",
-        "title":      "Auto Scored High",
+        "title":      "A 🎾 ⬆️",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "auto_scored_low",
         "class":      "",
-        "title":      "Auto Scored Low",
+        "title":      "A 🎾 ⬇️",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "auto_triggered_hopper",
         "class":      "",
-        "title":      "Auto Triggered Hopper",
+        "title":      "A Hop",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "tele_gears_scored",
         "class":      "",
-        "title":      "Gears Scored",
+        "title":      "⚙️ Scored",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "tele_gears_from_far",
         "class":      "",
-        "title":      "Gears From Far",
+        "title":      "⚙️ Far",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "tele_gears_from_near",
         "class":      "",
-        "title":      "Gears From Near",
+        "title":      "⚙️ Near",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "tele_scored_high",
         "class":      "",
-        "title":      "Scored High",
+        "title":      "🎾 ⬆️",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "tele_climbed",
         "class":      "",
-        "title":      "Climbed",
+        "title":      "Climb",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "tele_defense",
         "class":      "",
-        "title":      "Defense",
+        "title":      "D🤺",
         "data_class": "",
         "tooltip":    ""
       },
       {
         "data_key":   "disabled",
         "class":      "",
-        "title":      "Disabled",
+        "title":      "♿",
         "data_class": "",
         "tooltip":    ""
       },
