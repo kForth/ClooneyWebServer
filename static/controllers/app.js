@@ -307,7 +307,7 @@ app.controller('UserLoginController', function ($scope, $localStorage, $rootScop
 
 });
 
-app.controller('UserRegisterController', function ($scope, $localStorage, $rootScope, $location, $http) {
+app.controller('UserRegisterController', function ($scope, $rootScope, $location, $http) {
     $scope.input = {
         'first_name': '',
         'last_name': '',
@@ -351,16 +351,27 @@ app.controller('AnalysisMatchesController', function ($scope, $sessionStorage, $
 app.controller('AnalysisEntriesController', function ($scope, $sessionStorage, $localStorage, $rootScope, $location, $http, $timeout) {
 
     if($sessionStorage.tracked_event === undefined) $location.path("/");
+    if($localStorage.data === undefined) $localStorage.data = {};
+    if($localStorage.data[$location.path()] === undefined) $localStorage.data[$location.path()] = {};
 
-    $rootScope.data_loading += 1;
-    $http.get('/get/raw_entries/' + $localStorage.tracked_event.key)
-        .then(function(response){
-            $scope.data = response.data;
-            $rootScope.data_loading -= 1;
-        },
-        function(ignored){
-            $rootScope.data_loading -= 1;
-        });
+    $scope.headers = $localStorage.userSettings.headers[$location.path()];
+
+    if($localStorage.data[$location.path()][$sessionStorage.tracked_event.key] === undefined) {
+        console.log("Getting new entry data for " + $sessionStorage.tracked_event.key);
+        $rootScope.data_loading += 1;
+        $http.get('/get/raw_entries/' + ($sessionStorage.tracked_event.key || ""))
+            .then(function (response) {
+                    $scope.data = response.data;
+                    $timeout(function(){$localStorage.data[$location.path()][$sessionStorage.tracked_event.key] = $scope.data;}, 0);
+                    $rootScope.data_loading -= 1;
+                },
+                function (ignored) {
+                    $rootScope.data_loading -= 1;
+                });
+    }
+    else{
+        $scope.data = $localStorage.data[$location.path()][$sessionStorage.tracked_event.key];
+    }
 });
 
 app.controller('SettingsHomeController', function ($scope, $localStorage, $location, AuthenticationService) {
