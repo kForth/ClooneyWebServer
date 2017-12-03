@@ -78,15 +78,33 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
     });
 
 
-app.directive('highlightTable', function ($location) {
+app.directive('highlightTable', function ($location, $sessionStorage) {
     function link(scope) {
-        if (scope.colours === undefined)
-            scope.colours = {};
+        if($sessionStorage.colours == undefined) $sessionStorage.colours = {};
+        scope.colours = $sessionStorage.colours[$location.path()] || {};
 
-        scope.cycleColour = function (index) {
+        scope.$watch('colours', function() {
+            $sessionStorage.colours[$location.path()] = scope.colours;
+        });
+
+        scope.$watch(function() {
+            return angular.toJson($sessionStorage);
+        }, function() {
+            scope.colours = $sessionStorage.colours[$location.path()];
+        });
+
+        scope.cycleColour = function (event, index) {
             if (scope.colours[index] === undefined)
                 scope.colours[index] = 0;
-            scope.colours[index]++;
+            if(event.shiftKey) {
+                scope.colours[index] = 0;
+            }
+            else if(event.ctrlKey || event.metaKey) {
+                scope.colours[index] -= 1;
+            }
+            else{
+                scope.colours[index] += 1;
+            }
         };
     }
 
