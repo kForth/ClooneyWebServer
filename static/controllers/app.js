@@ -137,10 +137,20 @@ app.directive('multiSortTable', function ($location, $sessionStorage) {
                 scope.sorts = [];
             }
             if (scope.sorts.indexOf("-" + key) > -1) {
-                scope.sorts[scope.sorts.indexOf("-" + key)] = key;
+                if(event.ctrlKey || event.metaKey){
+                    scope.sorts.splice(scope.sorts.indexOf(key), 1);
+                }
+                else {
+                    scope.sorts[scope.sorts.indexOf("-" + key)] = key;
+                }
             }
             else if (scope.sorts.indexOf(key) > -1) {
-                scope.sorts.splice(scope.sorts.indexOf(key), 1);
+                if(event.ctrlKey || event.metaKey){
+                    scope.sorts[scope.sorts.indexOf(key)] = "-" + key;
+                }
+                else {
+                    scope.sorts.splice(scope.sorts.indexOf(key), 1);
+                }
             }
             else {
                 scope.sorts.push("-" + key);
