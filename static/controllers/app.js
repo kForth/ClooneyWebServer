@@ -208,15 +208,15 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
     }
 });
 
-app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $location, $http, AuthenticationService) {
+app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $sessionStorage, $location, $http, AuthenticationService) {
     $rootScope.data_loading = 0;
     AuthenticationService.GetUserSettings('');
 
     $scope.$on('$routeChangeStart', function () {
         $rootScope.data_loading = 0;
-        $scope.tracking_input_data.event = ($localStorage.tracked_event === undefined ? undefined : $localStorage.tracked_event.info.data);
-        if ($localStorage.globals != undefined && $localStorage.globals.currentUser != undefined) {
-            $scope.user_data = $localStorage.globals.currentUser;
+        $scope.tracking_input_data.event = ($sessionStorage.tracked_event === undefined ? undefined : $sessionStorage.tracked_event.info.data);
+        if ($localStorage.currentUser != undefined) {
+            $scope.user_data = $localStorage.currentUser;
         }
     });
 
@@ -234,13 +234,13 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
     };
 
     $scope.isNavCollapsed = true;
-    $localStorage.tracked_event_okay = false;
+    $sessionStorage.tracked_event_okay = false;
     $scope.select_event_button = function () {
         if (typeof($scope.tracking_input_data.event) == 'object') {
             $http.get('/get/event/' + $scope.tracking_input_data.event.key)
                 .then(function(resp){
-                    $localStorage.tracked_event = resp.data;
-                    $localStorage.tracked_event_okay = true;
+                    $sessionStorage.tracked_event = resp.data;
+                    $sessionStorage.tracked_event_okay = true;
                     $location.path('/a');
                 },
                 function(ignored){
@@ -332,26 +332,25 @@ app.controller('UserRegisterController', function ($scope, $localStorage, $rootS
     }
 });
 
-app.controller('AnalysisHomeController', function ($scope, $localStorage, $location) {
-    if ($localStorage.tracked_event === undefined) $location.path("/");
+app.controller('AnalysisHomeController', function ($scope, $sessionStorage, $location) {
+    if ($sessionStorage.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisAveragesController', function ($scope, $localStorage, $location) {
-    if ($localStorage.tracked_event === undefined) $location.path("/");
+app.controller('AnalysisAveragesController', function ($scope, $sessionStorage, $location) {
+    if ($sessionStorage.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisInsightsController', function ($scope, $localStorage, $location) {
-    if ($localStorage.tracked_event === undefined) $location.path("/");
+app.controller('AnalysisInsightsController', function ($scope, $sessionStorage, $location) {
+    if ($sessionStorage.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisMatchesController', function ($scope, $localStorage, $location) {
-    if ($localStorage.tracked_event === undefined) $location.path("/");
+app.controller('AnalysisMatchesController', function ($scope, $sessionStorage, $location) {
+    if ($sessionStorage.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisEntriesController', function ($scope, $localStorage, $rootScope, $location, $http) {
-    if ($localStorage.tracked_event === undefined) $location.path("/");
+app.controller('AnalysisEntriesController', function ($scope, $sessionStorage, $localStorage, $rootScope, $location, $http, $timeout) {
 
-    $scope.headers = $localStorage.globals.userSettings.headers[$location.path()];
+    if($sessionStorage.tracked_event === undefined) $location.path("/");
 
     $rootScope.data_loading += 1;
     $http.get('/get/raw_entries/' + $localStorage.tracked_event.key)
@@ -365,11 +364,11 @@ app.controller('AnalysisEntriesController', function ($scope, $localStorage, $ro
 });
 
 app.controller('SettingsHomeController', function ($scope, $localStorage, $location, AuthenticationService) {
-    if ($localStorage.tracked_event === undefined || !AuthenticationService.isAuthorized(2)) $location.path("/");
+    if ($sessionStorage.tracked_event === undefined || !AuthenticationService.isAuthorized(2)) $location.path("/");
 });
 
 app.controller('SettingsCalculationsController', function ($scope, $localStorage, $location, AuthenticationService) {
-    if ($localStorage.tracked_event === undefined || !AuthenticationService.isAuthorized(2)) $location.path("/");
+    if ($sessionStorage.tracked_event === undefined || !AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.calculations = [
         {'name': 'a', 'key': 'a', 'formula': 'x*x', 'type': 'float'},
         {'name': 'b', 'key': 'b', 'formula': 'x+y', 'type': 'float'},
@@ -378,7 +377,7 @@ app.controller('SettingsCalculationsController', function ($scope, $localStorage
     ];
 });
 
-app.controller('SetupEventController', function ($scope, $localStorage, $location, $http, AuthenticationService) {
+app.controller('SetupEventController', function ($scope, $localStorage, $sessionStorage, $location, $http, AuthenticationService) {
     if (!AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.setup_step = 0;
     $scope.default_data =
@@ -430,8 +429,8 @@ app.controller('SetupEventController', function ($scope, $localStorage, $locatio
             .then(function (resp) {
                     if (resp.status === 200) {
                         $scope.update_available_events();
-                        $localStorage.tracked_event = resp.data;
-                        $localStorage.tracked_event_okay = true;
+                        $sessionStorage.tracked_event = resp.data;
+                        $sessionStorage.tracked_event_okay = true;
                         $location.path('/s');
                     }
                 },
