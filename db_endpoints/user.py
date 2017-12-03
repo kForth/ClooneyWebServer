@@ -23,7 +23,8 @@ class UserDatabaseEndpoints:
     def get_user_settings(self, username=None):
         if username:
             user_settings = self._db_interactor.get_user_settings_by_user_username(username.lower())
-            return make_response(jsonify(user_settings.to_dict()), 200)
+            if user_settings:
+                return make_response(jsonify(user_settings.to_dict()), 200)
         elif username:
             self._db_interactor.set_user_settings(username.lower(), UserSettings.from_json(self.DEFAULT_USER_SETTINGS))
         return make_response(jsonify(self.DEFAULT_USER_SETTINGS), 200)
