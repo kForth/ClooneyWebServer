@@ -72,6 +72,7 @@ class EventDatabaseEndpoints:
                 }
                 event = Event.from_json(data)
                 self._db_interactor.set_event(data['key'], event)
+                self._db_interactor.set_event_settings(data['key'])
                 if use_tba:
                     self._db_interactor.update_event_details(event.key)
                     self._db_interactor.update_event_teams(event.key)

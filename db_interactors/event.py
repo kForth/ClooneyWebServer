@@ -3,6 +3,8 @@ from tba_py import TBA
 
 
 class EventDatabaseInteractor:
+    DEFAULT_EVENT_SETTINGS = {'setings': {'sheet': {}}, 'calculations': []}
+
     def __init__(self, db, app):
         self._db = db
         self._tba = TBA(app.config['TBA_AUTH_KEY'], cache_filename=app.config['TBA_CACHE_FILE'])
@@ -10,7 +12,7 @@ class EventDatabaseInteractor:
     def get_event_settings(self, key):
         return self._db.db['event_settings'][key]
 
-    def set_event_settings(self, key, settings):
+    def set_event_settings(self, key, settings=DEFAULT_EVENT_SETTINGS):
         self._db.db['event_settings'][key] = settings
 
     def get_events(self):
