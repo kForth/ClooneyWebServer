@@ -37,11 +37,11 @@
             </td>
 
             <td ng-repeat="header in headers" class="data-box {{ header.data_class }}"
-                ng-class="{'highlight-green': colours[$parent.$index] % 4 == 1 || elem[header.data_key] == highlight_val, 'highlight-red': colours[$parent.$index] % 4 == 2, 'highlight-blue': colours[$parent.$index] % 4 == 3}">
+                ng-class="{'highlight-green': colours[$parent.$index] % 4 == 1, 'highlight-red': colours[$parent.$index] % 4 == 2, 'highlight-blue': colours[$parent.$index] % 4 == 3}">
                 <a ng-show="header.title === 'Team'" class="team-link">
-                   {{ elem[header.data_key] }}
+                   {{ getData(elem, header.data_key) }}
                 </a>
-                <span ng-show="header.title != 'Team'" uib-tooltip="{{ header.title }}">{{elem[header.data_key]}}</span>
+                <span ng-show="header.title != 'Team'" uib-tooltip="{{ header.title }}">{{ getData(elem, header.data_key) }}</span>
             </td>
         </tr>
     </tbody>

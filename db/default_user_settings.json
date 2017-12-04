@@ -127,6 +127,134 @@
         "data_class": "",
         "tooltip":    ""
       }
+    ],
+  "/a/a": [
+      {
+        "data_key":   "match.count",
+        "class":      "",
+        "title":      "M#",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "pos.count",
+        "class":      "",
+        "title":      "P#",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "team.count",
+        "class":      "",
+        "title":      "Team",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_no_move.avg",
+        "class":      "",
+        "title":      "A No Move",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_gear_location.mode",
+        "class":      "",
+        "title":      "A ⚙️ Loc",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_gears_scored.mode",
+        "class":      "",
+        "title":      "A ⚙",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_scored_high.mode",
+        "class":      "",
+        "title":      "A 🎾 ⬆️",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_scored_low.mode",
+        "class":      "",
+        "title":      "A 🎾 ⬇️",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "auto_triggered_hopper.mode",
+        "class":      "",
+        "title":      "A Hop",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_gears_scored.mode",
+        "class":      "",
+        "title":      "⚙️ Scored",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_gears_from_far.mode",
+        "class":      "",
+        "title":      "⚙️ Far",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_gears_from_near.mode",
+        "class":      "",
+        "title":      "⚙️ Near",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_scored_high.mode",
+        "class":      "",
+        "title":      "🎾 ⬆️",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_climbed.mode",
+        "class":      "",
+        "title":      "Climb",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "tele_defense.mode",
+        "class":      "",
+        "title":      "D🤺",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "disabled.mode",
+        "class":      "",
+        "title":      "♿",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "no_move.mode",
+        "class":      "",
+        "title":      "No move",
+        "data_class": "",
+        "tooltip":    ""
+      },
+      {
+        "data_key":   "no_show.mode",
+        "class":      "",
+        "title":      "No Show",
+        "data_class": "",
+        "tooltip":    ""
+      }
     ]
   }
 }

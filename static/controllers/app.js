@@ -261,6 +261,11 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
         }
     };
 
+
+    String.prototype.toProperCase = function () {
+        return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    };
+
 });
 
 app.controller('HomeController', function ($scope, $localStorage) {
@@ -273,12 +278,14 @@ app.controller('SidebarController', function ($scope, $localStorage, $location) 
     }
 });
 
-app.controller('SettingsSidebarController', function($scope, $sessionStorage, $location, $http){
+app.controller('SettingsSidebarController', function($scope, $sessionStorage, $localStorage, $location, $http){
     $scope.nav = function (path) {
         $location.path(path);
     };
 
     $scope.update_event = function(){
+        $localStorage.data['/a/a'][$sessionStorage.tracked_event.key] = undefined;
+        $http.post('/update/event_analysis/' + $sessionStorage.tracked_event.key);
         console.log("update");
     };
 
@@ -348,8 +355,44 @@ app.controller('AnalysisHomeController', function ($scope, $sessionStorage, $loc
     if ($sessionStorage.tracked_event === undefined) $location.path("/");
 });
 
-app.controller('AnalysisAveragesController', function ($scope, $sessionStorage, $location) {
+app.controller('AnalysisAveragesController', function ($scope, $sessionStorage, $localStorage, $rootScope, $location, $http) {
     if ($sessionStorage.tracked_event === undefined) $location.path("/");
+    if($localStorage.data[$location.path()] === undefined) $localStorage.data[$location.path()] = {};
+
+    $scope.headers = $localStorage.userSettings.headers[$location.path()];
+
+    if($localStorage.data[$location.path()][$sessionStorage.tracked_event.key] === undefined) {
+        console.log("Getting new entry data for " + $sessionStorage.tracked_event.key);
+        $rootScope.data_loading += 1;
+        $http.get('/get/event_analysis/' + $sessionStorage.tracked_event.key)
+            .then(function (response) {
+                    $scope.data = response.data;
+                    $localStorage.data[$location.path()][$sessionStorage.tracked_event.key] = $scope.data;
+                    $rootScope.data_loading -= 1;
+                },
+                function (ignored) {
+                    $rootScope.data_loading -= 1;
+                });
+    }
+    else{
+        $scope.data = $localStorage.data[$location.path()][$sessionStorage.tracked_event.key];
+    }
+
+
+    $scope.getData = function(o, s) {
+        s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+        s = s.replace(/^\./, '');           // strip a leading dot
+        var a = s.split('.');
+        for (var i = 0, n = a.length; i < n; ++i) {
+            var k = a[i];
+            if (k in o) {
+                o = o[k];
+            } else {
+                return;
+            }
+        }
+        return o;
+    }
 });
 
 app.controller('AnalysisInsightsController', function ($scope, $sessionStorage, $location) {
@@ -401,7 +444,7 @@ app.controller('SettingsHomeController', function ($scope, $sessionStorage, $loc
 
     $http.get('/get/event_settings/' + $sessionStorage.tracked_event.key)
         .then(function(resp){
-            $scope.settings = resp.data;
+            $scope.settings = resp.data.settings;
             $scope.backup = angular.copy($scope.settings);
 
         });
@@ -636,8 +679,4 @@ app.controller('SheetsEditController', function ($scope, $rootScope, $localStora
             $scope.default_fields = resp.data;
             $rootScope.data_loading = 0;
         });
-
-    String.prototype.toProperCase = function () {
-        return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    };
 });
