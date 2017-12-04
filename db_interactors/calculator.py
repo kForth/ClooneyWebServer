@@ -28,7 +28,7 @@ class CalculatorDatabaseInteractor:
         for team in list(data_by_team.keys())[1:]:
             data = data_by_team[team]
             analysis = {
-                'team': {'mode', self._calc.mode(data['team'])},
+                'team': {'mode': self._calc.mode(data['team'])},
                 'match': {'mode': self._calc.mode(data['match'])},
                 'pos': {'mode': self._calc.mode(data['pos'])}
             }

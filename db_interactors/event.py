@@ -27,7 +27,6 @@ class EventDatabaseInteractor:
         return events[0] if events else None
 
     def set_event(self, key, data):
-        print(self._db.db['events'][key])
         self._db.db['events'][key] = data.to_dict()
 
     def get_search_events(self):
