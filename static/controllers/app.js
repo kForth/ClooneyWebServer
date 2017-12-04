@@ -273,7 +273,7 @@ app.controller('SidebarController', function ($scope, $localStorage, $location) 
     }
 });
 
-app.controller('SettingsSidebarController', function($scope, $localStorage, $location){
+app.controller('SettingsSidebarController', function($scope, $sessionStorage, $location, $http){
     $scope.nav = function (path) {
         $location.path(path);
     };
