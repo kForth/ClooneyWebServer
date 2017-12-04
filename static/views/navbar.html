@@ -18,8 +18,8 @@
                 <button ng-click="select_event_button()" class="btn btn-default">Go</button>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li ng-if="tracked_event_okay"><a href="#/a">Analysis</a></li>
-                <li ng-if="tracked_event_okay && user_data.user.role >= 2"><a href="#/s">Settings</a></li>
+                <li ng-if="tracked_event != undefined"><a href="#/a">Analysis</a></li>
+                <li ng-if="tracked_event != undefined && user_data.user.role >= 2"><a href="#/s">Settings</a></li>
                 <li uib-dropdown>
                     <a uib-dropdown-toggle><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a>
                     <ul uib-dropdown-menu>

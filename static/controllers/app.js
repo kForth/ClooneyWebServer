@@ -225,6 +225,7 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
     $scope.$on('$routeChangeStart', function () {
         $rootScope.data_loading = 0;
         $scope.tracking_input_data.event = ($sessionStorage.tracked_event === undefined ? undefined : $sessionStorage.tracked_event.info.data);
+        $scope.tracked_event = $sessionStorage.tracked_event;
         if ($localStorage.currentUser != undefined) {
             $scope.user_data = $localStorage.currentUser;
         }
@@ -384,11 +385,11 @@ app.controller('AnalysisEntriesController', function ($scope, $sessionStorage, $
     }
 });
 
-app.controller('SettingsHomeController', function ($scope, $localStorage, $location, AuthenticationService) {
+app.controller('SettingsHomeController', function ($scope, $sessionStorage, $location, AuthenticationService) {
     if ($sessionStorage.tracked_event === undefined || !AuthenticationService.isAuthorized(2)) $location.path("/");
 });
 
-app.controller('SettingsCalculationsController', function ($scope, $localStorage, $location, AuthenticationService) {
+app.controller('SettingsCalculationsController', function ($scope, $sessionStorage, $location, AuthenticationService) {
     if ($sessionStorage.tracked_event === undefined || !AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.calculations = [
         {'name': 'a', 'key': 'a', 'formula': 'x*x', 'type': 'float'},
@@ -471,7 +472,6 @@ app.controller('SetupEventController', function ($scope, $localStorage, $session
     //Step 2 - Edit the event information
     $scope.input_data = {};
     $scope.submit_manual_data = function () {
-        console.log($scope.input_data);
         // $location.path('/s/e');
     };
 
