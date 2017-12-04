@@ -16,7 +16,7 @@ class CalculatorDatabaseInteractor:
     def update_entries_for_event(self, event_key):
         entries = [e.data for e in self._db.entries.get_entries_for_event(event_key)]
         event_settings = self._db.events.get_event_settings(event_key)
-        sheet = json.loads(event_settings['selected_sheet'])['data']
+        sheet = json.loads(event_settings['settings']['selected_sheet'])['data']
         data_keys = ['team', 'match', 'pos'] + [e['key'] for e in sheet if e['type'] not in ['Divider', 'Image']]
         data_by_team = {}
 
@@ -32,11 +32,7 @@ class CalculatorDatabaseInteractor:
         analysis_data_by_team = {}
         for team in list(data_by_team.keys())[1:]:
             data = data_by_team[team]
-            analysis = {
-                'team': {'mode': self._calc.mode(data['team'])},
-                'match': {'mode': self._calc.mode(data['match'])},
-                'pos': {'mode': self._calc.mode(data['pos'])}
-            }
+            analysis = {}
             for field in sheet:
                 if field['type'] in ['Divider', 'Image']:
                     continue
@@ -50,7 +46,19 @@ class CalculatorDatabaseInteractor:
                     'count': len(raw),
                     'raw': raw
                 }
-                if field['type'] == 'Numbers':
+                if field['key'] == 'team':
+                    analysis[key].update({
+                        'mode': self._calc.mode(data['team'])
+                    })
+                elif field['key'] == 'match':
+                    analysis[key].update({
+                        'mode': self._calc.mode(data['match'])
+                    })
+                elif field['key'] == 'pos':
+                    analysis[key].update({
+                        'mode': self._calc.mode(data['pos'])
+                    })
+                elif field['type'] == 'Numbers':
                     analysis[key].update({
                         'avg': sum(raw) / len(raw),
                         'median': statistics.median(raw),
