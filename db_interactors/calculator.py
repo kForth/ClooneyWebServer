@@ -66,9 +66,7 @@ class CalculatorDatabaseInteractor:
                     })
             analysis_data_by_team[team] = analysis
 
-        # TODO: Do something with the data.
-        print(analysis_data_by_team)
-        return True
+        self._db.db['calculations']['analysis'][event_key] = analysis_data_by_team
 
 
 class Calculator(object):
