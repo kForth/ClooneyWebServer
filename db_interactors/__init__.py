@@ -10,7 +10,7 @@ from util import PeriodicRunner
 
 class DatabaseInteractor:
     DEFAULT_DB = {
-        'events': {}, 'user_settings': {}, 'users': {'users': [], 'max_id': -1}, 'sheets': {'sheets': [], 'max_id': -1}, 'entry': {'entry': [], 'max_id': -1}
+        'calculations': {'analysis': {}, 'calculations': {}}, 'event_settings': {}, 'events': {}, 'user_settings': {}, 'users': {'users': [], 'max_id': -1}, 'sheets': {'sheets': [], 'max_id': -1}, 'entry': {'entry': [], 'max_id': -1}
     }
 
     def __init__(self, app, filename="db/db.json"):

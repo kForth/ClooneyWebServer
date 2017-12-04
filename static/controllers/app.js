@@ -219,8 +219,9 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
 });
 
 app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $sessionStorage, $location, $http, AuthenticationService) {
-    $rootScope.data_loading = 0;
+    if($localStorage.data === undefined) $localStorage.data = {};
     AuthenticationService.GetUserSettings('');
+    $rootScope.data_loading = 0;
 
     $scope.$on('$routeChangeStart', function () {
         $rootScope.data_loading = 0;
@@ -362,7 +363,6 @@ app.controller('AnalysisMatchesController', function ($scope, $sessionStorage, $
 app.controller('AnalysisEntriesController', function ($scope, $sessionStorage, $localStorage, $rootScope, $location, $http, $timeout) {
 
     if($sessionStorage.tracked_event === undefined) $location.path("/");
-    if($localStorage.data === undefined) $localStorage.data = {};
     if($localStorage.data[$location.path()] === undefined) $localStorage.data[$location.path()] = {};
 
     $scope.headers = $localStorage.userSettings.headers[$location.path()];
@@ -385,8 +385,31 @@ app.controller('AnalysisEntriesController', function ($scope, $sessionStorage, $
     }
 });
 
-app.controller('SettingsHomeController', function ($scope, $sessionStorage, $location, AuthenticationService) {
+app.controller('SettingsHomeController', function ($scope, $sessionStorage, $location, AuthenticationService, $http) {
     if ($sessionStorage.tracked_event === undefined || !AuthenticationService.isAuthorized(2)) $location.path("/");
+
+    $scope.saveSettings = function(){
+        $http.post('/set/event_settings/' + $sessionStorage.tracked_event.key, $scope.settings)
+            .then(function(resp){
+                console.log(resp);
+            });
+    };
+
+    $scope.revertSettings = function(){
+        $scope.settings = angular.copy($scope.backup);
+    };
+
+    $http.get('/get/event_settings/' + $sessionStorage.tracked_event.key)
+        .then(function(resp){
+            $scope.settings = resp.data;
+            $scope.backup = angular.copy($scope.settings);
+
+        });
+    $http.get('/get/sheets')
+        .then(function(resp){
+            $scope.sheets = resp.data;
+            console.log($scope.sheets);
+        });
 });
 
 app.controller('SettingsCalculationsController', function ($scope, $sessionStorage, $location, AuthenticationService) {

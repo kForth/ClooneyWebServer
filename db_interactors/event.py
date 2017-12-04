@@ -7,6 +7,12 @@ class EventDatabaseInteractor:
         self._db = db
         self._tba = TBA(app.config['TBA_AUTH_KEY'], cache_filename=app.config['TBA_CACHE_FILE'])
 
+    def get_event_settings(self, key):
+        return self._db.db['event_settings'][key]
+
+    def set_event_settings(self, key, settings):
+        self._db.db['event_settings'][key] = settings
+
     def get_events(self):
         return [Event.from_json(e) for e in self._db.db['events'].values()]
 
