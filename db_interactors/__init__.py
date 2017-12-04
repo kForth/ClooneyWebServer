@@ -1,6 +1,7 @@
 import json
 from os import path
 
+from db_interactors.calculator import CalculatorDatabaseInteractor
 from db_interactors.entry import EntryDatabaseInteractor
 from db_interactors.event import EventDatabaseInteractor
 from db_interactors.sheet import SheetDatabaseInteractor
@@ -24,6 +25,7 @@ class DatabaseInteractor:
         self.sheets = SheetDatabaseInteractor(self, app)
         self.events = EventDatabaseInteractor(self, app)
         self.entries = EntryDatabaseInteractor(self)
+        self.calculator = CalculatorDatabaseInteractor(self)
 
     def _read_db(self):
         self.db = self.DEFAULT_DB

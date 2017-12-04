@@ -24,3 +24,7 @@ class EntryDatabaseInteractor:
     def get_next_entry_id(self):
         self._db.db['entry']['max_id'] += 1
         return self._db.db['entry']['max_id']
+
+    def get_entries_for_event(self, event_key):
+        return [e for e in self.get_entries() if e.event == event_key]
+

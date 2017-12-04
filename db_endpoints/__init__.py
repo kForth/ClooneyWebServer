@@ -2,3 +2,4 @@ from db_endpoints.entry import EntryDatabaseEndpoints
 from db_endpoints.event import EventDatabaseEndpoints
 from db_endpoints.sheet import SheetDatabaseEndpoints
 from db_endpoints.user import UserDatabaseEndpoints
+from db_endpoints.calculator import CalculatorDatabaseEndpoints
