@@ -30,9 +30,16 @@ class CalculatorDatabaseInteractor:
                     data_by_team[team][key].append(entry[key])
 
         analysis_data_by_team = {}
-        for team in list(data_by_team.keys())[1:]:
+        for team in list(data_by_team.keys()):
             data = data_by_team[team]
             analysis = {}
+            for key in ['team', 'match', 'pos']:
+                raw = data[key]
+                analysis[key] = {
+                    'count': len(raw),
+                    'raw':   raw,
+                    'mode':  self._calc.mode(raw)
+                }
             for field in sheet:
                 if field['type'] in ['Divider', 'Image']:
                     continue
@@ -46,19 +53,7 @@ class CalculatorDatabaseInteractor:
                     'count': len(raw),
                     'raw': raw
                 }
-                if field['key'] == 'team':
-                    analysis[key].update({
-                        'mode': self._calc.mode(data['team'])
-                    })
-                elif field['key'] == 'match':
-                    analysis[key].update({
-                        'mode': self._calc.mode(data['match'])
-                    })
-                elif field['key'] == 'pos':
-                    analysis[key].update({
-                        'mode': self._calc.mode(data['pos'])
-                    })
-                elif field['type'] == 'Numbers':
+                if field['type'] == 'Numbers':
                     analysis[key].update({
                         'avg': sum(raw) / len(raw),
                         'median': statistics.median(raw),

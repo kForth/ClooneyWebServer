@@ -12,7 +12,6 @@ class CalculatorDatabaseEndpoints:
 
     def get_analysis_data(self, event_key):
         event = self._db_interactor.get_event_analysis(event_key)
-        print(event)
         return jsonify(event), 200
 
     def update_entries_for_event(self, event_key):
