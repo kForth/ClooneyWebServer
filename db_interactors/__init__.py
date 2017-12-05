@@ -30,7 +30,10 @@ class DatabaseInteractor:
     def _read_db(self):
         self.db = self.DEFAULT_DB
         if path.isfile(self._filepath):
-            self.db.update(json.load(open(self._filepath)))
+            try:
+                self.db.update(json.load(open(self._filepath)))
+            except:
+                self.db.update(json.load(open(self._filepath + ".backup")))
         self.commit()
 
     def commit(self):
