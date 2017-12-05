@@ -45,9 +45,8 @@
                 <b>{{ $index+1 }}</b>
             </td>
 
-            <td ng-repeat="header in headers" class="data-box {{ header.data_class }}"
-                ng-class="{'highlight-green': colours[$parent.$index] % 4 == 1, 'highlight-red': colours[$parent.$index] % 4 == 2, 'highlight-blue': colours[$parent.$index] % 4 == 3}">
-                <span ng-class="header.data_class.split(' ')" uib-tooltip="{{ header.title }}">{{ getData(elem, header.data_key) }}</span>
+            <td ng-repeat="header in headers" class="data-box" ng-class="{'highlight-green': colours[$parent.$index] % 4 == 1, 'highlight-red': colours[$parent.$index] % 4 == 2, 'highlight-blue': colours[$parent.$index] % 4 == 3}">
+                <datacell dc-header="header" dc-element="elem"></datacell>
             </td>
         </tr>
     </tbody>

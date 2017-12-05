@@ -120,6 +120,34 @@ app.directive('highlightTable', function ($location, $sessionStorage) {
     };
 });
 
+app.directive('datacell', function(){
+    function getData(obj, keys) {
+        keys.split(".").forEach(function (key) {
+            if (obj === undefined || keys === undefined) return obj;
+            obj = obj[key];
+        });
+        return obj;
+    }
+
+    function link(scope){
+        scope.value = getData(scope.dcElement, scope.dcHeader.data_key);
+        if(parseFloat(scope.value) == scope.value && parseInt(scope.value) != scope.value){
+            scope.value = scope.value.toFixed(2);
+        }
+    }
+
+    return {
+        restrict: 'E',
+        link: link,
+        template: "<span ng-class='dcHeader.data_class'>{{ value }}</span>",
+        transclude: true,
+        scope: {
+            'dcHeader': '=',
+            'dcElement': '='
+        }
+    }
+});
+
 app.directive('multiSortTable', function ($location, $sessionStorage) {
 
     function link(scope) {
@@ -427,7 +455,6 @@ app.controller('AnalysisAveragesController', function ($scope, $sessionStorage, 
     else {
         $scope.data = $localStorage.data[$location.path()][$sessionStorage.tracked_event.key];
     }
-    console.log($scope.data);
 
     $scope.getData = function (obj, keys) {
         if (obj === undefined || keys === undefined) return obj;
