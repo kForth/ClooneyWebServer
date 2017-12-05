@@ -123,27 +123,36 @@ app.directive('highlightTable', function ($location, $sessionStorage) {
 app.directive('multiSortTable', function ($location, $sessionStorage) {
 
     function link(scope) {
-        if($sessionStorage.sorts == undefined) $sessionStorage.sorts = {};
+        if ($sessionStorage.sorts == undefined) $sessionStorage.sorts = {};
         scope.sorts = $sessionStorage.sorts[$location.path()];
         if (scope.sorts === undefined)
             scope.sorts = [];
 
-        scope.$watch('sorts', function() {
+        scope.$watch('sorts', function () {
             $sessionStorage.sorts[$location.path()] = scope.sorts;
         });
 
-        scope.$watch(function() {
+        scope.$watch(function () {
             return angular.toJson($sessionStorage);
-        }, function() {
+        }, function () {
             scope.sorts = $sessionStorage.sorts[$location.path()];
         });
+
+
+        scope.getData = function (obj, keys) {
+            keys.split(".").forEach(function (e) {
+                if (obj === undefined || keys === undefined) return obj;
+                obj = obj[e];
+            });
+            return obj;
+        };
 
         scope.sortData = function (event, key) {
             if (event.shiftKey) {
                 scope.sorts = [];
             }
             if (scope.sorts.indexOf("-" + key) > -1) {
-                if(event.ctrlKey || event.metaKey){
+                if (event.ctrlKey || event.metaKey) {
                     scope.sorts.splice(scope.sorts.indexOf(key), 1);
                 }
                 else {
@@ -151,7 +160,7 @@ app.directive('multiSortTable', function ($location, $sessionStorage) {
                 }
             }
             else if (scope.sorts.indexOf(key) > -1) {
-                if(event.ctrlKey || event.metaKey){
+                if (event.ctrlKey || event.metaKey) {
                     scope.sorts[scope.sorts.indexOf(key)] = "-" + key;
                 }
                 else {
@@ -169,6 +178,39 @@ app.directive('multiSortTable', function ($location, $sessionStorage) {
         restrict: 'A'
     };
 });
+
+app.filter('orderDataBy', function () {
+    function getData(obj, keys) {
+        if (obj === undefined || keys === undefined) return obj;
+        keys.split(".").forEach(function (e) {
+            obj = obj[e];
+        });
+        return obj;
+    }
+
+    return function(items, field, reverse) {
+        var filtered = [];
+        items.forEach(function(e){filtered.push(e);});
+
+        filtered.sort(function(a, b) {
+            if(getData(a, field) > getData(b, field)) {
+                return 1;
+            }
+            else if(getData(a, field) > getData(b, field)){
+                return -1;
+            }
+            else{
+                return 0;
+            }
+        });
+
+        if (reverse)
+            filtered.reverse();
+
+        return filtered;
+    }
+});
+
 
 app.factory('AuthenticationService', function ($http, $localStorage) {
     var service = {};
@@ -384,20 +426,12 @@ app.controller('AnalysisAveragesController', function ($scope, $sessionStorage, 
         $scope.data = $localStorage.data[$location.path()][$sessionStorage.tracked_event.key];
     }
 
-
-    $scope.getData = function(o, s) {
-        s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-        s = s.replace(/^\./, '');           // strip a leading dot
-        var a = s.split('.');
-        for (var i = 0, n = a.length; i < n; ++i) {
-            var k = a[i];
-            if (k in o) {
-                o = o[k];
-            } else {
-                return;
-            }
-        }
-        return o;
+    $scope.getData = function (obj, keys) {
+        if (obj === undefined || keys === undefined) return obj;
+        keys.split(".").forEach(function (e) {
+            obj = obj[e];
+        });
+        return obj;
     }
 });
 
