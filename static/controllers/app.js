@@ -271,6 +271,16 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
         $localStorage.event_data = {};
     };
 
+    service.loadAvailableEvents = function () {
+        $http.get('/get/available_events').then(function (resp) {
+            $localStorage.available_events = resp.data;
+        });
+    };
+
+    service.getAvailableEvents = function(){
+        return $localStorage.available_events;
+    };
+
     function loadData(event_key, url, path){
         if ($localStorage.event_data[path] === undefined) $localStorage.event_data[path] = {};
         $log.info("Trying to " + url + " for " + event_key);
@@ -346,6 +356,7 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
 
 app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $sessionStorage, $location, $http, AuthenticationService, EventDataService) {
     AuthenticationService.GetUserSettings('');
+    EventDataService.loadAvailableEvents();
     $rootScope.data_loading = 0;
 
     $scope.$on('$routeChangeStart', function () {
@@ -358,17 +369,11 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
         }
     });
 
-    $scope.available_events = [];
-    $scope.update_available_events = function () {
-        $http.get('/get/available_events').then(function (resp) {
-            $scope.available_events = resp.data;
-        });
-    };
-    $scope.update_available_events();
+    $scope.available_events = EventDataService.getAvailableEvents();
 
     $scope.tracking_input_data = {
-        'event': '',
-        'team': ''
+        event: EventDataService.getTrackedEvent(),
+        team: ''
     };
 
     $scope.isNavCollapsed = true;
