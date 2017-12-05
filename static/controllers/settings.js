@@ -2,7 +2,7 @@ app.controller('SettingsHomeController', function ($scope, $location, Authentica
     if (!EventDataService.isTrackingEvent() || !AuthenticationService.isAuthorized(2)) $location.path("/");
 
     $scope.saveSettings = function () {
-        $http.post('/set/event_settings/' + EventDataService.getTrackedEvent().key, $scope.settings)
+        $http.post('/set/event_settings/' + EventDataService.getTrackedEvent().key, {'settings': $scope.settings})
             .then(function (resp) {
                 console.log(resp);
             });

@@ -3,7 +3,7 @@ from tba_py import TBA
 
 
 class EventDatabaseInteractor:
-    DEFAULT_EVENT_SETTINGS = {'setings': {'sheet': {}}, 'calculations': []}
+    DEFAULT_EVENT_SETTINGS = {'settings': {'sheet': {}}, 'calculations': []}
 
     def __init__(self, db, app):
         self._db = db
@@ -13,7 +13,9 @@ class EventDatabaseInteractor:
         return self._db.db['event_settings'][key]
 
     def set_event_settings(self, key, settings=DEFAULT_EVENT_SETTINGS):
-        self._db.db['event_settings'][key] = settings
+        if key not in self._db.db['event_settings'].keys():
+            self._db.db['event_settings'][key] = {}
+        self._db.db['event_settings'][key].update(settings)
 
     def get_events(self):
         return [Event.from_json(e) for e in self._db.db['events'].values()]

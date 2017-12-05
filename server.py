@@ -1,6 +1,4 @@
-from flask import Flask
-from flask import abort
-from flask import request
+from flask import Flask, abort, request
 
 from db_endpoints import *
 from db_interactors import DatabaseInteractor
@@ -13,11 +11,13 @@ active_users = {}
 
 def add_route(route, func, methods=('GET',), url_prefix="", min_role="Guest"):
     def func_with_auth(*args, **kwargs):
-        user = db.users.get_user_by_id(int('0' + request.headers['UserID']))
+        if not all([h in request.headers for h in ['UserID', 'UserKey']]):
+            abort(400)
+        user_id = int('0' + request.headers['UserID'])
+        user = db.users.get_user_by_id(user_id)
         user_key = request.headers['UserKey']
-        if min_role == "Guest" \
-                or (user and db.users.USER_ROLES.index(user.role) >= db.users.USER_ROLES.index(min_role)
-                    and user_key == active_users[user.username]):
+        if min_role == "Guest" or (user_key == active_users[user_id] and user
+                                   and db.users.USER_ROLES.index(user.role) >= db.users.USER_ROLES.index(min_role)):
             return func(*args, **kwargs)
         else:
             abort(401)

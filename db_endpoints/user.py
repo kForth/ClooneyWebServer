@@ -85,7 +85,7 @@ class UserDatabaseEndpoints:
                         'last_name': user.last_name
                     }
                 }
-                self._active_users[username] = {
+                self._active_users[user.id] = {
                     'key': response['key'],
                     'expiration': time.time() + 604800
                 }

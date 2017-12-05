@@ -49,7 +49,7 @@ app.controller('SetupEventController', function ($scope, $sessionStorage, $locat
         $http.post('/setup_tba_event', {'key': event.key})
             .then(function (resp) {
                     if (resp.status === 200) {
-                        $scope.update_available_events();
+                        EventDataService.loadAvailableEvents();
                         $sessionStorage.tracked_event = resp.data;
                         $sessionStorage.tracked_event_okay = true;
                         $location.path('/s');
