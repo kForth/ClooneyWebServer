@@ -6,6 +6,7 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                 templateUrl: '../../../static/views/pages/home.html',
                 controller: 'HomeController'
             })
+
             .when('/a', {
                 templateUrl: '../../../static/views/pages/event/home.html',
                 controller: 'AnalysisHomeController'
@@ -26,6 +27,7 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                 templateUrl: '../../../static/views/pages/event/entries.html',
                 controller: 'AnalysisEntriesController'
             })
+
             .when('/s', {
                 templateUrl: '../../../static/views/pages/settings/event_settings.html',
                 controller: 'SettingsHomeController'
@@ -34,10 +36,12 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                 templateUrl: '../../../static/views/pages/settings/edit_calculations.html',
                 controller: 'SettingsCalculationsController'
             })
+
             .when('/setup', {
                 templateUrl: '../../../static/views/pages/settings/event_setup.html',
                 controller: 'SetupEventController'
             })
+
             .when('/sheets', {
                 templateUrl: '../../../static/views/pages/sheets/home.html',
                 controller: 'SheetsHomeController'
@@ -60,6 +64,7 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                     }
                 }
             })
+
             .when('/login', {
                 templateUrl: '../../../static/views/pages/user/login.html',
                 controller: 'UserLoginController'
@@ -72,6 +77,7 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                 templateUrl: '../../../static/views/pages/user/register.html',
                 controller: 'UserRegisterController'
             })
+
             .otherwise({
                 redirectTo: '/'
             });
@@ -244,7 +250,7 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
     var service = {};
 
     service.isTrackingEvent = function(){
-        return $sessionStorage.tracked_event != undefined;
+        return $sessionStorage.tracked_event != undefined && typeof $sessionStorage.tracked_event == typeof {};
     };
 
     service.getTrackedEvent = function(){
@@ -304,6 +310,7 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
     var service = {};
 
     service.initGuestUser = function(){
+        service.ClearCredentials();
         $http.get('/get/user_settings')
             .then(function (response) {
                     $localStorage.userSettings = response.data;
@@ -339,10 +346,11 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
     service.SetCredentials = function (user) {
         $localStorage.currentUser = user;
 
-        $http.defaults.headers.common['Authorization'] = user.key;
+        $http.defaults.headers.common['UserID'] = user.id;
+        $http.defaults.headers.common['UserKey'] = user.key;
     };
 
-    service.ClearCredentials = function () {
+    service.ClearCredentials = function(){
         $localStorage.currentUser = undefined;
         $localStorage.userSettings = undefined;
         $http.defaults.headers.common.Authorization = '';
@@ -370,7 +378,7 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
     $scope.$on('$routeChangeStart', function () {
         $rootScope.data_loading = 0;
         $scope.tracked_event = EventDataService.getTrackedEvent();
-        $scope.tracking_input_data.event = $scope.tracked_event.data;
+        $scope.tracking_input_data.event = EventDataService.getTrackedEvent().info.data;
         $scope.user_data = AuthenticationService.getUser();
     });
 

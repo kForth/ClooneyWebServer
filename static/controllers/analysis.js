@@ -2,11 +2,12 @@ app.controller('AnalysisHomeController', function ($scope, $location, EventDataS
     if (!EventDataService.isTrackingEvent()) $location.path("/");
 });
 
-app.controller('AnalysisAveragesController', function ($scope, $localStorage, $location, EventDataService) {
+app.controller('AnalysisAveragesController', function ($scope, $localStorage, $location, EventDataService, AuthenticationService) {
     if (!EventDataService.isTrackingEvent()) $location.path("/");
 
-    $scope.headers = $localStorage.userSettings.headers[$location.path()];
+    $scope.headers = AuthenticationService.getUserSettings().headers[$location.path()];
     $scope.data = EventDataService.getEventData($location.path());
+    console.log($scope.data);
 });
 
 app.controller('AnalysisEntriesController', function ($scope, $localStorage, $location, EventDataService) {

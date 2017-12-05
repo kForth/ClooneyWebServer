@@ -34,6 +34,4 @@ class DatabaseInteractor:
         self.commit()
 
     def commit(self):
-        # from pprint import pprint
-        # pprint(self.db)
         json.dump(self.db, open(self._filepath, "w+"))
