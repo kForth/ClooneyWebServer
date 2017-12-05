@@ -311,13 +311,17 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
 
     service.initGuestUser = function(){
         service.ClearCredentials();
-        $http.get('/get/user_settings')
-            .then(function (response) {
-                    $localStorage.userSettings = response.data;
-                },
-                function (ignored) {
-                    console.error("Cannot get user settings");
-                });
+        service.SetCredentials({
+            'id': -1,
+            'key': '',
+            'user': {
+                'id': -1,
+                'username': 'guest',
+                'role': 'Guest',
+                'first_name': 'Guest',
+                'last_name': 'Guestington'
+            }
+        });
     };
 
     service.Login = function (username, password, success_callback, fail_callback) {
@@ -325,7 +329,6 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
             .then(function (resp) {
                     service.SetCredentials(resp.data);
                     success_callback(resp);
-                    service.GetUserSettings(username);
                 },
                 function (resp) {
                     fail_callback(resp);
@@ -333,14 +336,22 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
 
     };
 
-    service.GetUserSettings = function (){
+    service.SetUserSettings = function(settings){
+        $localStorage.userSettings = settings;
+    };
+
+    service.LoadUserSettings = function (){
         $http.get('/get/user_settings/' + service.getUser().username)
             .then(function (response) {
-                    $localStorage.userSettings = response.data;
+                    service.SetUserSettings(response.data);
                 },
                 function (ignored) {
                     console.error("Cannot get user settings");
                 });
+    };
+
+    service.GetUserSettings = function(){
+        return $localStorage.userSettings;
     };
 
     service.SetCredentials = function (user) {
@@ -348,6 +359,7 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
 
         $http.defaults.headers.common['UserID'] = user.id;
         $http.defaults.headers.common['UserKey'] = user.key;
+        service.LoadUserSettings();
     };
 
     service.ClearCredentials = function(){
@@ -371,14 +383,14 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
 });
 
 app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $sessionStorage, $location, $http, AuthenticationService, EventDataService) {
-    AuthenticationService.initGuestUser();
+    if(AuthenticationService.getUser() === undefined) AuthenticationService.initGuestUser();
     EventDataService.loadAvailableEvents();
     $rootScope.data_loading = 0;
 
     $scope.$on('$routeChangeStart', function () {
         $rootScope.data_loading = 0;
         $scope.tracked_event = EventDataService.getTrackedEvent();
-        $scope.tracking_input_data.event = EventDataService.getTrackedEvent().info.data;
+        $scope.tracking_input_data.event = EventDataService.getTrackedEvent() ? EventDataService.getTrackedEvent().info.data : '';
         $scope.user_data = AuthenticationService.getUser();
     });
 
