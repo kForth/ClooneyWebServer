@@ -353,8 +353,8 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
     service.ClearCredentials = function(){
         $localStorage.currentUser = undefined;
         $localStorage.userSettings = undefined;
-        $http.defaults.headers.common.Authorization = '';
-        service.GetUserSettings('');
+        $http.defaults.headers.common['UserID'] = '';
+        $http.defaults.headers.common['UserKey'] = '';
     };
 
     service.getUser = function(){
