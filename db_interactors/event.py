@@ -3,7 +3,7 @@ from tba_py import TBA
 
 
 class EventDatabaseInteractor:
-    DEFAULT_EVENT_SETTINGS = {'settings': {'sheet': {}}, 'calculations': []}
+    DEFAULT_EVENT_SETTINGS = {'settings': {'selected_sheet': {}}, 'calculations': []}
 
     def __init__(self, db, app):
         self._db = db

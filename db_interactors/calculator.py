@@ -9,9 +9,7 @@ class CalculatorDatabaseInteractor:
         self._calc = Calculator()
 
     def get_event_analysis(self, event_key):
-        data = self._db.db['calculations']['analysis'][event_key].values()
-        # data.update([("calc_" + k , v) for k, v in self._db.db['calculations']['calculations'][event_key].items()])
-        return list(data)
+        return list(self._db.db['calculations']['analysis'][event_key].values())
 
     def update_entries_for_event(self, event_key):
         entries = [e.data for e in self._db.entries.get_entries_for_event(event_key)]
