@@ -11,13 +11,14 @@ active_users = {}
 
 def add_route(route, func, methods=('GET',), url_prefix="", min_role="Guest"):
     def func_with_auth(*args, **kwargs):
+        if min_role == "Guest":
+            return func(*args, **kwargs)
         if not all([h in request.headers for h in ['UserID', 'UserKey']]):
             abort(400)
-        user_id = int('0' + request.headers['UserID'])
+        user_id = int(request.headers['UserID']) if request.headers['UserID'] else -1
         user = db.users.get_user_by_id(user_id)
         user_key = request.headers['UserKey']
-        if min_role == "Guest" or (user_key == active_users[user_id] and user
-                                   and db.users.USER_ROLES.index(user.role) >= db.users.USER_ROLES.index(min_role)):
+        if user_key == active_users[user_id] and user and db.users.USER_ROLES.index(user.role) >= db.users.USER_ROLES.index(min_role):
             return func(*args, **kwargs)
         else:
             abort(401)
