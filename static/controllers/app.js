@@ -240,28 +240,48 @@ app.filter('orderDataBy', function () {
 
 
 app.factory('EventDataService', function ($http, $localStorage, $sessionStorage, $log) {
-    if ($localStorage.data === undefined) $localStorage.data = {};
+    if ($localStorage.event_data === undefined) $localStorage.event_data = {};
     var service = {};
 
-    service.loadEventAnalysis = function (event_key){
-        loadData(event_key, '/get/event_analysis/', '/a/a');
+    service.isTrackingEvent = function(){
+        return $sessionStorage.tracked_event != undefined;
     };
 
-    service.loadEventEntries = function (event_key){
-        loadData(event_key, '/get/raw_entries/', '/a/e');
+    service.getTrackedEvent = function(){
+        return $sessionStorage.tracked_event;
+    };
+
+    service.setTrackedEvent = function(event){
+        $sessionStorage.tracked_event = event;
+    };
+
+    service.loadEventAnalysis = function (){
+        loadData(service.getTrackedEvent().key, '/get/event_analysis/', '/a/a');
+    };
+
+    service.loadEventEntries = function (){
+        loadData(service.getTrackedEvent().key, '/get/raw_entries/', '/a/e');
+    };
+
+    service.getEventData = function(path){
+        return $localStorage.event_data[path][$sessionStorage.tracked_event.key];
+    };
+
+    service.resetLocalData = function(){
+        $localStorage.event_data = {};
     };
 
     function loadData(event_key, url, path){
-        if ($localStorage.data[path] === undefined) $localStorage.data[path] = {};
+        if ($localStorage.event_data[path] === undefined) $localStorage.event_data[path] = {};
         $log.info("Trying to " + url + " for " + event_key);
         $http.get(url + (event_key || ""))
             .then(function (response) {
                 $log.info("Successfully " + url + " for " + event_key);
-                $localStorage.data[path][event_key] = response.data;
+                $localStorage.event_data[path][event_key] = response.data;
             },
             function(ignored){
                 $log.warn("Could not " + url + " for " + event_key);
-                $localStorage.data[path][event_key] = [];
+                $localStorage.event_data[path][event_key] = [];
             });
     }
 
@@ -330,8 +350,9 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
 
     $scope.$on('$routeChangeStart', function () {
         $rootScope.data_loading = 0;
-        $scope.tracking_input_data.event = ($sessionStorage.tracked_event === undefined ? undefined : $sessionStorage.tracked_event.info.data);
-        $scope.tracked_event = $sessionStorage.tracked_event;
+        $scope.tracked_event = EventDataService.getTrackedEvent();
+        $scope.tracking_input_data.event = $scope.tracked_event.data;
+
         if ($localStorage.currentUser != undefined) {
             $scope.user_data = $localStorage.currentUser;
         }
@@ -351,15 +372,13 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
     };
 
     $scope.isNavCollapsed = true;
-    $sessionStorage.tracked_event_okay = false;
     $scope.select_event_button = function () {
         if (typeof($scope.tracking_input_data.event) == 'object') {
             $http.get('/get/event/' + $scope.tracking_input_data.event.key)
                 .then(function (resp) {
-                        $sessionStorage.tracked_event = resp.data;
-                        $sessionStorage.tracked_event_okay = true;
-                        EventDataService.loadEventAnalysis($sessionStorage.tracked_event.key);
-                        EventDataService.loadEventEntries($sessionStorage.tracked_event.key);
+                        EventDataService.setTrackedEvent(resp.data);
+                        EventDataService.loadEventAnalysis();
+                        EventDataService.loadEventEntries();
                         $location.path('/a');
                     },
                     function (ignored) {
