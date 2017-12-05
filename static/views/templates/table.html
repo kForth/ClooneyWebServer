@@ -26,7 +26,7 @@
     <thead>
         <tr>
             <th ng-click="clearColours($event)"></th>
-            <th ng-repeat="header in headers" class="data-header clickable {{ header.class }}"
+            <th ng-repeat="header in headers" class="data-header clickable" ng-class="header.class"
                 ng-click="sortData($event, header.data_key)">
                 <span uib-tooltip="{{ header.tooltip }}" tooltip-placement="top">{{ header.title }}</span>
 
@@ -51,4 +51,3 @@
         </tr>
     </tbody>
 </table>
-<!--<ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" force-ellipses="true"></ul>-->

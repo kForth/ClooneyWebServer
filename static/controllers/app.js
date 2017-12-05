@@ -137,10 +137,9 @@ app.directive('datacell', function(){
     }
 
     return {
-        restrict: 'E',
         link: link,
+        restrict: 'E',
         template: "<span ng-class='dcHeader.data_class'>{{ value }}</span>",
-        transclude: true,
         scope: {
             'dcHeader': '=',
             'dcElement': '='
