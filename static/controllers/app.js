@@ -303,59 +303,67 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
 app.factory('AuthenticationService', function ($http, $localStorage) {
     var service = {};
 
-    service.Login = Login;
-    service.SetCredentials = SetCredentials;
-    service.GetUserSettings = GetUserSettings;
-    service.ClearCredentials = ClearCredentials;
-    service.isAuthorized = isAuthorized;
-
-    return service;
-
-    function Login(username, password, success_callback, fail_callback) {
-        $http.post('/login', {username: username, password: password})
-            .then(function (resp) {
-                    SetCredentials(resp.data);
-                    success_callback(resp);
-                    GetUserSettings(username);
-                },
-                function (resp) {
-                    fail_callback(resp);
-                });
-
-    }
-
-    function GetUserSettings(username) {
-        $http.get('/get/user_settings/' + username)
+    service.initGuestUser = function(){
+        $http.get('/get/user_settings')
             .then(function (response) {
                     $localStorage.userSettings = response.data;
                 },
                 function (ignored) {
                     console.error("Cannot get user settings");
                 });
-    }
+    };
 
-    function SetCredentials(user) {
+    service.Login = function (username, password, success_callback, fail_callback) {
+        $http.post('/login', {username: username, password: password})
+            .then(function (resp) {
+                    service.SetCredentials(resp.data);
+                    success_callback(resp);
+                    service.GetUserSettings(username);
+                },
+                function (resp) {
+                    fail_callback(resp);
+                });
+
+    };
+
+    service.GetUserSettings = function (){
+        $http.get('/get/user_settings/' + service.getUser().username)
+            .then(function (response) {
+                    $localStorage.userSettings = response.data;
+                },
+                function (ignored) {
+                    console.error("Cannot get user settings");
+                });
+    };
+
+    service.SetCredentials = function (user) {
         $localStorage.currentUser = user;
 
         $http.defaults.headers.common['Authorization'] = user.key;
-    }
+    };
 
-    function ClearCredentials() {
+    service.ClearCredentials = function () {
         $localStorage.currentUser = undefined;
         $localStorage.userSettings = undefined;
         $http.defaults.headers.common.Authorization = '';
-        GetUserSettings('');
-    }
+        service.GetUserSettings('');
+    };
 
-    function isAuthorized(min_level) {
+    service.getUser = function(){
+        return $localStorage.currentUser;
+    };
+
+    service.isAuthorized = function (min_level) {
         return $localStorage.currentUser != undefined && $localStorage.userSettings != undefined &&
             $localStorage.currentUser.user.role >= min_level;
 
-    }
+    };
+
+    return service;
 });
 
 app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $sessionStorage, $location, $http, AuthenticationService, EventDataService) {
-    AuthenticationService.GetUserSettings('');
+    AuthenticationService.initGuestUser();
     EventDataService.loadAvailableEvents();
     $rootScope.data_loading = 0;
 
@@ -363,10 +371,7 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
         $rootScope.data_loading = 0;
         $scope.tracked_event = EventDataService.getTrackedEvent();
         $scope.tracking_input_data.event = $scope.tracked_event.data;
-
-        if ($localStorage.currentUser != undefined) {
-            $scope.user_data = $localStorage.currentUser;
-        }
+        $scope.user_data = AuthenticationService.getUser();
     });
 
     $scope.available_events = EventDataService.getAvailableEvents();
