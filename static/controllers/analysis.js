@@ -6,14 +6,14 @@ app.controller('AnalysisAveragesController', function ($scope, $localStorage, $l
     if (!EventDataService.isTrackingEvent()) $location.path("/");
 
     $scope.headers = AuthenticationService.GetUserSettings().headers[$location.path()];
-    $scope.data = EventDataService.getEventData($location.path());
+    $scope.data = EventDataService.getPageData($location.path());
 });
 
 app.controller('AnalysisEntriesController', function ($scope, $localStorage, $location, EventDataService) {
     if (!EventDataService.isTrackingEvent()) $location.path("/");
 
     $scope.headers = $localStorage.userSettings.headers[$location.path()];
-    $scope.data = EventDataService.getEventData($location.path());
+    $scope.data = EventDataService.getPageData($location.path());
 });
 
 app.controller('AnalysisInsightsController', function ($scope, $location, EventDataService) {

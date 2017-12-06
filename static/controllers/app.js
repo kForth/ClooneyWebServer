@@ -133,15 +133,31 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
     };
 
     service.loadEventAnalysis = function (){
-        loadData(service.getTrackedEvent().key, '/get/event_analysis/', '/a/a');
+        loadData(service.getTrackedEvent().key, '/get/event_analysis/', 'avg');
     };
 
     service.loadEventEntries = function (){
-        loadData(service.getTrackedEvent().key, '/get/raw_entries/', '/a/e');
+        loadData(service.getTrackedEvent().key, '/get/raw_entries/', 'raw');
     };
 
-    service.getEventData = function(path){
-        return $localStorage.event_data[path][$sessionStorage.tracked_event.key];
+    service.getEventData = function(key){
+        return $localStorage.event_data[key][$sessionStorage.tracked_event.key];
+    };
+
+    service.getPageData = function(path){
+        switch(path){
+            default:
+                return undefined;
+            case '/a/a':
+                return service.getEventData('avg');
+            case '/a/e':
+                return service.getEventData('raw');
+        }
+    };
+
+    service.getTeamAnalysis = function(team){
+        var analysis_data = service.getEventData('avg');
+        console.log(analysis_data);
     };
 
     service.resetLocalData = function(){
