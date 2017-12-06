@@ -15,10 +15,6 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                 templateUrl: '../../../static/views/pages/event/averages.html',
                 controller: 'AnalysisAveragesController'
             })
-            .when('/a/i', {
-                templateUrl: '../../../static/views/pages/event/insights.html',
-                controller: 'AnalysisInsightsController'
-            })
             .when('/a/m', {
                 templateUrl: '../../../static/views/pages/event/matches.html',
                 controller: 'AnalysisMatchesController'
@@ -193,7 +189,7 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
 });
 
 
-app.factory('AuthenticationService', function ($http, $localStorage) {
+app.factory('AuthenticationService', function ($http, $localStorage, $location) {
     var service = {};
 
     service.initGuestUser = function(){

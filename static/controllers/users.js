@@ -1,6 +1,5 @@
 app.controller('UserLogoutController', function ($scope, $localStorage, $sessionStorage, $location, AuthenticationService, $http) {
-    $http.post('/logout');
-    AuthenticationService.ClearCredentials();
+    AuthenticationService.Logout(false);
     $location.path("/login");
 });
 

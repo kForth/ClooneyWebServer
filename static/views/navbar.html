@@ -19,19 +19,19 @@
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li ng-if="tracked_event != undefined"><a href="#/a">Analysis</a></li>
-                <li ng-if="tracked_event != undefined && user_data.user.role >= 2"><a href="#/s">Settings</a></li>
+                <li ng-if="tracked_event != undefined && user_data.role_index >= 2"><a href="#/s">Settings</a></li>
                 <li uib-dropdown>
                     <a uib-dropdown-toggle><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a>
                     <ul uib-dropdown-menu>
-                        <li ng-if="user_data == undefined"><a href="#/login">Login</a></li>
-                        <li ng-if="user_data == undefined"><a href="#/register">Register</a></li>
+                        <li ng-if="user_data.role_index <= 0"><a href="#/login">Login</a></li>
+                        <li ng-if="user_data.role_index <= 0"><a href="#/register">Register</a></li>
 
-                        <li ng-if="user_data != undefined"><a href="#/logout">Logout</a></li>
+                        <li ng-if="user_data.role_index > 0"><a href="#/logout">Logout</a></li>
 
-                        <li ng-if="user_data.user.role >= 2" role="separator" class="divider"></li>
-                        <li ng-if="user_data.user.role >= 2"><a href="#/sheets">Edit Scouting Sheets</a></li>
-                        <li ng-if="user_data.user.role >= 2" role="separator" class="divider"></li>
-                        <li ng-if="user_data.user.role >= 2"><a href="#/setup">Setup New Event</a></li>
+                        <li ng-if="user_data.role_index >= 2" role="separator" class="divider"></li>
+                        <li ng-if="user_data.role_index >= 2"><a href="#/sheets">Edit Scouting Sheets</a></li>
+                        <li ng-if="user_data.role_index >= 2" role="separator" class="divider"></li>
+                        <li ng-if="user_data.role_index >= 2"><a href="#/setup">Setup New Event</a></li>
                     </ul>
                 </li>
             </ul>
