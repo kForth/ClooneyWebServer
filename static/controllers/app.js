@@ -223,6 +223,16 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
 
     };
 
+    service.Logout = function(redirect){
+        $http.post('/logout')
+            .then(function(ignored){
+                service.ClearCredentials();
+                if(redirect === true) {
+                    $location.path('/');
+                }
+            });
+    };
+
     service.SetUserSettings = function(settings){
         $localStorage.userSettings = settings;
     };
@@ -243,17 +253,38 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
 
     service.SetCredentials = function (user) {
         $localStorage.currentUser = user;
+        updateUserRole();
 
         $http.defaults.headers.common['UserID'] = user.id;
         $http.defaults.headers.common['UserKey'] = user.key;
         service.LoadUserSettings();
     };
 
+    function updateUserRole(){
+        var roles = ['Guest', 'User,', 'Editor', 'Admin'];
+        $localStorage.currentUser.role_index = roles.indexOf($localStorage.currentUser.user.role);
+    }
+
     service.ClearCredentials = function(){
         $localStorage.currentUser = undefined;
         $localStorage.userSettings = undefined;
         $http.defaults.headers.common['UserID'] = '';
         $http.defaults.headers.common['UserKey'] = '';
+    };
+
+    service.testUser = function(){
+        $http.post('/test_user', service.getUser())
+            .then(function(resp){
+                if(resp.status == 204) {
+                    service.initGuestUser();
+                }
+                else{
+                    service.SetCredentials(resp.data);
+                }
+            },
+            function(ignored){
+                service.Logout();
+            });
     };
 
     service.getUser = function(){
@@ -270,7 +301,14 @@ app.factory('AuthenticationService', function ($http, $localStorage) {
 });
 
 app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $sessionStorage, $location, $http, AuthenticationService, EventDataService) {
-    if(AuthenticationService.getUser() === undefined) AuthenticationService.initGuestUser();
+    console.log(AuthenticationService.getUser());
+    if(AuthenticationService.getUser() === undefined || AuthenticationService.getUser().user.role == 'Guest'){
+        AuthenticationService.initGuestUser();
+    }
+    else{
+        AuthenticationService.testUser();
+    }
+
     EventDataService.loadAvailableEvents();
     $rootScope.data_loading = 0;
 
