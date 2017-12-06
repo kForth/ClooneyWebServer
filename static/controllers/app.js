@@ -145,11 +145,34 @@ app.directive('datacell', function(){
     return {
         link: link,
         restrict: 'E',
-        template: "<span ng-class='dcHeader.data_class'>{{ value }}</span>",
+        template: "<span ng-show=\"dcHeader.title != 'Team'\" ng-class='dcHeader.data_class'>{{ value }}</span>" +
+                  "<a ng-click='dcTeamCallback(value)' ng-show=\"dcHeader.title == 'Team'\" ng-class='dcHeader.data_class'>{{ value }}</a>",
         scope: {
             'dcHeader': '=',
-            'dcElement': '='
+            'dcElement': '=',
+            'dcTeamCallback': '='
         }
+    }
+});
+
+app.directive('teamModal', function(EventDataService){
+    function link(scope){
+        scope.modalOpen = false;
+        scope.closeModal = function(){
+            scope.modalOpen = false;
+        };
+        scope.openModal = function(team){
+            console.log(team);
+            scope.team_number = team;
+            scope.modalOpen = true;
+
+            scope.team_data = EventDataService.get
+        }
+    }
+
+    return {
+        restrict: 'A',
+        link: link
     }
 });
 

@@ -46,8 +46,14 @@
             </td>
 
             <td ng-repeat="header in headers" class="data-box" ng-class="{'highlight-green': colours[$parent.$index] % 4 == 1, 'highlight-red': colours[$parent.$index] % 4 == 2, 'highlight-blue': colours[$parent.$index] % 4 == 3}">
-                <datacell dc-header="header" dc-element="elem"></datacell>
+                <datacell dc-header="header" dc-element="elem" dc-team-callback="openModal"></datacell>
             </td>
         </tr>
     </tbody>
 </table>
+
+<div class="team-view-modal" team-modal ng-click="closeModal()" ng-show="modalOpen">
+    <div class="container team-view-modal-content">
+        <h3>{{ team_number }}</h3>
+    </div>
+</div>
