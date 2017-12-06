@@ -13,8 +13,8 @@ app.directive('highlightTable', function ($location, $sessionStorage) {
             scope.colours = $sessionStorage.colours[$location.path()];
         });
 
-        scope.clearColours = function(event){
-            if(event.shiftKey || event.ctrlKey || event.metaKey){
+        scope.clearColours = function (event) {
+            if (event.shiftKey || event.ctrlKey || event.metaKey) {
                 scope.colours = {};
             }
         };
@@ -40,7 +40,7 @@ app.directive('highlightTable', function ($location, $sessionStorage) {
     };
 });
 
-app.directive('datacell', function(){
+app.directive('datacell', function () {
     function getData(obj, keys) {
         keys.split(".").forEach(function (key) {
             if (obj === undefined || keys === undefined) return obj;
@@ -49,9 +49,9 @@ app.directive('datacell', function(){
         return obj;
     }
 
-    function link(scope){
+    function link(scope) {
         scope.value = getData(scope.dcElement, scope.dcHeader.data_key);
-        if(parseFloat(scope.value) == scope.value && parseInt(scope.value) != scope.value){
+        if (parseFloat(scope.value) == scope.value && parseInt(scope.value) != scope.value) {
             scope.value = scope.value.toFixed(2);
         }
     }
@@ -60,7 +60,7 @@ app.directive('datacell', function(){
         link: link,
         restrict: 'E',
         template: "<span ng-show=\"dcHeader.title != 'Team'\" ng-class='dcHeader.data_class'>{{ value }}</span>" +
-                  "<a ng-click='dcTeamCallback(value)' ng-show=\"dcHeader.title == 'Team'\" ng-class='dcHeader.data_class'>{{ value }}</a>",
+        "<a ng-click='dcTeamCallback(value)' ng-show=\"dcHeader.title == 'Team'\" ng-class='dcHeader.data_class'>{{ value }}</a>",
         scope: {
             'dcHeader': '=',
             'dcElement': '=',
@@ -69,15 +69,19 @@ app.directive('datacell', function(){
     }
 });
 
-app.directive('teamModal', function(EventDataService){
-    function link(scope){
+app.directive('teamModal', function (EventDataService) {
+    function link(scope) {
         scope.modalOpen = false;
-        scope.closeModal = function(){
+
+        scope.closeModal = function () {
             scope.modalOpen = false;
         };
-        scope.openModal = function(team){
-            console.log(team);
+        scope.openModal = function (team) {
             scope.team_number = team;
+            scope.team_data = EventDataService.getTeamAnalysis(team);
+
+            scope.team_raw = EventDataService.getTeamEntries(team);
+
             scope.modalOpen = true;
 
             scope.team_data = EventDataService.get
@@ -85,7 +89,10 @@ app.directive('teamModal', function(EventDataService){
     }
 
     return {
-        restrict: 'A',
+        restrict: 'E',
+        templateUrl: '../../static/views/templates/team_modal.html',
+        replace: true,
+        scope: false,
         link: link
     }
 });
