@@ -152,8 +152,26 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
     };
 
     service.getTeamAnalysis = function(team){
-        var analysis_data = service.getEventData('avg');
-        console.log(analysis_data);
+        var data = service.getEventData('avg');
+        for(var i in data){
+            var elem = data[i];
+            if(elem.team.mode === team){
+                return elem;
+            }
+        }
+        return undefined;
+    };
+
+    service.getTeamEntries = function(team){
+        var data = service.getEventData('raw');
+        var output = [];
+        for(var i in data){
+            var elem = data[i];
+            if(elem.team === team){
+                output.push(elem);
+            }
+        }
+        return output;
     };
 
     service.resetLocalData = function(){
