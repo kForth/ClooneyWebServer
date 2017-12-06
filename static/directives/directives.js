@@ -84,7 +84,120 @@ app.directive('teamModal', function (EventDataService) {
 
             scope.modalOpen = true;
 
-            scope.team_data = EventDataService.get
+            scope.team_raw_headers = [
+                {
+                    "data_key": "match",
+                    "class": "",
+                    "title": "M#",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "auto_no_move",
+                    "class": "",
+                    "title": "A No Move",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "auto_gear_location",
+                    "class": "",
+                    "title": "A ⚙️ Loc",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "auto_gears_scored",
+                    "class": "",
+                    "title": "A ⚙",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "auto_scored_high",
+                    "class": "",
+                    "title": "A 🎾 ⬆️",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "auto_scored_low",
+                    "class": "",
+                    "title": "A 🎾 ⬇️",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "auto_triggered_hopper",
+                    "class": "",
+                    "title": "A Hop",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "tele_gears_scored",
+                    "class": "",
+                    "title": "⚙️ Scored",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "tele_gears_from_far",
+                    "class": "",
+                    "title": "⚙️ Far",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "tele_gears_from_near",
+                    "class": "",
+                    "title": "⚙️ Near",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "tele_scored_high",
+                    "class": "",
+                    "title": "🎾 ⬆️",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "tele_climbed",
+                    "class": "",
+                    "title": "Climb",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "tele_defense",
+                    "class": "",
+                    "title": "D🤺",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "disabled",
+                    "class": "",
+                    "title": "♿",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "no_move",
+                    "class": "",
+                    "title": "No move",
+                    "data_class": "",
+                    "tooltip": ""
+                },
+                {
+                    "data_key": "no_show",
+                    "class": "",
+                    "title": "No Show",
+                    "data_class": "",
+                    "tooltip": ""
+                }
+            ];
         }
     }
 
@@ -94,6 +207,18 @@ app.directive('teamModal', function (EventDataService) {
         replace: true,
         scope: false,
         link: link
+    }
+});
+
+app.directive('dataTable', function () {
+    return {
+        restrict: 'E',
+        templateUrl: '../../static/views/templates/data_table.html',
+        replace: true,
+        scope: {
+            dtHeaders: '=',
+            dtData: '='
+        }
     }
 });
 
