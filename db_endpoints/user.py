@@ -96,4 +96,8 @@ class UserDatabaseEndpoints:
             return make_response(jsonify(), 409)
 
     def logout_user(self):
-        return make_response(jsonify(), 200)
+        try:
+            self._active_users.remove(int(request.headers.user_id))
+            return make_response("", 200)
+        except:
+            return make_response("", 200)
