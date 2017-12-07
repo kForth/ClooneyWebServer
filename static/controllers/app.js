@@ -2,11 +2,12 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
     .config(function ($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(false).hashPrefix('');
         $routeProvider
+            // Home
             .when('/', {
                 templateUrl: '../../../static/views/pages/home.html',
                 controller: 'HomeController'
             })
-
+            // Analysis
             .when('/a', {
                 templateUrl: '../../../static/views/pages/event/home.html',
                 controller: 'AnalysisHomeController'
@@ -23,7 +24,7 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                 templateUrl: '../../../static/views/pages/event/entries.html',
                 controller: 'AnalysisEntriesController'
             })
-
+            // Settings
             .when('/s', {
                 templateUrl: '../../../static/views/pages/settings/event_settings.html',
                 controller: 'SettingsHomeController'
@@ -32,12 +33,12 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                 templateUrl: '../../../static/views/pages/settings/edit_calculations.html',
                 controller: 'SettingsCalculationsController'
             })
-
+            // Setup
             .when('/setup', {
                 templateUrl: '../../../static/views/pages/settings/event_setup.html',
                 controller: 'SetupEventController'
             })
-
+            // Sheets
             .when('/sheets', {
                 templateUrl: '../../../static/views/pages/sheets/home.html',
                 controller: 'SheetsHomeController'
@@ -60,7 +61,7 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                     }
                 }
             })
-
+            // User
             .when('/login', {
                 templateUrl: '../../../static/views/pages/user/login.html',
                 controller: 'UserLoginController'
@@ -88,24 +89,47 @@ app.filter('orderDataBy', function () {
         return obj;
     }
 
-    return function(items, field, reverse) {
+    return function(items, params) {
+        if(params === undefined) return items;
+
+
+        var fields = [];
+        var reverses = [];
+        params[0].forEach(function(e){
+            var reverse = e.startsWith('-');
+            reverses.push(reverse);
+            if(reverse)
+                fields.push(e.slice(1, e.length));
+            else
+                fields.push(e);
+        });
+        var headers = params[1];
         var filtered = [];
         items.forEach(function(e){filtered.push(e);});
 
-        filtered.sort(function(a, b) {
-            if(getData(a, field) > getData(b, field)) {
-                return 1;
-            }
-            else if(getData(a, field) > getData(b, field)){
-                return -1;
-            }
-            else{
-                return 0;
-            }
-        });
+        if(fields === undefined || headers === undefined) return items;
 
-        if (reverse)
-            filtered.reverse();
+        function sortData(a, b, i){
+            if(i === undefined) i = 0;
+            var key = fields[i];
+            var reverse = reverses[i];
+
+            var a_val = parseFloat(getData(a, key));
+            var b_val = parseFloat(getData(b, key));
+
+            if(a_val > b_val) {
+                return reverse ? -1 : 1;
+            }
+            else if(a_val < b_val){
+                return reverse? 1 : -1;
+            }
+            else if(++i < fields.length) {
+                return sortData(a, b, i);
+            }
+            return 0;
+        }
+
+        filtered.sort(sortData);
 
         return filtered;
     }

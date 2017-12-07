@@ -39,7 +39,7 @@
         </tr>
     </thead>
     <tbody style="height: 400px; overflow-y: scroll; position: relative">
-        <tr ng-repeat="elem in data | orderBy:sorts | limitTo:16">
+        <tr ng-repeat="elem in data | orderDataBy:[sorts, headers] | limitTo:16">
             <td ng-click="cycleColour($event, $index)"
                 ng-class="{'highlight-green': colours[$index] % 4 == 1, 'highlight-red': colours[$index] % 4 == 2, 'highlight-blue': colours[$index] % 4 == 3}">
                 <b>{{ $index+1 }}</b>
