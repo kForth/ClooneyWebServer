@@ -77,13 +77,17 @@ app.directive('teamModal', function (EventDataService) {
             scope.modalOpen = false;
         };
         scope.openModal = function (team) {
-            scope.team_number = team;
-            scope.team_data = EventDataService.getTeamAnalysis(team);
-
-            scope.team_raw = EventDataService.getTeamEntries(team);
-
             scope.modalOpen = true;
 
+            scope.team_number = team;
+            scope.team_info = EventDataService.getEventData('info').teams.find(function(t){
+                return t.team_number == scope.team_number;
+            });
+            scope.team_analysis = EventDataService.getTeamAnalysis(team);
+
+
+            scope.team_raw = EventDataService.getTeamEntries(team);
+            console.log(scope.team_raw);
             scope.team_raw_headers = [
                 {
                     "data_key": "match",
@@ -211,6 +215,10 @@ app.directive('teamModal', function (EventDataService) {
 });
 
 app.directive('dataTable', function () {
+    function link(scope){
+
+    }
+
     return {
         restrict: 'E',
         templateUrl: '../../static/views/templates/data_table.html',
@@ -218,7 +226,8 @@ app.directive('dataTable', function () {
         scope: {
             dtHeaders: '=',
             dtData: '='
-        }
+        },
+        link: link
     }
 });
 

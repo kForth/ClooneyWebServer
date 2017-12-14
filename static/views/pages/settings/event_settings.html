@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="../../../../static/css/edit_calc.css">
 
 <div class="inner-content-with-sidebar">
-    <div class="row page-header-row">
+    <div class="row page-header">
         <div class="col-xs-6" style="padding: 0">
             Event Settings
         </div>
@@ -18,7 +18,7 @@
         <div class="row form-group">
             <label class="col-xs-2 col-form-label" for="sheet_select">Sheet:</label>
             <div class="col-xs-10">
-                <select id="sheet_select" class="form-control" ng-model="settings.selected_sheet">
+                <select id="sheet_select" class="form-control" ng-model="selected_sheet">
                     <option ng-repeat="option in sheets" value="{{ option }}">{{ option.name }}</option>
                 </select>
             </div>

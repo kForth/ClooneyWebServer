@@ -37,4 +37,5 @@ class DatabaseInteractor:
         self.commit()
 
     def commit(self):
+        print("Commiting Database")
         json.dump(self.db, open(self._filepath, "w+"))

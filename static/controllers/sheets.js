@@ -1,3 +1,36 @@
+app.service('SheetsService', function ($http, $localStorage, $sessionStorage, $log, EventTrackingService) {
+    var service = {};
+
+    service.loadEventSheets = function(){
+        loadData('/get/sheets', 'sheets');
+    };
+
+    service.getEventSheets = function() {
+        return $localStorage.sheets[getEventKey()];
+    };
+
+    function getEventKey(){
+        return EventTrackingService.getTrackedEvent().key;
+    }
+
+    function loadData(url, key){
+        $log.info("Trying to " + url + " for " + getEventKey());
+        if($localStorage[key] === undefined) $localStorage[key] = {};
+        $http.get(url)
+            .then(function (response) {
+                $log.info("Successfully " + url + " for " + getEventKey());
+                $localStorage[key][getEventKey()] = response.data;
+            },
+            function(ignored){
+                $log.warn("Could not " + url + " for " + getEventKey());
+                $localStorage[key][getEventKey()] = [];
+            });
+    }
+
+    return service;
+
+});
+
 app.controller('SheetsHomeController', function ($scope, $rootScope, $location, $http, AuthenticationService, FileSaver, Blob) {
     if (!AuthenticationService.isAuthorized(2)) $location.path("/");
     $scope.sheets = [];

@@ -18,7 +18,8 @@ def add_route(route, func, methods=('GET',), url_prefix="", min_role="Guest"):
         user_id = int(request.headers['UserID']) if request.headers['UserID'] else -1
         user = db.users.get_user_by_id(user_id)
         user_key = request.headers['UserKey']
-        if user_key == active_users[user_id] and user and db.users.USER_ROLES.index(user.role) >= db.users.USER_ROLES.index(min_role):
+        if user_id in active_users.keys() and user_key == active_users[user_id] and user \
+                and db.users.USER_ROLES.index(user.role) >= db.users.USER_ROLES.index(min_role):
             return func(*args, **kwargs)
         else:
             abort(401)
@@ -35,3 +36,19 @@ calc_endpoints = CalculatorDatabaseEndpoints(db.calculator, add_route)
 @app.route('/')
 def index():
     return app.send_static_file('views/index.html')
+
+
+@app.route('/commit_db', methods=('POST',))
+def commit():
+    db.commit()
+    return "", 200
+
+
+@app.route('/shutdown', methods=('POST',))
+def stop():
+    db.commit()
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+    return "", 200

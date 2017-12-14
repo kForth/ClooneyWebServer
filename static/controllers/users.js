@@ -4,7 +4,7 @@ app.controller('UserLogoutController', function ($scope, $localStorage, $session
 });
 
 app.controller('UserLoginController', function ($scope, $localStorage, $rootScope, $location, AuthenticationService) {
-    if (AuthenticationService.isAuthorized(0)) $location.path("/");
+    if (!AuthenticationService.isAuthorized(0)) $location.path("/");
     $scope.input = {
         'username': '',
         'password': ''

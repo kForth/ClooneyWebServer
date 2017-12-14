@@ -1,28 +1,7 @@
-<style>
-    tr:nth-child(even) .highlight-red{
-        background: #ecc;
-    }
-    tr:nth-child(odd) .highlight-red{
-        background: #daa;
-    }
-    tr:nth-child(even) .highlight-green{
-        background: #cec;
-    }
-    tr:nth-child(odd) .highlight-green{
-        background: #9d9;
-    }
-    tr:nth-child(even) .highlight-blue{
-        background: #cce;
-    }
-    tr:nth-child(odd) .highlight-blue{
-        background: #aad;
-    }
-</style>
-
-<table id="table" class="table info-block table-striped" style="font-size: 14px" ng-cloak multi-sort-table highlight-table>
+<table id="table" class="table info-block table-striped" style="font-size: 14px" ng-cloak multi-sort-table>
     <thead>
         <tr>
-            <th ng-click="clearColours($event)"></th>
+            <th ng-click=""></th>
             <th ng-repeat="header in dtHeaders" class="data-header clickable" ng-class="header.class"
                 ng-click="sortData($event, header.data_key)">
                 <span uib-tooltip="{{ header.tooltip }}" tooltip-placement="top">{{ header.title }}</span>
@@ -35,14 +14,13 @@
             </th>
         </tr>
     </thead>
-    <tbody style="height: 400px; overflow-y: scroll; position: relative">
+    <tbody>
         <tr ng-repeat="elem in dtData | orderBy:sorts | limitTo:16">
-            <td ng-click="cycleColour($event, $index)"
-                ng-class="{'highlight-green': colours[$index] % 4 == 1, 'highlight-red': colours[$index] % 4 == 2, 'highlight-blue': colours[$index] % 4 == 3}">
+            <td>
                 <b>{{ $index+1 }}</b>
             </td>
 
-            <td ng-repeat="header in dtHeaders" class="data-box" ng-class="{'highlight-green': colours[$parent.$index] % 4 == 1, 'highlight-red': colours[$parent.$index] % 4 == 2, 'highlight-blue': colours[$parent.$index] % 4 == 3}">
+            <td ng-repeat="header in dtHeaders" class="data-box">
                 <datacell dc-header="header" dc-element="elem"></datacell>
             </td>
         </tr>

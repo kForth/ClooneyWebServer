@@ -108,7 +108,6 @@ class PeriodicRunner(Runner):
             self.iter = (self.iter + 1) % 5
             tick = time()
             self.target()
-            print("run")
             self.sleep(self.delay, tick)
 
 

@@ -15,8 +15,8 @@ class UserDatabaseEndpoints:
 
         add_route('/login', self.login_user, ('POST',))
         add_route('/logout', self.logout_user, ('POST',))
-        add_route('/users/create/', self.register_user, ('POST',))
-        add_route('/users/update/<id>', self.get_user_by_username, ('POST',))
+        add_route('/users/create/', self.register_user, ('POST',), min_role=self.ROLES[-1])
+        add_route('/users/update/<id>', self.get_user_by_username, ('POST',), min_role=self.ROLES[1])
         add_route('/test_user', self.test_user, ('POST',))
         add_route('/get/user_settings/<username>', self.get_user_settings)
         add_route('/get/user_settings/', self.get_user_settings)

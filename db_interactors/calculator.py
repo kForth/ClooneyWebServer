@@ -9,16 +9,22 @@ class CalculatorDatabaseInteractor:
         self._calc = Calculator()
 
     def get_event_analysis(self, event_key):
-        return list(self._db.db['calculations']['analysis'][event_key].values())
+        if event_key in self._db.db['calculations']['analysis'].keys():
+            return list(self._db.db['calculations']['analysis'][event_key].values())
+        self._db.db['calculations']['analysis'][event_key] = {}
+        return []
 
     def update_entries_for_event(self, event_key):
         entries = [e.data for e in self._db.entries.get_entries_for_event(event_key)]
         event_settings = self._db.events.get_event_settings(event_key)
-        sheet = json.loads(event_settings['settings']['selected_sheet'])['data']
+        sheet = json.loads(event_settings['selected_sheet'])['data']
         data_keys = ['team', 'match', 'pos'] + [e['key'] for e in sheet if e['type'] not in ['Divider', 'Image']]
         data_by_team = {}
 
-        entries.sort(key=itemgetter('match', 'pos'))
+        print(data_keys)
+        print(entries[0].keys())
+
+        entries.sort(key=itemgetter('match'))
         for entry in entries:
             team = entry['team']
             if all([key in data_keys for key in entry.keys()]) and len(entry) == len(data_keys):
@@ -26,6 +32,8 @@ class CalculatorDatabaseInteractor:
                     data_by_team[team] = dict(zip(data_keys, [[] for _ in data_keys]))
                 for key in entry.keys():
                     data_by_team[team][key].append(entry[key])
+
+        print(data_by_team)
 
         analysis_data_by_team = {}
         for team in list(data_by_team.keys()):
@@ -72,7 +80,9 @@ class CalculatorDatabaseInteractor:
                     })
             analysis_data_by_team[team] = analysis
 
+        print(analysis_data_by_team)
         self._db.db['calculations']['analysis'][event_key] = analysis_data_by_team
+        self._db.commit()
 
 
 class Calculator(object):

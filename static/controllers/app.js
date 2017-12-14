@@ -1,3 +1,14 @@
+String.prototype.toProperCase = function () {
+    return this.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+};
+
+String.prototype.replaceAll = function(str1, str2, ignore)
+{
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+};
+
 var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.bootstrap', 'ngStorage', 'ui.sortable'])
     .config(function ($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(false).hashPrefix('');
@@ -135,9 +146,7 @@ app.filter('orderDataBy', function () {
     }
 });
 
-
-app.factory('EventDataService', function ($http, $localStorage, $sessionStorage, $log) {
-    if ($localStorage.event_data === undefined) $localStorage.event_data = {};
+app.factory('EventTrackingService', function($http, $localStorage, $sessionStorage, $log){
     var service = {};
 
     service.isTrackingEvent = function(){
@@ -152,16 +161,32 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
         $sessionStorage.tracked_event = event;
     };
 
+    return service;
+});
+
+
+app.factory('EventDataService', function ($http, $localStorage, $sessionStorage, $log, EventTrackingService) {
+    if ($localStorage.event_data === undefined) $localStorage.event_data = {};
+    var service = {};
+
     service.loadEventAnalysis = function (){
-        loadData(service.getTrackedEvent().key, '/get/event_analysis/', 'avg');
+        loadData('/get/event_analysis/', 'avg');
     };
 
     service.loadEventEntries = function (){
-        loadData(service.getTrackedEvent().key, '/get/raw_entries/', 'raw');
+        loadData('/get/raw_entries/', 'raw');
+    };
+
+    service.loadEventInfo = function(){
+        loadData('/get/event/', 'info')
+    };
+
+    service.loadEventHeaders = function(){
+        loadData('/get/event_headers/', 'headers')
     };
 
     service.getEventData = function(key){
-        return $localStorage.event_data[key][$sessionStorage.tracked_event.key];
+        return getData(key);
     };
 
     service.getPageData = function(path){
@@ -169,10 +194,15 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
             default:
                 return undefined;
             case '/a/a':
-                return service.getEventData('avg');
+                console.log(getData('avg'));
+                return getData('avg');
             case '/a/e':
-                return service.getEventData('raw');
+                return getData('raw');
         }
+    };
+
+    service.getPageHeaders = function(path){
+        return getData('headers')[path];
     };
 
     service.getTeamAnalysis = function(team){
@@ -212,17 +242,25 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
         return $localStorage.available_events;
     };
 
-    function loadData(event_key, url, path){
-        if ($localStorage.event_data[path] === undefined) $localStorage.event_data[path] = {};
-        $log.info("Trying to " + url + " for " + event_key);
-        $http.get(url + (event_key || ""))
+    function getEventKey(){
+        return EventTrackingService.getTrackedEvent().key;
+    }
+
+    function getData(key){
+        return $localStorage.event_data[key][getEventKey()];
+    }
+
+    function loadData(url, key){
+        if ($localStorage.event_data[key] === undefined) $localStorage.event_data[key] = {};
+        $log.info("Trying to " + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
+        $http.get(url + (getEventKey() || ""))
             .then(function (response) {
-                $log.info("Successfully " + url + " for " + event_key);
-                $localStorage.event_data[path][event_key] = response.data;
+                $log.info("Successfully" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
+                $localStorage.event_data[key][getEventKey()] = response.data;
             },
             function(ignored){
-                $log.warn("Could not " + url + " for " + event_key);
-                $localStorage.event_data[path][event_key] = [];
+                $log.warn("Could not" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
+                $localStorage.event_data[key][getEventKey()] = [];
             });
     }
 
@@ -330,17 +368,17 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location) 
     };
 
     service.isAuthorized = function (min_level) {
-        return $localStorage.currentUser != undefined && $localStorage.userSettings != undefined &&
-            $localStorage.currentUser.user.role >= min_level;
+        return service.getUser() != undefined && service.getUser().role_index >= min_level;
 
     };
 
     return service;
 });
 
-app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $sessionStorage, $location, $http, AuthenticationService, EventDataService) {
-    console.log(AuthenticationService.getUser());
-    if(AuthenticationService.getUser() === undefined || AuthenticationService.getUser().user.role == 'Guest'){
+app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $sessionStorage, $location, $http,
+                                                  AuthenticationService, EventDataService, EventTrackingService,
+                                                  EventSettingsService) {
+    if(AuthenticationService.getUser() === undefined || AuthenticationService.getUser().role_index < 1){
         AuthenticationService.initGuestUser();
     }
     else{
@@ -352,15 +390,15 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
 
     $scope.$on('$routeChangeStart', function () {
         $rootScope.data_loading = 0;
-        $scope.tracked_event = EventDataService.getTrackedEvent();
-        $scope.tracking_input_data.event = EventDataService.getTrackedEvent() ? EventDataService.getTrackedEvent().info.data : '';
+        $scope.tracked_event = EventTrackingService.getTrackedEvent();
+        $scope.tracking_input_data.event = EventTrackingService.getTrackedEvent() ? EventTrackingService.getTrackedEvent().info.data : '';
         $scope.user_data = AuthenticationService.getUser();
     });
 
     $scope.available_events = EventDataService.getAvailableEvents();
 
     $scope.tracking_input_data = {
-        event: EventDataService.getTrackedEvent(),
+        event: EventTrackingService.getTrackedEvent(),
         team: ''
     };
 
@@ -369,22 +407,17 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
         if (typeof($scope.tracking_input_data.event) == 'object') {
             $http.get('/get/event/' + $scope.tracking_input_data.event.key)
                 .then(function (resp) {
-                        EventDataService.setTrackedEvent(resp.data);
+                        EventTrackingService.setTrackedEvent(resp.data);
                         EventDataService.loadEventAnalysis();
                         EventDataService.loadEventEntries();
+                        EventDataService.loadEventHeaders();
+                        EventDataService.loadEventInfo();
                         $location.path('/a');
                     },
                     function (ignored) {
                         console.error("Couldn't get event" + $scope.tracking_input_data.event.key);
                     });
         }
-    };
-
-
-    String.prototype.toProperCase = function () {
-        return this.replace(/\w\S*/g, function (txt) {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        });
     };
 
 });

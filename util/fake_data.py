@@ -5,7 +5,7 @@ import requests
 
 if __name__ == "__main__":
     event_key = '2017onham'
-    db = json.load(open('db/db.json'))
+    db = json.load(open('../db/db.json'))
     sheet = list(db['sheets']['sheets'][0]["data"])
     matches = db['events'][event_key]['matches']
 
