@@ -11,7 +11,7 @@ from util import PeriodicRunner
 
 class DatabaseInteractor:
     DEFAULT_DB = {
-        'calculations': {'analysis': {}, 'calculations': {}}, 'event_settings': {}, 'events': {}, 'user_settings': {}, 'users': {'users': [], 'max_id': -1}, 'sheets': {'sheets': [], 'max_id': -1}, 'entry': {'entry': [], 'max_id': -1}
+        'user_event_headers': {}, 'calculations': {'analysis': {}, 'calculations': {}}, 'event_settings': {}, 'events': {}, 'user_settings': {}, 'users': {'users': [], 'max_id': -1}, 'sheets': {'sheets': [], 'max_id': -1}, 'entry': {'entry': [], 'max_id': -1}
     }
 
     def __init__(self, app, filename="db/db.json"):
