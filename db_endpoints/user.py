@@ -21,6 +21,12 @@ class UserDatabaseEndpoints:
         add_route('/get/user_settings/<username>', self.get_user_settings)
         add_route('/get/user_settings/', self.get_user_settings)
 
+    def _verify_user_key(self, headers):
+        if all([e in headers for e in ['UserID', 'UserKey']]):
+            return headers['UserID'] in self._active_users.keys() \
+                   and self._active_users[headers['UserID']] == headers['UserKey']
+        return False
+
     def test_user(self):
         user = request.json
         if user['id'] in self._active_users.keys() and self._active_users[user['id']] == user['key']:
