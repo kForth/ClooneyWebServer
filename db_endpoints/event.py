@@ -19,6 +19,8 @@ class EventDatabaseEndpoints:
         add_route('/get/calculations', self.get_calculations)
         add_route('/set/calculations', self.set_calculations, methods=('POST',))
 
+        add_route('/get/event_headers/<event_key>', self.get_event_headers)
+
     def get_event(self, key):
         event = self._db_interactor.get_event(key)
         if event:
@@ -82,3 +84,11 @@ class EventDatabaseEndpoints:
                 return make_response(jsonify(), 409)
         else:
             return make_response(jsonify(), 400)
+
+    def get_event_headers(self, event_key):
+        if self._verify_user_key(request.headers):
+            user_id = request.headers['UserID']
+            headers = self._db_interactor.get_event_headers_by_user_id(user_id, event_key)
+        else:
+            headers = self._db_interactor.get_default_event_headers(event_key)
+        return make_response(jsonify(headers), 200)

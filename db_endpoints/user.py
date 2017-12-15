@@ -20,21 +20,12 @@ class UserDatabaseEndpoints:
         add_route('/test_user', self.test_user, ('POST',))
         add_route('/get/user_settings/<username>', self.get_user_settings)
         add_route('/get/user_settings/', self.get_user_settings)
-        add_route('/get/event_headers/<event_key>', self.get_event_headers)
 
     def _verify_user_key(self, headers):
         if all([e in headers for e in ['UserID', 'UserKey']]):
             return headers['UserID'] in self._active_users.keys() \
                    and self._active_users[headers['UserID']] == headers['UserKey']
         return False
-
-    def get_event_headers(self, event_key):
-        if self._verify_user_key(request.headers):
-            user_id = request.headers['UserID']
-            headers = self._db_interactor.get_event_headers_by_user_id(user_id, event_key)
-        else:
-            headers = self._db_interactor.get_default_event_headers(event_key)
-        return make_response(jsonify(headers), 200)
 
     def test_user(self):
         user = request.json
