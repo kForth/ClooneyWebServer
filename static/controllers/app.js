@@ -4,16 +4,15 @@ String.prototype.toProperCase = function () {
     });
 };
 
-String.prototype.replaceAll = function(str1, str2, ignore)
-{
-    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+String.prototype.replaceAll = function (str1, str2, ignore) {
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof(str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
 };
 
 var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.bootstrap', 'ngStorage', 'ui.sortable'])
     .config(function ($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(false).hashPrefix('');
         $routeProvider
-            // Home
+        // Home
             .when('/', {
                 templateUrl: '../../../static/views/pages/home.html',
                 controller: 'HomeController'
@@ -100,41 +99,43 @@ app.filter('orderDataBy', function () {
         return obj;
     }
 
-    return function(items, params) {
-        if(params === undefined) return items;
+    return function (items, params) {
+        if (params === undefined) return items;
 
 
         var fields = [];
         var reverses = [];
-        params[0].forEach(function(e){
+        params[0].forEach(function (e) {
             var reverse = e.startsWith('-');
             reverses.push(reverse);
-            if(reverse)
+            if (reverse)
                 fields.push(e.slice(1, e.length));
             else
                 fields.push(e);
         });
         var headers = params[1];
         var filtered = [];
-        items.forEach(function(e){filtered.push(e);});
+        items.forEach(function (e) {
+            filtered.push(e);
+        });
 
-        if(fields === undefined || headers === undefined) return items;
+        if (fields === undefined || headers === undefined) return items;
 
-        function sortData(a, b, i){
-            if(i === undefined) i = 0;
+        function sortData(a, b, i) {
+            if (i === undefined) i = 0;
             var key = fields[i];
             var reverse = reverses[i];
 
             var a_val = parseFloat(getData(a, key));
             var b_val = parseFloat(getData(b, key));
 
-            if(a_val > b_val) {
+            if (a_val > b_val) {
                 return reverse ? -1 : 1;
             }
-            else if(a_val < b_val){
-                return reverse? 1 : -1;
+            else if (a_val < b_val) {
+                return reverse ? 1 : -1;
             }
-            else if(++i < fields.length) {
+            else if (++i < fields.length) {
                 return sortData(a, b, i);
             }
             return 0;
@@ -146,18 +147,18 @@ app.filter('orderDataBy', function () {
     }
 });
 
-app.factory('EventTrackingService', function($http, $localStorage, $sessionStorage, $log){
+app.factory('EventTrackingService', function ($http, $localStorage, $sessionStorage, $log) {
     var service = {};
 
-    service.isTrackingEvent = function(){
+    service.isTrackingEvent = function () {
         return $sessionStorage.tracked_event != undefined && typeof $sessionStorage.tracked_event == typeof {};
     };
 
-    service.getTrackedEvent = function(){
+    service.getTrackedEvent = function () {
         return $sessionStorage.tracked_event;
     };
 
-    service.setTrackedEvent = function(event){
+    service.setTrackedEvent = function (event) {
         $sessionStorage.tracked_event = event;
     };
 
@@ -169,28 +170,28 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
     if ($localStorage.event_data === undefined) $localStorage.event_data = {};
     var service = {};
 
-    service.loadEventAnalysis = function (){
+    service.loadEventAnalysis = function () {
         loadData('/get/event_analysis/', 'avg');
     };
 
-    service.loadEventEntries = function (){
+    service.loadEventEntries = function () {
         loadData('/get/raw_entries/', 'raw');
     };
 
-    service.loadEventInfo = function(){
+    service.loadEventInfo = function () {
         loadData('/get/event/', 'info')
     };
 
-    service.loadEventHeaders = function(){
+    service.loadEventHeaders = function () {
         loadData('/get/event_headers/', 'headers')
     };
 
-    service.getEventData = function(key){
+    service.getEventData = function (key) {
         return getData(key);
     };
 
-    service.getPageData = function(path){
-        switch(path){
+    service.getPageData = function (path) {
+        switch (path) {
             default:
                 return undefined;
             case '/a/a':
@@ -201,34 +202,34 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
         }
     };
 
-    service.getPageHeaders = function(path){
+    service.getPageHeaders = function (path) {
         return getData('headers')[path];
     };
 
-    service.getTeamAnalysis = function(team){
+    service.getTeamAnalysis = function (team) {
         var data = service.getEventData('avg');
-        for(var i in data){
+        for (var i in data) {
             var elem = data[i];
-            if(elem.team.mode === team){
+            if (elem.team.mode === team) {
                 return elem;
             }
         }
         return undefined;
     };
 
-    service.getTeamEntries = function(team){
+    service.getTeamEntries = function (team) {
         var data = service.getEventData('raw');
         var output = [];
-        for(var i in data){
+        for (var i in data) {
             var elem = data[i];
-            if(elem.team === team){
+            if (elem.team === team) {
                 output.push(elem);
             }
         }
         return output;
     };
 
-    service.resetLocalData = function(){
+    service.resetLocalData = function () {
         $localStorage.event_data = {};
     };
 
@@ -238,30 +239,30 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
         });
     };
 
-    service.getAvailableEvents = function(){
+    service.getAvailableEvents = function () {
         return $localStorage.available_events;
     };
 
-    function getEventKey(){
+    function getEventKey() {
         return EventTrackingService.getTrackedEvent().key;
     }
 
-    function getData(key){
+    function getData(key) {
         return $localStorage.event_data[key][getEventKey()];
     }
 
-    function loadData(url, key){
+    function loadData(url, key) {
         if ($localStorage.event_data[key] === undefined) $localStorage.event_data[key] = {};
         $log.info("Trying to " + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
         $http.get(url + (getEventKey() || ""))
             .then(function (response) {
-                $log.info("Successfully" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
-                $localStorage.event_data[key][getEventKey()] = response.data;
-            },
-            function(ignored){
-                $log.warn("Could not" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
-                $localStorage.event_data[key][getEventKey()] = [];
-            });
+                    $log.info("Successfully" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
+                    $localStorage.event_data[key][getEventKey()] = response.data;
+                },
+                function (ignored) {
+                    $log.warn("Could not" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
+                    $localStorage.event_data[key][getEventKey()] = [];
+                });
     }
 
     return service;
@@ -269,10 +270,10 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
 });
 
 
-app.factory('AuthenticationService', function ($http, $localStorage, $location) {
+app.factory('AuthenticationService', function ($http, $localStorage, $location, $route) {
     var service = {};
 
-    service.initGuestUser = function(){
+    service.initGuestUser = function () {
         service.ClearCredentials();
         service.SetCredentials({
             'id': -1,
@@ -299,21 +300,21 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location) 
 
     };
 
-    service.Logout = function(redirect){
+    service.Logout = function (redirect) {
         $http.post('/logout')
-            .then(function(ignored){
+            .then(function (ignored) {
                 service.ClearCredentials();
-                if(redirect === true) {
+                if (redirect === true) {
                     $location.path('/');
                 }
             });
     };
 
-    service.SetUserSettings = function(settings){
+    service.SetUserSettings = function (settings) {
         $localStorage.userSettings = settings;
     };
 
-    service.LoadUserSettings = function (){
+    service.LoadUserSettings = function () {
         $http.get('/get/user_settings/' + service.getUser().username)
             .then(function (response) {
                     service.SetUserSettings(response.data);
@@ -323,7 +324,7 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location) 
                 });
     };
 
-    service.GetUserSettings = function(){
+    service.GetUserSettings = function () {
         return $localStorage.userSettings;
     };
 
@@ -341,7 +342,7 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location) 
         $localStorage.currentUser.role_index = roles.indexOf($localStorage.currentUser.role);
     }
 
-    service.ClearCredentials = function(){
+    service.ClearCredentials = function () {
         $localStorage.currentUser = undefined;
         $localStorage.userSettings = undefined;
         $http.defaults.headers.common['UserID'] = '';
@@ -365,7 +366,7 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location) 
                 });
     };
 
-    service.getUser = function(){
+    service.getUser = function () {
         return $localStorage.currentUser;
     };
 
@@ -378,17 +379,23 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location) 
 });
 
 app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $sessionStorage, $location, $http,
-                                                  AuthenticationService, EventDataService, EventTrackingService,
-                                                  EventSettingsService) {
-    if(AuthenticationService.getUser() === undefined || AuthenticationService.getUser().role_index < 1){
+                                                  $log, AuthenticationService, EventDataService, EventTrackingService) {
+    if (AuthenticationService.getUser() === undefined || AuthenticationService.getUser().role_index < 1) {
         AuthenticationService.initGuestUser();
     }
-    else{
+    else {
         AuthenticationService.testUser();
     }
 
-    EventDataService.loadAvailableEvents();
-    $rootScope.data_loading = 0;
+    $rootScope.data_loading = 0; // hide loading overlay
+
+    EventDataService.loadAvailableEvents(); //
+    $scope.available_events = EventDataService.getAvailableEvents(); // Add events to search box typeahead
+
+    $scope.tracking_input_data = { // Set up the event search box.
+        event: EventTrackingService.getTrackedEvent(),
+        team: ''
+    };
 
     $scope.$on('$routeChangeStart', function () {
         $rootScope.data_loading = 0;
@@ -396,13 +403,6 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
         $scope.tracking_input_data.event = EventTrackingService.getTrackedEvent() ? EventTrackingService.getTrackedEvent().info.data : '';
         $scope.user_data = AuthenticationService.getUser();
     });
-
-    $scope.available_events = EventDataService.getAvailableEvents();
-
-    $scope.tracking_input_data = {
-        event: EventTrackingService.getTrackedEvent(),
-        team: ''
-    };
 
     $scope.isNavCollapsed = true;
     $scope.select_event_button = function () {
@@ -417,7 +417,7 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
                         $location.path('/a');
                     },
                     function (ignored) {
-                        console.error("Couldn't get event" + $scope.tracking_input_data.event.key);
+                        $log.error("Couldn't get event" + $scope.tracking_input_data.event.key);
                     });
         }
     };
