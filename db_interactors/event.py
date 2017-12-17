@@ -1,3 +1,5 @@
+import json
+
 from models import Event
 from tba_py import TBA
 
@@ -55,25 +57,40 @@ class EventDatabaseInteractor:
         event.matches = self._tba.get_event_matches(key)
         self.set_event(key, event)
 
+    def get_default_event_headers(self, event_key):
+        if 'default' in self._db.db['user_event_headers'].keys() and event_key in self._db.db['user_event_headers']['default'].keys():
+            return self._db.db['user_event_headers']['default'][event_key]
+        headers = self.get_auto_generated_headers(event_key)
+        self.set_default_event_headers(event_key, headers)
+        return headers
 
+    def set_default_event_headers(self, event_key, headers, update=True):
+        if 'default' not in self._db.db['user_event_headers'].keys():
+            self._db.db['user_event_headers']['default'] = {}
+        if update:
+            self._db.db['user_event_headers']['default'][event_key].update(headers)
+        else:
+            self._db.db['user_event_headers']['default'][event_key] = headers
 
-    def update_event_headers_by_user_id(self, user_id, event_key, data):
+    def get_user_event_headers(self, user_id, event_key):
+        if user_id in self._db.db['user_event_headers'].keys():
+            if event_key in self._db.db['user_event_headers'][user_id].keys():
+                headers = self._db.db['user_event_headers'][event_key]
+                return headers if headers else self.get_default_event_headers(event_key)
+        return {}
+
+    def set_user_event_headers(self, user_id, event_key, data, update=True):
         if user_id not in self._db.db['user_event_headers'].keys():
             self._db.db['user_event_headers'][user_id] = {}
         if event_key not in self._db.db['user_event_headers'][user_id].keys():
             self._db.db['user_event_headers'][user_id][event_key] = {}
-        self._db.db['user_event_headers'][user_id][event_key].update(data)
+        if update:
+            self._db.db['user_event_headers'][user_id][event_key].update(data)
+        else:
+            self._db.db['user_event_headers'][user_id][event_key] = data
 
-    def get_default_event_headers(self, event_key):
-        if 'default' in self._db.db['user_event_headers'].keys() and event_key in self._db.db['user_event_headers']['default'].keys():
-            return self._db.db['user_event_headers']['default'][event_key]
-        return self.update_default_event_headers(event_key)
-
-    def update_default_event_headers(self, event_key):
-        headers = {
-            '/a/a': [],
-            '/a/e': []
-        }
+    def get_auto_generated_headers(self, event_key, pages=('/a/a', '/a/e', '/a/t/e')):
+        headers = dict([(e, []) for e in pages])
         event_sheet = json.loads(self._db.db['event_settings'][event_key]['selected_sheet'])['data']
         if event_sheet:
             raw_headers = [
@@ -99,6 +116,7 @@ class EventDatabaseInteractor:
                     "tooltip":    ""
                 },
             ]
+            team_raw_headers = [dict(e) for e in raw_headers[:1]]
             avg_headers = [dict(e) for e in raw_headers]
             del avg_headers[1]
             avg_headers[0]['data_key'] += '.count'
@@ -113,27 +131,24 @@ class EventDatabaseInteractor:
                     "data_class": "",
                     "tooltip":    ""
                 }
-                raw_headers.append(dict(header))
-                if line['type'] == 'Numbers':
-                    header["data_key"] += ".avg"
-                elif line['type'] == 'Boolean':
-                    header["data_key"] += ".mode"
-                elif line['type'] == 'HorizontalOptions':
-                    header["data_key"] += ".mode"
-                avg_headers.append(header)
+                if '/a/e' in pages:
+                    raw_headers.append(dict(header))
+                if '/a/t/e' in pages:
+                    team_raw_headers.append(dict(header))
+                if '/a/a' in pages:
+                    if line['type'] == 'Numbers':
+                        header["data_key"] += ".avg"
+                    elif line['type'] == 'Boolean':
+                        header["data_key"] += ".mode"
+                    elif line['type'] == 'HorizontalOptions':
+                        header["data_key"] += ".mode"
+                    avg_headers.append(header)
 
-            headers['/a/e'] = raw_headers
-            headers['/a/a'] = avg_headers
-
-            if 'default' not in self._db.db['user_event_headers'].keys():
-                self._db.db['user_event_headers']['default'] = {}
-            self._db.db['user_event_headers']['default'][event_key] = headers
+            if '/a/e' in pages:
+                headers['/a/e'] = raw_headers
+            if '/a/t/e' in pages:
+                headers['/a/t/e'] = team_raw_headers
+            if '/a/a' in pages:
+                headers['/a/a'] = avg_headers
 
         return headers
-
-    def get_event_headers_by_user_id(self, user_id, event_key):
-        if user_id in self._db.db['user_event_headers'].keys():
-            if event_key in self._db.db['user_event_headers'][user_id].keys():
-                headers = self._db.db['user_event_headers'][event_key]
-                return headers if headers else self.get_default_event_headers(event_key)
-        return {}

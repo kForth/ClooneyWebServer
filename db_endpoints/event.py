@@ -19,7 +19,11 @@ class EventDatabaseEndpoints:
         add_route('/get/calculations', self.get_calculations)
         add_route('/set/calculations', self.set_calculations, methods=('POST',))
 
-        add_route('/get/event_headers/<event_key>', self.get_event_headers)
+        add_route('/get/event_headers/<event_key>', self.get_user_event_headers)
+        add_route('/post/event_headers/<event_key>', self.set_user_event_headers, methods=('POST',))
+        add_route('/post/default_event_headers/<event_key>', self.set_default_event_headers, methods=('POST',))
+        add_route('/get/auto_create_event_headers/<event_key>', self.auto_create_event_headers)
+        add_route('/get/auto_create_default_headers/<event_key>', self.auto_create_default_headers)
 
     def get_event(self, key):
         event = self._db_interactor.get_event(key)
@@ -85,10 +89,31 @@ class EventDatabaseEndpoints:
         else:
             return make_response(jsonify(), 400)
 
-    def get_event_headers(self, event_key):
-        if self._verify_user_key(request.headers):
+    def get_user_event_headers(self, event_key):
+        if 'UserID' in request.headers.keys():
             user_id = request.headers['UserID']
-            headers = self._db_interactor.get_event_headers_by_user_id(user_id, event_key)
+            headers = self._db_interactor.get_user_event_headers(user_id, event_key)
         else:
             headers = self._db_interactor.get_default_event_headers(event_key)
         return make_response(jsonify(headers), 200)
+
+    def set_user_event_headers(self, event_key):
+        self._db_interactor.set_user_event_headers(request.headers['UserID'], event_key, request.json)
+        return make_response("", 200)
+
+    def set_default_event_headers(self, event_key):
+        self._db_interactor.set_default_event_headers(event_key, request.json)
+        return make_response("", 200)
+
+    def auto_create_event_headers(self, event_key):
+        if request.json:
+            pages = request.json
+            headers = self._db_interactor.get_auto_generated_headers(event_key, pages)
+        else:
+            headers = self._db_interactor.get_auto_generated_headers(event_key)
+        return make_response(headers, 200)
+
+    def auto_create_default_headers(self, event_key):
+        headers = self._db_interactor.get_auto_generated_headers(event_key)
+        self._db_interactor.set_default_event_headers(headers)
+        return make_response("", 200)
