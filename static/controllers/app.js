@@ -154,6 +154,10 @@ app.filter('orderDataBy', function () {
 app.factory('EventTrackingService', function ($http, $localStorage, $sessionStorage, $log) {
     var service = {};
 
+    service.getEventKey = function(){
+        return service.getTrackedEvent().key;
+    };
+
     service.isTrackingEvent = function () {
         return $sessionStorage.tracked_event != undefined && typeof $sessionStorage.tracked_event == typeof {};
     };

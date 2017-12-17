@@ -1,22 +1,39 @@
-.calculation-list-holder {
+.item-list-holder {
+
 }
 
-.calculation-list {
+.item-list {
     border: 1px solid #ddd;
 }
 
-.calculation-list tr {
+.item-list tr {
     height: 20px;
     padding: 2px;
 }
 
-.calculation-list input, .calculation-list select {
+.item-list input, .item-list select {
     padding: 2px;
     height: 20px;
 }
 
-.calculation-list-item {
+.item-list-item {
 }
 
-.calculation-list-item .selected {
+.item-list-item .selected {
+}
+
+.item-sub-list-holder {
+    margin-left: 8px;
+    margin-right: -8px;
+    border-top: solid 1px #ddd;
+    padding: 5px;
+}
+.item-sub-list-header{
+    font-size: 16px;
+    cursor: hand;
+}
+
+.item-sub-list-item {
+    padding: 2px;
+    padding-left: 5px;
 }
