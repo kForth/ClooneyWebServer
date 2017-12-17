@@ -336,9 +336,9 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location) 
         service.LoadUserSettings();
     };
 
-    function updateUserRole(){
+    function updateUserRole() {
         var roles = ['Guest', 'User,', 'Editor', 'Admin'];
-        $localStorage.currentUser.role_index = roles.indexOf($localStorage.currentUser.user.role);
+        $localStorage.currentUser.role_index = roles.indexOf($localStorage.currentUser.role);
     }
 
     service.ClearCredentials = function(){
@@ -348,19 +348,21 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location) 
         $http.defaults.headers.common['UserKey'] = '';
     };
 
-    service.testUser = function(){
+    service.testUser = function () {
         $http.post('/test_user', service.getUser())
-            .then(function(resp){
-                if(resp.status == 204) {
+            .then(function (resp) {
+                    if (resp.status == 204) {
+                        service.initGuestUser();
+                    }
+                    else {
+                        service.SetCredentials(resp.data);
+                    }
+                },
+                function (ignored) {
+                    service.Logout();
                     service.initGuestUser();
-                }
-                else{
-                    service.SetCredentials(resp.data);
-                }
-            },
-            function(ignored){
-                service.Logout();
-            });
+                    $route.reload();
+                });
     };
 
     service.getUser = function(){

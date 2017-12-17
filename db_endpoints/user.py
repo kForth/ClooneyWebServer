@@ -28,12 +28,18 @@ class UserDatabaseEndpoints:
         return False
 
     def test_user(self):
-        user = request.json
-        if user['id'] in self._active_users.keys() and self._active_users[user['id']] == user['key']:
-            user = self._db_interactor.get_user_by_id(user['id'])
-            return make_response(jsonify(user), 200)
-        elif user['user']['role'] == 'Guest' or user['user']['role'] == 0:
-            return make_response("", 204)
+        user_data = request.json
+        if all([key in user_data.keys() for key in ['id', 'key']]):
+            user_id = user_data['id']
+            user_key = user_data['key']
+            user = self._db_interactor.get_user_by_id(user_id)
+            if user:
+                if user_id in self._active_users.keys() and \
+                                self._active_users[user_id]['key'] == user_key and \
+                                self._active_users[user_id]['expiration'] > time.time():
+                    return make_response(jsonify(user.to_dict_no_pwd()), 200)
+                elif user.role == 'Guest' or user.role == 0:
+                    return make_response("", 204)
         return make_response("", 401)
 
     def get_user_settings(self, username=None):

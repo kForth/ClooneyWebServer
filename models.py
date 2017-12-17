@@ -17,6 +17,15 @@ class User:
             'role':       self.role
         }
 
+    def to_dict_no_pwd(self):
+        return {
+            'username':   self.username,
+            'first_name': self.first_name,
+            'last_name':  self.last_name,
+            'id':         self.id,
+            'role':       self.role
+        }
+
     @staticmethod
     def verify_json(data):
         req_keys = ['username', 'password', 'first_name', 'last_name', 'id']
