@@ -57,7 +57,7 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                 templateUrl: '../../../static/views/pages/sheets/edit.html',
                 controller: 'SheetsEditController',
                 resolve: {
-                    appPath: function ($route) {
+                    appPath: function () {
                         return {'mode': 'create'};
                     }
                 }
@@ -195,7 +195,6 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
             default:
                 return undefined;
             case '/a/a':
-                console.log(getData('avg'));
                 return getData('avg');
             case '/a/e':
                 return getData('raw');
@@ -256,11 +255,11 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
         $log.info("Trying to " + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
         $http.get(url + (getEventKey() || ""))
             .then(function (response) {
-                    $log.info("Successfully" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
+                    $log.info("Successfully " + url.replaceAll('/', ' ').replaceAll('_', ' ').trim() + " for " + getEventKey());
                     $localStorage.event_data[key][getEventKey()] = response.data;
                 },
                 function (ignored) {
-                    $log.warn("Could not" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
+                    $log.warn("Could not " + url.replaceAll('/', ' ').replaceAll('_', ' ').trim() + " for " + getEventKey());
                     $localStorage.event_data[key][getEventKey()] = [];
                 });
     }
@@ -270,7 +269,7 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
 });
 
 
-app.factory('AuthenticationService', function ($http, $localStorage, $location, $route) {
+app.factory('AuthenticationService', function ($http, $localStorage, $location, $route, $log) {
     var service = {};
 
     service.initGuestUser = function () {
@@ -320,7 +319,7 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location, 
                     service.SetUserSettings(response.data);
                 },
                 function (ignored) {
-                    console.error("Cannot get user settings");
+                    $log.error("Cannot get user settings");
                 });
     };
 
@@ -371,7 +370,7 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location, 
     };
 
     service.isAuthorized = function (min_level) {
-        return service.getUser() != undefined && service.getUser().role_index >= min_level;
+        return min_level < 1 || (service.getUser() != undefined && service.getUser().role_index >= min_level);
 
     };
 
@@ -380,6 +379,7 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location, 
 
 app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $sessionStorage, $location, $http,
                                                   $log, AuthenticationService, EventDataService, EventTrackingService) {
+
     if (AuthenticationService.getUser() === undefined || AuthenticationService.getUser().role_index < 1) {
         AuthenticationService.initGuestUser();
     }

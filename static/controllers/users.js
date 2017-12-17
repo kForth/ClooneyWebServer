@@ -4,6 +4,7 @@ app.controller('UserLogoutController', function ($scope, $localStorage, $session
 });
 
 app.controller('UserLoginController', function ($scope, $localStorage, $rootScope, $location, AuthenticationService) {
+    console.log(AuthenticationService.getUser());
     if (!AuthenticationService.isAuthorized(0)) $location.path("/");
     $scope.input = {
         'username': '',
@@ -18,10 +19,10 @@ app.controller('UserLoginController', function ($scope, $localStorage, $rootScop
     $scope.login = function () {
         $rootScope.data_loading += 1;
         AuthenticationService.Login($scope.input.username, $scope.input.password,
-            function (response) {
+            function () {
                 $location.path('/');
             },
-            function (ignored) {
+            function () {
                 $scope.alert = 'Error. Try Again.';
                 $rootScope.data_loading = 0;
             });

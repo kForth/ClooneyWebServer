@@ -21,9 +21,6 @@ class CalculatorDatabaseInteractor:
         data_keys = ['team', 'match', 'pos'] + [e['key'] for e in sheet if e['type'] not in ['Divider', 'Image']]
         data_by_team = {}
 
-        print(data_keys)
-        print(entries[0].keys())
-
         entries.sort(key=itemgetter('match'))
         for entry in entries:
             team = entry['team']
@@ -32,8 +29,6 @@ class CalculatorDatabaseInteractor:
                     data_by_team[team] = dict(zip(data_keys, [[] for _ in data_keys]))
                 for key in entry.keys():
                     data_by_team[team][key].append(entry[key])
-
-        print(data_by_team)
 
         analysis_data_by_team = {}
         for team in list(data_by_team.keys()):
@@ -80,7 +75,6 @@ class CalculatorDatabaseInteractor:
                     })
             analysis_data_by_team[team] = analysis
 
-        print(analysis_data_by_team)
         self._db.db['calculations']['analysis'][event_key] = analysis_data_by_team
         self._db.commit()
 
