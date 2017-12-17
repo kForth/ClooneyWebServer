@@ -4,6 +4,7 @@ from os import path
 from db_interactors.calculator import CalculatorDatabaseInteractor
 from db_interactors.entry import EntryDatabaseInteractor
 from db_interactors.event import EventDatabaseInteractor
+from db_interactors.headers import HeadersDatabaseInteractor
 from db_interactors.sheet import SheetDatabaseInteractor
 from db_interactors.user import UserDatabaseInteractor
 from util import PeriodicRunner
@@ -26,6 +27,7 @@ class DatabaseInteractor:
         self.events = EventDatabaseInteractor(self, app)
         self.entries = EntryDatabaseInteractor(self)
         self.calculator = CalculatorDatabaseInteractor(self)
+        self.headers = HeadersDatabaseInteractor(self)
 
     def _read_db(self):
         self.db = self.DEFAULT_DB

@@ -82,3 +82,70 @@ app.controller('SettingsCalculationsController', function ($scope, $location, Au
         {'name': 'd', 'key': 'd', 'formula': 'x+2', 'type': 'float'}
     ];
 });
+
+app.controller('SettingsHeadersController', function ($scope, $location, $http, AuthenticationService, EventDataService, EventTrackingService) {
+    if (!EventTrackingService.isTrackingEvent() || !AuthenticationService.isAuthorized(2)) $location.path("/");
+
+    var backup_groups = [];
+    $scope.header_groups = [];
+
+    $http.get('/get/header_groups/' + EventTrackingService.getEventKey())
+        .then(function (resp) {
+            $scope.header_groups = resp.data;
+            backup_groups = angular.copy($scope.header_groups);
+        });
+
+    $scope.saveGroups = function(){
+        $http.post('/post/header_groups/' + EventTrackingService.getEventKey(), $scope.header_groups)
+            .then(function () {
+                backup_groups = angular.copy($scope.header_groups);
+            });
+    };
+
+    $scope.resetGroups = function(){
+        $scope.header_groups = angular.copy(backup_groups);
+    };
+
+    $scope.getPageGroups = function(page){
+        var groups = [];
+        for(var i in $scope.header_groups){
+            var elem = $scope.header_groups[i];
+            if(elem.path == page.path){
+                groups.push(elem);
+            }
+        }
+        return groups;
+    };
+
+    $scope.createGroup = function(page){
+        $http.post('/post/create_header_group/' + EventTrackingService.getEventKey(), {'path': page.path})
+            .then(function(resp){
+                $scope.header_groups.push(resp.data);
+                $scope.selected_group = $scope.header_groups[$scope.header_groups.length - 1];
+            });
+    };
+
+    $scope.selectGroup = function(group){
+        $scope.selected_group = group;
+    };
+
+    $scope.header_pages = [
+        {
+            'name': 'Averages',
+            'path': '/a/a'
+        },
+        {
+            'name': 'Entries',
+            'path': '/a/e'
+        },
+        {
+            'name': 'Team Entries',
+            'path': '/a/t/e'
+        }
+    ];
+
+    $scope.headers = [
+        {"data_key": "match.count", "class": "", "title": "M#", "data_class": "", "tooltip": ""},
+        {"data_key": "match.count", "class": "", "title": "Team", "data_class": "", "tooltip": ""}
+    ];
+});

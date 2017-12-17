@@ -43,6 +43,10 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                 templateUrl: '../../../static/views/pages/settings/edit_calculations.html',
                 controller: 'SettingsCalculationsController'
             })
+            .when('/s/h', {
+                templateUrl: '../../../static/views/pages/settings/edit_headers.html',
+                controller: 'SettingsHeadersController'
+            })
             // Setup
             .when('/setup', {
                 templateUrl: '../../../static/views/pages/settings/event_setup.html',

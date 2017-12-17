@@ -1,6 +1,7 @@
 from flask import Flask, abort, request
 
 from db_endpoints import *
+from db_endpoints.headers import HeadersDatabaseEndpoints
 from db_interactors import DatabaseInteractor
 
 app = Flask(__name__)
@@ -31,6 +32,7 @@ sheet_endpoints = SheetDatabaseEndpoints(db.sheets, add_route)
 event_endpoints = EventDatabaseEndpoints(db.events, add_route)
 entry_endpoints = EntryDatabaseEndpoints(db.entries, add_route)
 calc_endpoints = CalculatorDatabaseEndpoints(db.calculator, add_route)
+header_endpoints = HeadersDatabaseEndpoints(db.headers, add_route)
 
 
 @app.route('/')
