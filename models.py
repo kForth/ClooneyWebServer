@@ -1,11 +1,12 @@
 class User:
-    def __init__(self, username, password, first_name, last_name, id, role="Guest"):
+    def __init__(self, username, password, first_name, last_name, id, role="Guest", permissions=[]):
         self.username = username
         self.password = password
         self.first_name = first_name
         self.last_name = last_name
         self.id = id
         self.role = role
+        self.permissions = permissions
 
     def to_dict(self):
         return {
@@ -14,7 +15,8 @@ class User:
             'first_name': self.first_name,
             'last_name':  self.last_name,
             'id':         self.id,
-            'role':       self.role
+            'role':       self.role,
+            'permissions':       self.permissions
         }
 
     def to_dict_no_pwd(self):
@@ -23,13 +25,14 @@ class User:
             'first_name': self.first_name,
             'last_name':  self.last_name,
             'id':         self.id,
-            'role':       self.role
+            'role':       self.role,
+            'permissions':       self.permissions
         }
 
     @staticmethod
     def verify_json(data):
         req_keys = ['username', 'password', 'first_name', 'last_name', 'id']
-        opt_keys = ['role']
+        opt_keys = ['role', 'permissions']
         return all([k in data.keys() for k in req_keys]) and all([k in opt_keys or k in req_keys for k in data.keys()])
 
     @staticmethod

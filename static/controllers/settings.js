@@ -49,6 +49,10 @@ app.service('EventSettingsService', function ($http, $localStorage, $sessionStor
 
 app.controller('SettingsHomeController', function ($scope, $location, AuthenticationService, $http, EventDataService,
                                                    EventTrackingService, EventSettingsService, SheetsService) {
+    if (!EventTrackingService.isTrackingEvent() ||
+        !AuthenticationService.isAuthorized(2) ||
+        AuthenticationService.hasPermission('settings/home'))
+            $location.path("/");
 
     EventSettingsService.loadEventSettings();
     SheetsService.loadEventSheets();
@@ -93,8 +97,10 @@ app.controller('SettingsHomeController', function ($scope, $location, Authentica
 });
 
 app.controller('SettingsCalculationsController', function ($scope, $location, AuthenticationService, EventDataService, EventTrackingService) {
-    if (!EventTrackingService.isTrackingEvent() || !AuthenticationService.isAuthorized(2)) $location.path("/");
-
+    if (!EventTrackingService.isTrackingEvent() ||
+        !AuthenticationService.isAuthorized(2) ||
+        AuthenticationService.hasPermission('settings/calculations'))
+            $location.path("/");
 
     $scope.calculations = [
         {'name': 'a', 'key': 'a', 'formula': 'x*x', 'type': 'float'},
@@ -105,7 +111,10 @@ app.controller('SettingsCalculationsController', function ($scope, $location, Au
 });
 
 app.controller('SettingsHeadersController', function ($scope, $location, $http, AuthenticationService, EventDataService, EventTrackingService) {
-    if (!EventTrackingService.isTrackingEvent() || !AuthenticationService.isAuthorized(2)) $location.path("/");
+    if (!EventTrackingService.isTrackingEvent() ||
+        !AuthenticationService.isAuthorized(2) ||
+        AuthenticationService.hasPermission('settings/header_groups'))
+            $location.path("/");
 
     var backup_groups = [];
     $scope.header_groups = [];

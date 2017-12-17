@@ -299,6 +299,7 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location, 
         $http.post('/login', {username: username, password: password})
             .then(function (resp) {
                     service.SetCredentials(resp.data);
+                    console.log(resp);
                     success_callback(resp);
                 },
                 function (resp) {
@@ -375,6 +376,18 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location, 
 
     service.getUser = function () {
         return $localStorage.currentUser;
+    };
+
+    service.getUserId = function(){
+        return service.getUser().id;
+    };
+
+    service.getUserPermissions = function(){
+        return service.getUser().permissions;
+    };
+
+    service.hasPermission = function(perm){
+        return service.getUserPermissions().indexOf(perm) > 0;
     };
 
     service.isAuthorized = function (min_level) {
