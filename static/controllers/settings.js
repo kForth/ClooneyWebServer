@@ -53,6 +53,27 @@ app.controller('SettingsHomeController', function ($scope, $location, Authentica
     EventSettingsService.loadEventSettings();
     SheetsService.loadEventSheets();
 
+    $scope.avg_headers = [];
+    $scope.raw_headers = [];
+    $scope.team_raw_headers = [];
+    $http.get('/get/header_groups/' + EventTrackingService.getEventKey())
+        .then(function (resp) {
+            for(var i in resp.data){
+                var elem = resp.data[i];
+                switch(elem['path']){
+                    case '/a/a':
+                        $scope.avg_headers.push(elem);
+                        break;
+                    case '/a/e':
+                        $scope.raw_headers.push(elem);
+                        break;
+                    case '/a/t/e':
+                        $scope.team_raw_headers.push(elem);
+                        break;
+                }
+            }
+        });
+
     if (!EventTrackingService.isTrackingEvent() || !AuthenticationService.isAuthorized(2)){
         $location.path("/");
         return;
@@ -125,8 +146,37 @@ app.controller('SettingsHeadersController', function ($scope, $location, $http, 
             });
     };
 
+    var backup_selected_group = undefined;
+
     $scope.selectGroup = function(group){
         $scope.selected_group = group;
+        $scope.canDeleteGroup = group.creator_id == AuthenticationService.getUser().id;
+        $scope.canSetGlobalDefault = AuthenticationService.isAuthorized(3) || AuthenticationService.hasPermission('settings/header_groups/set_global_default');
+        backup_selected_group = angular.copy(group);
+    };
+
+    $scope.saveGroup = function(){
+
+    };
+
+    $scope.resetGroup = function(){
+        $scope.selected_group = angular.copy(backup_selected_group);
+    };
+
+    $scope.deleteGroup = function(){
+
+    };
+
+    $scope.setDefault = function(){
+        if(group.creator_id == AuthenticationService.getUser().id){
+
+        }
+    };
+
+    $scope.setGlobalDefault = function(){
+        if(AuthenticationService.isAuthorized(3)){
+
+        }
     };
 
     $scope.header_pages = [

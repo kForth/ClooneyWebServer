@@ -23,5 +23,31 @@
                 </select>
             </div>
         </div>
+
+        <h3>Default Headers</h3>
+        <div class="row form-group">
+            <label class="col-xs-2 col-form-label" for="default_avg_headers">Averages:</label>
+            <div class="col-xs-10">
+                <select id="default_avg_headers" class="form-control" ng-model="default_avg_headers">
+                    <option ng-repeat="option in avg_headers" value="{{ option }}">{{ option.name }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <label class="col-xs-2 col-form-label" for="default_raw_headers">Entries:</label>
+            <div class="col-xs-10">
+                <select id="default_raw_headers" class="form-control" ng-model="default_raw_headers">
+                    <option ng-repeat="option in raw_headers" value="{{ option }}">{{ option.name }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <label class="col-xs-2 col-form-label" for="default_team_raw_headers">Team Entries:</label>
+            <div class="col-xs-10">
+                <select id="default_team_raw_headers" class="form-control" ng-model="default_team_raw_headers">
+                    <option ng-repeat="option in team_raw_headers" value="{{ option }}">{{ option.name }}</option>
+                </select>
+            </div>
+        </div>
     </div>
 </div>

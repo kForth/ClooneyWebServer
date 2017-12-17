@@ -5,7 +5,15 @@ from tba_py import TBA
 
 
 class EventDatabaseInteractor:
-    DEFAULT_EVENT_SETTINGS = {'settings': {'selected_sheet': {}}, 'calculations': []}
+    DEFAULT_EVENT_SETTINGS = {
+        'settings':     {
+            'selected_sheet': {},
+            'default_avg_headers': {},
+            'default_raw_headers': {},
+            'default_team_raw_headers': {}
+        },
+        'calculations': []
+    }
 
     def __init__(self, db, app):
         self._db = db
@@ -19,7 +27,9 @@ class EventDatabaseInteractor:
             self._db.db['user_event_headers'] = {}
 
     def get_event_settings(self, key):
-        return self._db.db['event_settings'][key]
+        settings = dict(self.DEFAULT_EVENT_SETTINGS.items())
+        settings.update(self._db.db['event_settings'][key])
+        return settings
 
     def set_event_settings(self, key, settings=DEFAULT_EVENT_SETTINGS):
         if key not in self._db.db['event_settings'].keys():
@@ -65,7 +75,8 @@ class EventDatabaseInteractor:
         self.set_event(key, event)
 
     def get_default_event_headers(self, event_key):
-        if 'default' in self._db.db['user_event_headers'].keys() and event_key in self._db.db['user_event_headers']['default'].keys():
+        if 'default' in self._db.db['user_event_headers'].keys() and event_key in self._db.db['user_event_headers'][
+            'default'].keys():
             return self._db.db['user_event_headers']['default'][event_key]
         headers = self.get_auto_generated_headers(event_key)
         self.set_default_event_headers(event_key, headers)
@@ -132,11 +143,11 @@ class EventDatabaseInteractor:
                 if line['type'] in ['Image', 'Divider']:
                     continue
                 header = {
-                    "data_key":   line['key'],
-                    "class":      "",
-                    "title":      line['label'],
-                    "data_class": "",
-                    "tooltip":    ""
+                    "data_key": line['key'],
+                    "class":        "",
+                    "title": line   ['label'],
+                    "data_class":   "",
+                    "tooltip":      ""
                 }
                 if '/a/e' in pages:
                     raw_headers.append(dict(header))
