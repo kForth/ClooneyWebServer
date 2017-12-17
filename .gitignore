@@ -11,7 +11,7 @@ db/db.json
 db/tba_cache.json
 sheets/
 resources/OpenSansEmoji.ttf
-
+old_data/
 db/db.json.backup
 
 db/sheet.json
