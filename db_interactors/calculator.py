@@ -8,6 +8,12 @@ class CalculatorDatabaseInteractor:
         self._db = db
         self._calc = Calculator()
 
+        if 'calculations' not in self._db.db.keys():
+            self._db.db['calculations'] = {'analysis': {}, 'calculations': {}}
+        for key in ['analysis', 'calculations']:
+            if key not in self._db.db['calculations'].keys():
+                self._db.db['calculations'][key] = {}
+
     def get_event_analysis(self, event_key):
         if event_key in self._db.db['calculations']['analysis'].keys():
             return list(self._db.db['calculations']['analysis'][event_key].values())

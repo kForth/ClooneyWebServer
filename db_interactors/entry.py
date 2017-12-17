@@ -5,6 +5,12 @@ class EntryDatabaseInteractor:
     def __init__(self, db):
         self._db = db
 
+        if 'entry' not in self._db.db.keys():
+            self._db.db['entry'] = {'entry': [], 'max_id': -1}
+        for key, value in (('entry', []), ('max_id', -1)):
+            if key not in self._db.db['entry'].keys():
+                self._db.db['entry'][key] = value
+
     def get_entries(self):
         return [ScoutingEntry.from_json(e) for e in self._db.db['entry']['entry']]
 

@@ -11,10 +11,6 @@ from util import PeriodicRunner
 
 
 class DatabaseInteractor:
-    DEFAULT_DB = {
-        'user_event_headers': {}, 'calculations': {'analysis': {}, 'calculations': {}}, 'event_settings': {}, 'events': {}, 'user_settings': {}, 'users': {'users': [], 'max_id': -1}, 'sheets': {'sheets': [], 'max_id': -1}, 'entry': {'entry': [], 'max_id': -1}
-    }
-
     def __init__(self, app, filename="db/db.json"):
         self._filepath = app.root_path + "/" + filename
         self._app = app
@@ -30,7 +26,7 @@ class DatabaseInteractor:
         self.headers = HeadersDatabaseInteractor(self)
 
     def _read_db(self):
-        self.db = self.DEFAULT_DB
+        self.db = {}
         if path.isfile(self._filepath):
             try:
                 self.db.update(json.load(open(self._filepath)))

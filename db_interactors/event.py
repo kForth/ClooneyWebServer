@@ -11,6 +11,13 @@ class EventDatabaseInteractor:
         self._db = db
         self._tba = TBA(app.config['TBA_AUTH_KEY'], cache_filename=app.config['TBA_CACHE_FILE'])
 
+        if 'events' not in self._db.db.keys():
+            self._db.db['events'] = {}
+        if 'event_settings' not in self._db.db.keys():
+            self._db.db['event_settings'] = {}
+        if 'user_event_headers' not in self._db.db.keys():
+            self._db.db['user_event_headers'] = {}
+
     def get_event_settings(self, key):
         return self._db.db['event_settings'][key]
 

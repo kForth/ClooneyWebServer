@@ -9,6 +9,12 @@ class SheetDatabaseInteractor:
         self._db = db
         self.default_fields = json.load(open(app.root_path + "/db/field_settings.json"))
 
+        if 'sheets' not in self._db.db.keys():
+            self._db.db['sheets'] = {'sheets': [], 'max_id': -1}
+        for key, value in (('sheets', []), ('max_id', -1)):
+            if key not in self._db.db['sheets'].keys():
+                self._db.db['sheets'][key] = value
+
     def get_sheets(self):
         return [ScoutingSheetConfig.from_json(e) for e in self._db.db['sheets']['sheets']]
 

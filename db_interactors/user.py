@@ -12,6 +12,14 @@ class UserDatabaseInteractor:
         self._db = db
         self._app = app
 
+        if 'users' not in self._db.db.keys():
+            self._db.db['users'] = {'users': []}
+        for key, value in (('users', []),):
+            if key not in self._db.db['users'].keys():
+                self._db.db['users'][key] = value
+        if 'user_event_headers' not in self._db.db.keys():
+            self._db.db['user_event_headers'] = {}
+
     def encrypt_password(self, pwd):
         hash = hmac.new(str(self._app.config['PASSWORD_KEY']).encode('UTF-8'), msg=str(pwd).encode('UTF-8'),
                         digestmod=sha1)
