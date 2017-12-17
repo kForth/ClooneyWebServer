@@ -96,17 +96,8 @@ class UserDatabaseEndpoints:
             password = credentials['password']
             user = self._db_interactor.get_user_by_username(username)
             if user and self._db_interactor.verify_password(password, user.password):
-                response = {
-                    'id': user.id,
-                    'key': self._db_interactor.encrypt_password(username + str(time.time())),
-                    'user': {
-                        'id': user.id,
-                        'username': username,
-                        'role': user.role,
-                        'first_name': user.first_name,
-                        'last_name': user.last_name
-                    }
-                }
+                response = user.to_dict_no_pwd()
+                response['key'] = self._db_interactor.encrypt_password(username + str(time.time()))
                 self._active_users[user.id] = {
                     'key': response['key'],
                     'expiration': time.time() + 604800
