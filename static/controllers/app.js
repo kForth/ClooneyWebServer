@@ -387,7 +387,12 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location, 
     };
 
     service.hasPermission = function(perm){
-        return service.getUserPermissions().indexOf(perm) > 0;
+        if(service.getUserPermissions().indexOf(perm) > 0) return true;
+        for(var i in perm.split("/")){
+            var temp_perm = perm.split("/").splice(0, i).join("/") + "/*";
+            if(service.getUserPermissions().indexOf(temp_perm) > 0) return true
+        }
+        return false;
     };
 
     service.isAuthorized = function (min_level) {
