@@ -1,0 +1,25 @@
+load:
+    check existing user
+        login existing user
+        init guest user
+    check existing event
+        track existing event
+        clear event tracker
+
+    page-change
+
+page-change:
+    check user permissions
+        redirect to /
+    check event tracked
+        redirect to /
+    get page headers
+    load page data
+
+event-change:
+    load user/guest headers for event
+
+user-change:
+    load user/guest headers for event
+    check page permissions
+        redirect to /

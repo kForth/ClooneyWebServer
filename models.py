@@ -1,38 +1,41 @@
 class User:
-    def __init__(self, username, password, first_name, last_name, id, role="Guest", permissions=[]):
+    def __init__(self, username, password, first_name, last_name, id, role="Guest", role_index=0, permissions=[]):
         self.username = username
         self.password = password
         self.first_name = first_name
         self.last_name = last_name
         self.id = id
         self.role = role
+        self.role_index = role_index
         self.permissions = permissions
 
     def to_dict(self):
         return {
-            'username':   self.username,
-            'password':   self.password,
-            'first_name': self.first_name,
-            'last_name':  self.last_name,
-            'id':         self.id,
-            'role':       self.role,
-            'permissions':       self.permissions
+            'username':     self.username,
+            'password':     self.password,
+            'first_name':   self.first_name,
+            'last_name':    self.last_name,
+            'id':           self.id,
+            'role':         self.role,
+            'role_index':   self.role_index,
+            'permissions':  self.permissions
         }
 
     def to_dict_no_pwd(self):
         return {
-            'username':   self.username,
-            'first_name': self.first_name,
-            'last_name':  self.last_name,
-            'id':         self.id,
-            'role':       self.role,
-            'permissions':       self.permissions
+            'username':     self.username,
+            'first_name':   self.first_name,
+            'last_name':    self.last_name,
+            'id':           self.id,
+            'role':         self.role,
+            'role_index':   self.role_index,
+            'permissions':  self.permissions
         }
 
     @staticmethod
     def verify_json(data):
         req_keys = ['username', 'password', 'first_name', 'last_name', 'id']
-        opt_keys = ['role', 'permissions']
+        opt_keys = ['role', 'role_index', 'permissions']
         return all([k in data.keys() for k in req_keys]) and all([k in opt_keys or k in req_keys for k in data.keys()])
 
     @staticmethod

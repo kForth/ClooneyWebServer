@@ -7,9 +7,9 @@ from tba_py import TBA
 class EventDatabaseInteractor:
     DEFAULT_EVENT_SETTINGS = {
         'settings':     {
-            'selected_sheet': {},
-            'default_avg_headers': {},
-            'default_raw_headers': {},
+            'selected_sheet':           {},
+            'default_avg_headers':      {},
+            'default_raw_headers':      {},
             'default_team_raw_headers': {}
         },
         'calculations': []
@@ -75,29 +75,32 @@ class EventDatabaseInteractor:
         self.set_event(key, event)
 
     def get_default_event_headers(self, event_key):
-        if 'default' in self._db.db['user_event_headers'].keys() and event_key in self._db.db['user_event_headers'][
-            'default'].keys():
+        if 'default' in self._db.db['user_event_headers'].keys() and \
+                        event_key in self._db.db['user_event_headers']['default'].keys():
             return self._db.db['user_event_headers']['default'][event_key]
-        headers = self.get_auto_generated_headers(event_key)
-        self.set_default_event_headers(event_key, headers)
-        return headers
+        else:
+            headers = self.get_auto_generated_headers(event_key)
+            self.set_default_event_headers(event_key, headers)
+            return headers
 
     def set_default_event_headers(self, event_key, headers, update=True):
+        print(headers)
         if 'default' not in self._db.db['user_event_headers'].keys():
             self._db.db['user_event_headers']['default'] = {}
         if update:
             self._db.db['user_event_headers']['default'][event_key].update(headers)
         else:
             self._db.db['user_event_headers']['default'][event_key] = headers
+        print(self._db.db['user_event_headers']['default'][event_key])
 
     def get_user_event_headers(self, user_id, event_key):
+        headers = self.get_default_event_headers(event_key)
         if user_id in self._db.db['user_event_headers'].keys():
             if event_key in self._db.db['user_event_headers'][user_id].keys():
-                headers = self._db.db['user_event_headers'][event_key]
-                return headers if headers else self.get_default_event_headers(event_key)
-        return {}
+                headers.update(self._db.db['user_event_headers'][event_key])
+        return headers
 
-    def set_user_event_headers(self, user_id, event_key, data, update=True):
+    def set_user_default_event_headers(self, user_id, event_key, data, update=True):
         if user_id not in self._db.db['user_event_headers'].keys():
             self._db.db['user_event_headers'][user_id] = {}
         if event_key not in self._db.db['user_event_headers'][user_id].keys():

@@ -5,12 +5,13 @@ app.controller('UserLogoutController', function ($scope, $localStorage, $session
 
 app.controller('UserLoginController', function ($scope, $localStorage, $rootScope, $location, AuthenticationService) {
     console.log(AuthenticationService.getUser());
+
     if (!AuthenticationService.isAuthorized(0)) $location.path("/");
     $scope.input = {
         'username': '',
         'password': ''
     };
-    AuthenticationService.ClearCredentials();
+    AuthenticationService.ClearUserData();
 
     $scope.closeAlert = function () {
         $scope.alert = undefined;

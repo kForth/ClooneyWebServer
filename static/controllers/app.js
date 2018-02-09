@@ -84,10 +84,10 @@ var app = angular.module('app', ['ngRoute', 'ngFileSaver', 'ngAnimate', 'ui.boot
                 templateUrl: '../../../static/views/pages/user/login.html',
                 controller: 'UserLogoutController'
             })
-            .when('/register', {
-                templateUrl: '../../../static/views/pages/user/register.html',
-                controller: 'UserRegisterController'
-            })
+            // .when('/register', {
+            //     templateUrl: '../../../static/views/pages/user/register.html',
+            //     controller: 'UserRegisterController'
+            // })
 
             .otherwise({
                 redirectTo: '/'
@@ -103,7 +103,7 @@ app.filter('orderDataBy', function () {
         return obj;
     }
 
-    return function (items, params) {
+    function sort(items, params) {
         if (params === undefined) return items;
 
 
@@ -149,12 +149,14 @@ app.filter('orderDataBy', function () {
 
         return filtered;
     }
+
+    return sort;
 });
 
 app.factory('EventTrackingService', function ($http, $localStorage, $sessionStorage, $log) {
     var service = {};
 
-    service.getEventKey = function(){
+    service.getEventKey = function () {
         return service.getTrackedEvent().key;
     };
 
@@ -281,29 +283,31 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location, 
     var service = {};
 
     service.initGuestUser = function () {
-        service.ClearCredentials();
-        service.SetCredentials({
-            'id': -1,
-            'key': '',
-            'user': {
-                'id': -1,
-                'username': 'guest',
-                'role': 'Guest',
-                'first_name': 'Guest',
-                'last_name': 'Guestington'
-            }
-        });
+        service.ClearUserData();
+        service.LoadUserSettings();
     };
 
     service.Login = function (username, password, success_callback, fail_callback) {
         $http.post('/login', {username: username, password: password})
             .then(function (resp) {
-                    service.SetCredentials(resp.data);
                     console.log(resp);
-                    success_callback(resp);
+                    service.SetUserData(resp.data);
+                    if (success_callback != undefined) success_callback(resp);
                 },
                 function (resp) {
-                    fail_callback(resp);
+                    if (fail_callback != undefined) fail_callback(resp);
+                });
+
+    };
+
+    service.CachedLogin = function (user_data, success_callback, fail_callback) {
+        $http.post('/cached_login', {user_data: user_data})
+            .then(function (resp) {
+                    service.SetUserData(resp.data);
+                    if (success_callback != undefined) success_callback(resp);
+                },
+                function (resp) {
+                    if (fail_callback != undefined) fail_callback(resp);
                 });
 
     };
@@ -311,7 +315,7 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location, 
     service.Logout = function (redirect) {
         $http.post('/logout')
             .then(function (ignored) {
-                service.ClearCredentials();
+                service.ClearUserData();
                 if (redirect === true) {
                     $location.path('/');
                 }
@@ -319,11 +323,11 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location, 
     };
 
     service.SetUserSettings = function (settings) {
-        $localStorage.userSettings = settings;
+        $localStorage.user_settings = settings;
     };
 
     service.LoadUserSettings = function () {
-        $http.get('/get/user_settings/' + service.getUser().username)
+        $http.get('/get/user_settings/' + (service.getUser() ? service.getUser().username : ""))
             .then(function (response) {
                     service.SetUserSettings(response.data);
                 },
@@ -333,85 +337,54 @@ app.factory('AuthenticationService', function ($http, $localStorage, $location, 
     };
 
     service.GetUserSettings = function () {
-        return $localStorage.userSettings;
+        return $localStorage.user_settings;
     };
 
-    service.SetCredentials = function (user) {
-        $localStorage.currentUser = user;
-        updateUserRole();
-
+    service.SetUserData = function (user) {
+        $localStorage.user_data = user;
         $http.defaults.headers.common['UserID'] = user.id;
         $http.defaults.headers.common['UserKey'] = user.key;
         service.LoadUserSettings();
     };
 
-    function updateUserRole() {
-        var roles = ['Guest', 'User,', 'Editor', 'Admin'];
-        $localStorage.currentUser.role_index = roles.indexOf($localStorage.currentUser.role);
-    }
-
-    service.ClearCredentials = function () {
-        $localStorage.currentUser = undefined;
-        $localStorage.userSettings = undefined;
-        $http.defaults.headers.common['UserID'] = '';
-        $http.defaults.headers.common['UserKey'] = '';
-    };
-
-    service.testUser = function () {
-        $http.post('/test_user', service.getUser())
-            .then(function (resp) {
-                    if (resp.status == 204) {
-                        service.initGuestUser();
-                    }
-                    else {
-                        service.SetCredentials(resp.data);
-                    }
-                },
-                function (ignored) {
-                    service.Logout();
-                    service.initGuestUser();
-                    $route.reload();
-                });
+    service.ClearUserData = function () {
+        $localStorage.user_data = undefined;
+        $localStorage.user_settings = undefined;
+        $http.defaults.headers.common['UserID'] = undefined;
+        $http.defaults.headers.common['UserKey'] = undefined;
     };
 
     service.getUser = function () {
-        return $localStorage.currentUser;
+        return $localStorage.user_data;
     };
 
-    service.getUserId = function(){
+    service.getUserId = function () {
         return service.getUser().id;
     };
 
-    service.getUserPermissions = function(){
-        return service.getUser().permissions;
-    };
-
-    service.hasPermission = function(perm){
-        if(service.getUserPermissions().indexOf(perm) > 0) return true;
-        for(var i in perm.split("/")){
-            var temp_perm = perm.split("/").splice(0, i).join("/") + "/*";
-            if(service.getUserPermissions().indexOf(temp_perm) > 0) return true
-        }
-        return false;
-    };
-
     service.isAuthorized = function (min_level) {
-        return min_level < 1 || (service.getUser() != undefined && service.getUser().role_index >= min_level);
-
+        var user = service.getUser();
+        return min_level < 1 || (user != undefined && user.role_index >= min_level);
     };
+
+    //Init Service
+    if ($localStorage.user_data != undefined) {
+        console.info("Logging in cached user");
+        service.CachedLogin($localStorage.user_data, undefined, function(resp){
+            console.error("Couldn't log in cached user - Logging in Guest", resp, $localStorage.user_data);
+            service.initGuestUser();
+        });
+    }
+    else {
+        console.info("No cached user found - Logging in Guest");
+        service.initGuestUser();
+    }
 
     return service;
 });
 
 app.controller('ApplicationController', function ($scope, $rootScope, $localStorage, $sessionStorage, $location, $http,
                                                   $log, AuthenticationService, EventDataService, EventTrackingService) {
-
-    if (AuthenticationService.getUser() === undefined || AuthenticationService.getUser().role_index < 1) {
-        AuthenticationService.initGuestUser();
-    }
-    else {
-        AuthenticationService.testUser();
-    }
 
     $rootScope.data_loading = 0; // hide loading overlay
 
@@ -424,10 +397,13 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
     };
 
     $scope.$on('$routeChangeStart', function () {
+        var path = $location.path();
+
         $rootScope.data_loading = 0;
         $scope.tracked_event = EventTrackingService.getTrackedEvent();
-        $scope.tracking_input_data.event = EventTrackingService.getTrackedEvent() ? EventTrackingService.getTrackedEvent().info.data : '';
         $scope.user_data = AuthenticationService.getUser();
+        $scope.tracking_input_data.event = EventTrackingService.getTrackedEvent() ? EventTrackingService.getTrackedEvent().info.data : '';
+
     });
 
     $scope.isNavCollapsed = true;

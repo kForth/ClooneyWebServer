@@ -19,9 +19,9 @@ class EventDatabaseEndpoints:
         add_route('/get/calculations', self.get_calculations)
         add_route('/set/calculations', self.set_calculations, methods=('POST',))
 
-        add_route('/get/event_headers/<event_key>', self.get_user_event_headers)
-        add_route('/post/event_headers/<event_key>', self.set_user_event_headers, methods=('POST',))
-        add_route('/post/default_event_headers/<event_key>', self.set_default_event_headers, methods=('POST',))
+        add_route('/get/user_event_headers/<event_key>', self.get_user_event_headers)
+        add_route('/set/user_event_headers/<event_key>', self.set_user_default_event_headers, methods=('POST',))
+        add_route('/set/global_default_event_headers/<event_key>', self.set_global_default_event_headers, methods=('POST',))
         add_route('/get/auto_create_event_headers/<event_key>', self.auto_create_event_headers)
         add_route('/get/auto_create_default_headers/<event_key>', self.auto_create_default_headers)
 
@@ -97,11 +97,11 @@ class EventDatabaseEndpoints:
             headers = self._db_interactor.get_default_event_headers(event_key)
         return make_response(jsonify(headers), 200)
 
-    def set_user_event_headers(self, event_key):
-        self._db_interactor.set_user_event_headers(request.headers['UserID'], event_key, request.json)
+    def set_user_default_event_headers(self, event_key):
+        self._db_interactor.set_user_default_event_headers(request.headers['UserID'], event_key, request.json)
         return make_response("", 200)
 
-    def set_default_event_headers(self, event_key):
+    def set_global_default_event_headers(self, event_key):
         self._db_interactor.set_default_event_headers(event_key, request.json)
         return make_response("", 200)
 

@@ -1,46 +1,46 @@
 app.service('EventSettingsService', function ($http, $localStorage, $sessionStorage, $log, EventTrackingService) {
     var service = {};
 
-    service.loadEventSettings = function(){
+    service.loadEventSettings = function () {
         return loadData('/get/event_settings/', 'settings');
     };
 
-    service.getEventSettings = function(){
+    service.getEventSettings = function () {
         return getData('settings');
     };
 
-    service.setEventSettings = function(new_settings){
+    service.setEventSettings = function (new_settings) {
         $log.info("Trying to set event settings for " + getEventKey());
         $http.post('/set/event_settings/' + getEventKey(), new_settings)
-            .then(function(resp){
-                $log.info("Successfully set event settings for " + getEventKey());
-            },
-            function(resp){
-                $log.info("Failed to set event settings for " + getEventKey());
-            });
+            .then(function (resp) {
+                    $log.info("Successfully set event settings for " + getEventKey());
+                },
+                function (resp) {
+                    $log.info("Failed to set event settings for " + getEventKey());
+                });
     };
 
-    function getEventKey(){
+    function getEventKey() {
         return EventTrackingService.getTrackedEvent().key;
     }
 
-    function getData(key){
+    function getData(key) {
         return $localStorage.event_settings[key][getEventKey()];
     }
 
-    function loadData(url, key){
+    function loadData(url, key) {
         if ($localStorage.event_settings === undefined) $localStorage.event_settings = {};
         if ($localStorage.event_settings[key] === undefined) $localStorage.event_settings[key] = {};
         $log.info("Trying to" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
         $http.get(url + (getEventKey() || ""))
             .then(function (response) {
-                $log.info("Successfully" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
-                $localStorage.event_settings[key][getEventKey()] = response.data;
-            },
-            function(ignored){
-                $log.warn("Could not" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
-                $localStorage.event_settings[key][getEventKey()] = [];
-            });
+                    $log.info("Successfully" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
+                    $localStorage.event_settings[key][getEventKey()] = response.data;
+                },
+                function (ignored) {
+                    $log.warn("Could not" + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
+                    $localStorage.event_settings[key][getEventKey()] = [];
+                });
     }
 
     return service;
@@ -49,10 +49,8 @@ app.service('EventSettingsService', function ($http, $localStorage, $sessionStor
 
 app.controller('SettingsHomeController', function ($scope, $location, AuthenticationService, $http, EventDataService,
                                                    EventTrackingService, EventSettingsService, SheetsService) {
-    if (!EventTrackingService.isTrackingEvent() ||
-        !AuthenticationService.isAuthorized(2) ||
-        AuthenticationService.hasPermission('settings/home'))
-            $location.path("/");
+    if (!EventTrackingService.isTrackingEvent() || !AuthenticationService.isAuthorized(2))
+        $location.path("/");
 
     EventSettingsService.loadEventSettings();
     SheetsService.loadEventSheets();
@@ -62,9 +60,9 @@ app.controller('SettingsHomeController', function ($scope, $location, Authentica
     $scope.team_raw_headers = [];
     $http.get('/get/header_groups/' + EventTrackingService.getEventKey())
         .then(function (resp) {
-            for(var i in resp.data){
+            for (var i in resp.data) {
                 var elem = resp.data[i];
-                switch(elem['path']){
+                switch (elem['path']) {
                     case '/a/a':
                         $scope.avg_headers.push(elem);
                         break;
@@ -78,7 +76,7 @@ app.controller('SettingsHomeController', function ($scope, $location, Authentica
             }
         });
 
-    if (!EventTrackingService.isTrackingEvent() || !AuthenticationService.isAuthorized(2)){
+    if (!EventTrackingService.isTrackingEvent() || !AuthenticationService.isAuthorized(2)) {
         $location.path("/");
         return;
     }
@@ -97,10 +95,8 @@ app.controller('SettingsHomeController', function ($scope, $location, Authentica
 });
 
 app.controller('SettingsCalculationsController', function ($scope, $location, AuthenticationService, EventDataService, EventTrackingService) {
-    if (!EventTrackingService.isTrackingEvent() ||
-        !AuthenticationService.isAuthorized(2) ||
-        AuthenticationService.hasPermission('settings/calculations'))
-            $location.path("/");
+    if (!EventTrackingService.isTrackingEvent() || !AuthenticationService.isAuthorized(2))
+        $location.path("/");
 
     $scope.calculations = [
         {'name': 'a', 'key': 'a', 'formula': 'x*x', 'type': 'float'},
@@ -111,10 +107,8 @@ app.controller('SettingsCalculationsController', function ($scope, $location, Au
 });
 
 app.controller('SettingsHeadersController', function ($scope, $location, $http, AuthenticationService, EventDataService, EventTrackingService) {
-    if (!EventTrackingService.isTrackingEvent() ||
-        !AuthenticationService.isAuthorized(2) ||
-        AuthenticationService.hasPermission('settings/header_groups'))
-            $location.path("/");
+    if (!EventTrackingService.isTrackingEvent() || !AuthenticationService.isAuthorized(2))
+        $location.path("/");
 
     var backup_groups = [];
     $scope.header_groups = [];
@@ -125,31 +119,31 @@ app.controller('SettingsHeadersController', function ($scope, $location, $http, 
             backup_groups = angular.copy($scope.header_groups);
         });
 
-    $scope.saveGroups = function(){
+    $scope.saveGroups = function () {
         $http.post('/post/header_groups/' + EventTrackingService.getEventKey(), $scope.header_groups)
             .then(function () {
                 backup_groups = angular.copy($scope.header_groups);
             });
     };
 
-    $scope.resetGroups = function(){
+    $scope.resetGroups = function () {
         $scope.header_groups = angular.copy(backup_groups);
     };
 
-    $scope.getPageGroups = function(page){
+    $scope.getPageGroups = function (page) {
         var groups = [];
-        for(var i in $scope.header_groups){
+        for (var i in $scope.header_groups) {
             var elem = $scope.header_groups[i];
-            if(elem.path == page.path){
+            if (elem.path == page.path) {
                 groups.push(elem);
             }
         }
         return groups;
     };
 
-    $scope.createGroup = function(page){
+    $scope.createGroup = function (page) {
         $http.post('/post/create_header_group/' + EventTrackingService.getEventKey(), {'path': page.path})
-            .then(function(resp){
+            .then(function (resp) {
                 $scope.header_groups.push(resp.data);
                 $scope.selected_group = $scope.header_groups[$scope.header_groups.length - 1];
             });
@@ -157,34 +151,42 @@ app.controller('SettingsHeadersController', function ($scope, $location, $http, 
 
     var backup_selected_group = undefined;
 
-    $scope.selectGroup = function(group){
+    $scope.selectGroup = function (group) {
         $scope.selected_group = group;
         $scope.canDeleteGroup = group.creator_id == AuthenticationService.getUser().id;
-        $scope.canSetGlobalDefault = AuthenticationService.isAuthorized(3) || AuthenticationService.hasPermission('settings/header_groups/set_global_default');
+        $scope.canSetGlobalDefault = AuthenticationService.isAuthorized(3);
         backup_selected_group = angular.copy(group);
     };
 
-    $scope.saveGroup = function(){
+    $scope.saveGroup = function () {
 
     };
 
-    $scope.resetGroup = function(){
+    $scope.resetGroup = function () {
         $scope.selected_group = angular.copy(backup_selected_group);
     };
 
-    $scope.deleteGroup = function(){
+    $scope.deleteGroup = function () {
 
     };
 
-    $scope.setDefault = function(){
-        if(group.creator_id == AuthenticationService.getUser().id){
-
-        }
+    $scope.setDefault = function () {
+        var payload = {};
+        payload[$scope.selected_group.path] = $scope.selected_group;
+        $http.post('/set/user_event_headers/' + $scope.selected_group.event, payload)
+            .then(function (resp) {
+                console.log(resp);
+            })
     };
 
-    $scope.setGlobalDefault = function(){
-        if(AuthenticationService.isAuthorized(3)){
-
+    $scope.setGlobalDefault = function () {
+        if (AuthenticationService.isAuthorized(3)) {
+        var payload = {};
+        payload[$scope.selected_group.path] = $scope.selected_group;
+            $http.post('/set/global_default_event_headers/' + $scope.selected_group.event, payload)
+                .then(function (resp) {
+                    console.log(resp);
+                });
         }
     };
 

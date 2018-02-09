@@ -16,7 +16,7 @@ class DatabaseInteractor:
         self._app = app
         self._read_db()
 
-        self.commit_runner = PeriodicRunner(target=self.commit, delay=60)
+        self.commit_runner = PeriodicRunner(target=self.commit, period=60)
 
         self.users = UserDatabaseInteractor(self, app)
         self.sheets = SheetDatabaseInteractor(self, app)
