@@ -180,6 +180,10 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
     if ($localStorage.event_data === undefined) $localStorage.event_data = {};
     var service = {};
 
+    service.loadEventMatches = function () {
+        loadData('/get/event_matches/', 'matches');
+    };
+
     service.loadEventAnalysis = function () {
         loadData('/get/event_analysis/', 'avg');
     };
@@ -189,11 +193,11 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
     };
 
     service.loadEventInfo = function () {
-        loadData('/get/event/', 'info')
+        loadData('/get/event/', 'info');
     };
 
     service.loadEventHeaders = function () {
-        loadData('/get/event_headers/', 'headers')
+        loadData('/get/user_event_headers/', 'headers');
     };
 
     service.getEventData = function (key) {
@@ -208,6 +212,8 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
                 return getData('avg');
             case '/a/e':
                 return getData('raw');
+            case '/a/m':
+                return getData('matches');
         }
     };
 
@@ -257,14 +263,16 @@ app.factory('EventDataService', function ($http, $localStorage, $sessionStorage,
     }
 
     function getData(key) {
-        return $localStorage.event_data[key][getEventKey()];
+        return $localStorage.event_data[key][getEventKey()] || undefined;
     }
 
     function loadData(url, key) {
+        console.log(key);
         if ($localStorage.event_data[key] === undefined) $localStorage.event_data[key] = {};
         $log.info("Trying to " + url.replaceAll('/', ' ').replaceAll('_', ' ') + "for " + getEventKey());
         $http.get(url + (getEventKey() || ""))
             .then(function (response) {
+                    console.log(response.data);
                     $log.info("Successfully " + url.replaceAll('/', ' ').replaceAll('_', ' ').trim() + " for " + getEventKey());
                     $localStorage.event_data[key][getEventKey()] = response.data;
                 },
@@ -412,10 +420,14 @@ app.controller('ApplicationController', function ($scope, $rootScope, $localStor
             $http.get('/get/event/' + $scope.tracking_input_data.event.key)
                 .then(function (resp) {
                         EventTrackingService.setTrackedEvent(resp.data);
+
+                        // TODO: Lazy load these
+                        EventDataService.loadEventMatches();
                         EventDataService.loadEventAnalysis();
                         EventDataService.loadEventEntries();
                         EventDataService.loadEventHeaders();
                         EventDataService.loadEventInfo();
+
                         $location.path('/a');
                     },
                     function (ignored) {

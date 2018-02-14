@@ -9,6 +9,7 @@ class EventDatabaseEndpoints:
 
         add_route('/get/available_events', self.get_available_events)
         add_route('/get/event/<key>', self.get_event)
+        add_route('/get/event_matches/<key>', self.get_event_matches)
         add_route('/get/event_settings/<key>', self.get_event_settings)
         add_route('/set/event_settings/<key>', self.set_event_settings, methods=('POST',))
         add_route('/get/search_events', self.get_search_events, methods=('GET',))
@@ -29,6 +30,12 @@ class EventDatabaseEndpoints:
         event = self._db_interactor.get_event(key)
         if event:
             return make_response(jsonify(event.to_dict()), 200)
+        return make_response(jsonify(), 404)
+
+    def get_event_matches(self, key):
+        event = self._db_interactor.get_event(key)
+        if event:
+            return make_response(jsonify(event.matches), 200)
         return make_response(jsonify(), 404)
 
     def get_event_settings(self, key):

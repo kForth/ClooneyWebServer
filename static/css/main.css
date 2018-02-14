@@ -81,6 +81,15 @@ a:hover{
     margin-bottom: 5px;
 }
 
+.info-table {
+    width: calc(100% - 200px);
+    height: calc(100% - 30px);
+    overflow-y: scroll;
+    font-size: 12px;
+    position: fixed;
+    margin-top: 30px;
+}
+
 .team-link {
     font-weight: bold;
 }
@@ -109,6 +118,14 @@ a:hover{
     background: #78C993;
     color: #375C43;
     border-color: #375C43;
+}
+
+.data-cell-text {
+
+}
+
+.team-data-cell-text {
+    font-weight: 500;
 }
 
 .team-view-modal{

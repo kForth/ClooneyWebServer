@@ -19,32 +19,34 @@
     }
 </style>
 
-<table id="table" class="table info-block table-striped" style="font-size: 14px" ng-cloak multi-sort-table highlight-table>
-    <thead>
-        <tr>
-            <th ng-click="clearColours($event)"></th>
-            <th ng-repeat="header in headers" class="data-header clickable" ng-class="header.class"
-                ng-click="sortData($event, header.data_key)">
-                <span uib-tooltip="{{ header.tooltip }}" tooltip-placement="top">{{ header.title }}</span>
+<div class="info-table">
+    <table id="table" class="table table-striped" style="font-size: 14px;" ng-cloak multi-sort-table highlight-table>
+        <thead>
+            <tr>
+                <th ng-click="clearColours($event)"></th>
+                <th ng-repeat="header in headers" class="data-header clickable" ng-class="header.class"
+                    ng-click="sortData($event, header.data_key)">
+                    <span uib-tooltip="{{ header.tooltip }}" tooltip-placement="top">{{ header.title }}</span>
 
-                <div style="font-size: 10px; color: #333">
-                    <span ng-if="sorts.indexOf(header.data_key) > -1" class="glyphicon glyphicon-sort-by-attributes">{{ sorts.indexOf(header.data_key)+1 }}</span>
-                    <span ng-if="sorts.indexOf('-' + header.data_key) > -1" class="glyphicon glyphicon-sort-by-attributes-alt">{{ sorts.indexOf("-" + header.data_key)+1 }}</span>
-                    <span ng-if="sorts.indexOf(header.data_key) < 0 && sorts.indexOf('-' + header.data_key) < 0" class="glyphicon glyphicon-sort"> </span>
-                </div>
-            </th>
-        </tr>
-    </thead>
-    <tbody style="height: 400px; overflow-y: scroll; position: relative">
-        <tr ng-repeat="elem in data | orderDataBy:[sorts, headers] | limitTo:16">
-            <td ng-click="cycleColour($event, $index)"
-                ng-class="{'highlight-green': colours[$index] % 4 == 1, 'highlight-red': colours[$index] % 4 == 2, 'highlight-blue': colours[$index] % 4 == 3}">
-                <b>{{ $index+1 }}</b>
-            </td>
+                    <div style="font-size: 10px; color: #333">
+                        <span ng-if="sorts.indexOf(header.data_key) > -1" class="glyphicon glyphicon-sort-by-attributes">{{ sorts.indexOf(header.data_key)+1 }}</span>
+                        <span ng-if="sorts.indexOf('-' + header.data_key) > -1" class="glyphicon glyphicon-sort-by-attributes-alt">{{ sorts.indexOf("-" + header.data_key)+1 }}</span>
+                        <span ng-if="sorts.indexOf(header.data_key) < 0 && sorts.indexOf('-' + header.data_key) < 0" class="glyphicon glyphicon-sort"> </span>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody style="height: 400px; overflow-y: scroll; position: relative">
+            <tr ng-repeat="elem in data | orderDataBy:[sorts, headers]">
+                <td ng-click="cycleColour($event, $index)"
+                    ng-class="{'highlight-green': colours[$index] % 4 == 1, 'highlight-red': colours[$index] % 4 == 2, 'highlight-blue': colours[$index] % 4 == 3}">
+                    <b>{{ $index+1 }}</b>
+                </td>
 
-            <td ng-repeat="header in headers" class="data-box" ng-class="{'highlight-green': colours[$parent.$index] % 4 == 1, 'highlight-red': colours[$parent.$index] % 4 == 2, 'highlight-blue': colours[$parent.$index] % 4 == 3}">
-                <datacell dc-header="header" dc-element="elem" dc-team-callback="openModal"></datacell>
-            </td>
-        </tr>
-    </tbody>
-</table>
+                <td ng-repeat="header in headers" class="data-box" ng-class="{'highlight-green': colours[$parent.$index] % 4 == 1, 'highlight-red': colours[$parent.$index] % 4 == 2, 'highlight-blue': colours[$parent.$index] % 4 == 3}">
+                    <datacell dc-header="header" dc-element="elem" dc-team-callback="openModal"></datacell>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

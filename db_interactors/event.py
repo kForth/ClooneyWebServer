@@ -71,7 +71,12 @@ class EventDatabaseInteractor:
 
     def update_event_matches(self, key):
         event = self.get_event(key)
-        event.matches = self._tba.get_event_matches(key)
+        event.matches = []
+        for match in self._tba.get_event_matches(key):
+            match['alliances']['red']['team_keys'] = [e.strip('frc') for e in match['alliances']['red']['team_keys']]
+            match['alliances']['blue']['team_keys'] = [e.strip('frc') for e in match['alliances']['blue']['team_keys']]
+            match['short_key'] = match['key'].split('_')[-1]
+            event.matches += [match]
         self.set_event(key, event)
 
     def get_default_event_headers(self, event_key):

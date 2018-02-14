@@ -59,8 +59,8 @@ app.directive('datacell', function () {
     return {
         link: link,
         restrict: 'E',
-        template: "<span ng-show=\"dcHeader.title != 'Team'\" ng-class='dcHeader.data_class'>{{ value }}</span>" +
-        "<a ng-click='dcTeamCallback(value)' ng-show=\"dcHeader.title == 'Team'\" ng-class='dcHeader.data_class'>{{ value }}</a>",
+        template: "<span ng-if=\"dcHeader.data_class.search('team') === -1\" ng-class='dcHeader.data_class' class='data-cell-text '>{{ value }}</span>" +
+        "<a ng-click='dcTeamCallback(value)' ng-if=\"dcHeader.data_class.search('team') !== -1\" ng-class='dcHeader.data_class' class='team-data-cell-text'>{{ value }}</a>",
         scope: {
             'dcHeader': '=',
             'dcElement': '=',

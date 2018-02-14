@@ -10,12 +10,12 @@ app.controller('SettingsSidebarController', function ($scope, $sessionStorage, $
     };
 
     $scope.update_event = function () {
-        $localStorage.event_data['/a/a'][$sessionStorage.tracked_event.key] = undefined;
         $http.post('/update/event_analysis/' + $sessionStorage.tracked_event.key);
         console.log("update");
     };
 
     $scope.update_tba = function () {
+        $http.get('/update/tba/' + $sessionStorage.tracked_event.key);
         console.log("update_tba");
     };
 });
