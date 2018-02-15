@@ -1,4 +1,4 @@
-import secrets
+import random
 
 from models import HeaderGroup
 
@@ -41,7 +41,7 @@ class HeadersDatabaseInteractor:
     def get_next_group_id(self, event_key):
         existing_ids = []
         [existing_ids.extend(e) for e in self._db.db['headers'][event_key].values()]
-        new_id = secrets.randbits(32)
+        new_id = random.getrandbits(32)
         while new_id in existing_ids:
-            new_id = secrets.randbits(32)
+            new_id = random.getrandbits(32)
         return new_id
