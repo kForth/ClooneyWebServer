@@ -1,5 +1,5 @@
 import hmac
-import secrets
+import random
 from hashlib import sha1
 
 from models import User, UserSettings
@@ -65,7 +65,7 @@ class UserDatabaseInteractor:
 
     def get_next_user_id(self):
         existing_ids = [e['id'] for e in self._db.db['users']]
-        new_id = secrets.randbits(32)
+        new_id = random.getrandbits(32)
         while new_id in existing_ids:
-            new_id = secrets.randbits(32)
+            new_id = random.getrandbits(32)
         return new_id
