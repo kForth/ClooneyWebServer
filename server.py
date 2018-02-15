@@ -1,10 +1,12 @@
 from flask import Flask, abort, request
+from flask_cors import CORS
 
 from db_endpoints import *
 from db_endpoints.headers import HeadersDatabaseEndpoints
 from db_interactors import DatabaseInteractor
 
 app = Flask(__name__)
+CORS(app)
 app.config.from_pyfile('server.cfg')
 db = DatabaseInteractor(app)
 active_users = {}
