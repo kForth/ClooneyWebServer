@@ -35,11 +35,6 @@ calc_endpoints = CalculatorDatabaseEndpoints(db.calculator, add_route)
 header_endpoints = HeadersDatabaseEndpoints(db.headers, add_route)
 
 
-@app.route('/')
-def index():
-    return app.send_static_file('views/index.html')
-
-
 @app.route('/commit_db', methods=('POST',))
 def commit():
     db.commit()
