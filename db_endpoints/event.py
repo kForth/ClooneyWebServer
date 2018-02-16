@@ -62,7 +62,6 @@ class EventDatabaseEndpoints:
             self._db_interactor.update_event_teams(event)
             return make_response(jsonify(), 200)
         except Exception as ex:
-            print(ex)
             return make_response(jsonify(), 400)
 
     def get_search_events(self):
@@ -75,7 +74,6 @@ class EventDatabaseEndpoints:
         if request.json:
             data = request.json
             if data['key'] not in self._db_interactor.get_event_keys():
-                print(data)
                 data['info'] = {
                     'is_tba': use_tba,
                     'data': {

@@ -2,8 +2,8 @@ import json
 import requests
 
 if __name__ == "__main__":
-    event_key = "2017onham"
-    data = json.load(open('../old_data/onham.json'))
+    event_key = "2017onbar"
+    data = json.load(open('../old_data/2017onbar.json'))
     for line in data:
         filename = line['filename']
         line['match'] = int(line['match'])

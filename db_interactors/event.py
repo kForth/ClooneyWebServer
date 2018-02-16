@@ -6,12 +6,7 @@ from tba_py import TBA
 
 class EventDatabaseInteractor:
     DEFAULT_EVENT_SETTINGS = {
-        'settings':     {
-            'selected_sheet':           {},
-            'default_avg_headers':      {},
-            'default_raw_headers':      {},
-            'default_team_raw_headers': {}
-        },
+        'selected_sheet': "{}",
         'calculations': []
     }
 
@@ -89,14 +84,12 @@ class EventDatabaseInteractor:
             return headers
 
     def set_default_event_headers(self, event_key, headers, update=True):
-        print(headers)
         if 'default' not in self._db.db['user_event_headers'].keys():
             self._db.db['user_event_headers']['default'] = {}
         if update:
             self._db.db['user_event_headers']['default'][event_key].update(headers)
         else:
             self._db.db['user_event_headers']['default'][event_key] = headers
-        print(self._db.db['user_event_headers']['default'][event_key])
 
     def get_user_event_headers(self, user_id, event_key):
         headers = self.get_default_event_headers(event_key)

@@ -37,7 +37,7 @@ calc_endpoints = CalculatorDatabaseEndpoints(db.calculator, add_route)
 header_endpoints = HeadersDatabaseEndpoints(db.headers, add_route)
 
 
-@app.route('/commit_db', methods=('POST',))
+@app.route('/commit_db', methods=('POST', 'GET'))
 def commit():
     db.commit()
     return "", 200
