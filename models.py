@@ -176,9 +176,8 @@ class EventInfo:
 
 
 class HeaderGroup:
-    def __init__(self, name, event, creator_id, path, data, id):
+    def __init__(self, name, creator_id, path, data, id):
         self.name = name
-        self.event = event
         self.creator_id = creator_id
         self.path = path
         self.data = data
@@ -187,7 +186,6 @@ class HeaderGroup:
     def to_dict(self):
         return {
             'name': self.name,
-            'event': self.event,
             'creator_id': self.creator_id,
             'path': self.path,
             'data': self.data,
@@ -196,7 +194,7 @@ class HeaderGroup:
 
     @staticmethod
     def verify_json(data):
-        req_keys = ['name', 'event', 'creator_id', 'path', 'data', 'id']
+        req_keys = ['name', 'creator_id', 'path', 'data', 'id']
         opt_keys = []
         return all([k in data.keys() for k in req_keys]) and all([k in opt_keys or k in req_keys for k in data.keys()])
 

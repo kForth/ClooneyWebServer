@@ -1,5 +1,4 @@
 from flask import jsonify, make_response, request, send_file
-from flask import send_from_directory
 
 from models import ScoutingSheetConfig
 from sheet_gen import SheetGenerator

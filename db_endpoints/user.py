@@ -28,6 +28,7 @@ class UserDatabaseEndpoints:
         return False
 
     def _verify_key(self, user_id, key):
+        json.dump(self._active_users, open('db/active_users.json', 'w+'))
         if user_id in self._active_users.keys():
             active_key = self._active_users[user_id]
             return active_key['key'] == key and active_key['expiration'] < time.time()
@@ -64,7 +65,7 @@ class UserDatabaseEndpoints:
         user = User.from_json(request.json)
         if user:
             existing = self._db_interactor.get_user_by_username(user.username)
-            if not existing:
+            if not existing and user.username.lower() not in ['default', 'guest']:
                 user.role = self.ROLES[0]
                 user.role_index = 0
                 user.password = self._db_interactor.encrypt_password(user.password)
@@ -97,7 +98,7 @@ class UserDatabaseEndpoints:
             return make_response("", 409)
 
     def cached_login(self):
-        user_data = request.json
+        user_data = request.json['user_data']
         if all([e in user_data.keys() for e in ['username', 'key']]):
             username = user_data['username']
             key = user_data['key']

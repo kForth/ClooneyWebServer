@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, abort, request
 from flask_cors import CORS
 
@@ -9,7 +11,10 @@ app = Flask(__name__)
 CORS(app)
 app.config.from_pyfile('server.cfg')
 db = DatabaseInteractor(app)
-active_users = {}
+try:
+    active_users = json.load(open('db/active_users.json'))
+except:
+    active_users = {}
 
 
 def add_route(route, func, methods=('GET',), url_prefix="", min_role="Guest"):
