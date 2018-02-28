@@ -89,6 +89,7 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
     $http.get("/api/events")
         .then(function (response) {
             $scope.events = response.data;
+            console.log(response.data);
         });
 
 });

@@ -108,12 +108,7 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             return $http
                 .post('/user/login', user_pass)
                 .then(function (res) {
-                    if (res.status === 200) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
+                    return res.status === 200;
                 });
         };
 
