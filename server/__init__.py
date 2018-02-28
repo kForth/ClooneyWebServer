@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restless import APIManager
 from tba_py import BlueAllianceAPI
 import better_exceptions
+import os
 
 from server.data import DataServer
 from server.db import Database
@@ -27,8 +28,8 @@ class ClooneyServer(object):
 
         self.sql_db.create_all()
 
-        selfapi_manager = APIManager(app, flask_sqlalchemy_db=sql_db)
-        selfapi_manager.create_api(OprEntry, methods=['GET'], results_per_page=-1, url_prefix="/api/sql/")
+        self.api_manager = APIManager(app, flask_sqlalchemy_db=sql_db)
+        self.api_manager.create_api(OprEntry, methods=['GET'], results_per_page=-1, url_prefix="/api/sql/")
 
         self.tba = BlueAllianceAPI('kestin_goforth', 'Clooney', '1.0', enable_caching=False, cache_db_path='./tba.json')
         self.db = Database()

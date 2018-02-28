@@ -1,5 +1,5 @@
 from tba_py import BlueAllianceAPI
-from flask import make_response, jsonify, request
+from flask import make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 from datetime import datetime
@@ -28,7 +28,7 @@ class InfoServer(object):
         self._add('/event/<event_id>/matches/<level>/<int:team_number>', self.get_matches)
         self._add('/event/<event_id>/matches/<level>', self.get_matches)
         self._add('/event/<event_id>/matches', self.get_matches)
-        self._add('/setup/<event_id>', self.trigger_event_setup, methods=['POST'])
+        self._add('/setups/<event_id>', self.trigger_event_setup, methods=['POST'])
 
     def get_team_info(self, event_id, team_number):
         from server.models import Event
@@ -60,7 +60,7 @@ class InfoServer(object):
         headers = self.db.get_table_headers(event_id, 'matches')
         lines = []
         for match in self.tba.get_event_matches(event_id):
-            if level is None or level.lower() == match["comp_level"].lower():
+            if level is None or str(level).lower() == match["comp_level"].lower():
                 teams = {}
                 for alli in ["red", "blue"]:
                     teams[alli] = match['alliances'][alli]['teams']
@@ -121,7 +121,7 @@ class InfoServer(object):
             entry.set_tba_info(tba_info)
             self.sql_db.session.commit()
         else:
-            entry = Event(event_id, tba_info, [])
+            entry = Event(event_id, tba_info, [], [])
             self.sql_db.session.add(entry)
             self.sql_db.session.commit()
 
