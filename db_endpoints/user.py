@@ -106,6 +106,7 @@ class UserDatabaseEndpoints:
             if user and self._verify_key(user.id, key):
                 response = user.to_dict_no_pwd()
                 response['key'] = self._renew_user_key(user)
+                self._save_active_users()
                 return make_response(jsonify(response), 200)
             else:
                 return make_response("", 400)
@@ -113,12 +114,10 @@ class UserDatabaseEndpoints:
             return make_response("", 409)
 
     def logout_user(self):
-        try:
+        if int(request.headers.user_id) in self._active_users:
             self._active_users.remove(int(request.headers.user_id))
             self._save_active_users()
-            return make_response("", 200)
-        except:
-            return make_response("", 200)
+        return make_response("", 200)
 
     def _load_active_users(self):
         self._active_users.update(json.load(open('db/active_users.json')))

@@ -86,4 +86,5 @@ class EventDatabaseEndpoints:
             else:
                 return make_response(jsonify(), 409)
         else:
+            print(request.data)
             return make_response(jsonify(), 400)
