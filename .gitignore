@@ -6,3 +6,4 @@ server/static/node_modules/
 sheets/pdf
 server/static/robot_pics/
 */__pycache__/
+*.pyc
