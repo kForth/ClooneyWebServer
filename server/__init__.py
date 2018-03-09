@@ -1,7 +1,8 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_restless import APIManager
-from tba_py import BlueAllianceAPI
+from tba_py import TBA
 import better_exceptions
 import os
 
@@ -13,6 +14,7 @@ from server.users import UsersServer
 from server.sql import SqlServer
 
 app = Flask(__name__, static_folder='../server/static')
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/db.sqlite'  # 'postgres://localhost:5432'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "D4&u$VDtwe2Ng!q&"
@@ -31,7 +33,7 @@ class ClooneyServer(object):
         self.api_manager = APIManager(app, flask_sqlalchemy_db=sql_db)
         self.api_manager.create_api(OprEntry, methods=['GET'], results_per_page=-1, url_prefix="/api/sql/")
 
-        self.tba = BlueAllianceAPI('kestin_goforth', 'Clooney', '1.0', enable_caching=False, cache_db_path='./tba.json')
+        self.tba = TBA('GdZrQUIjmwMZ3XVS622b6aVCh8CLbowJkCs5BmjJl2vxNuWivLz3Sf3PaqULUiZW', use_cache=False, cache_filename='./tba.json')
         self.db = Database()
 
         self._register_views()
@@ -47,7 +49,7 @@ class ClooneyServer(object):
         self._add('/', self.index)
 
     def _add(self, route: str, func: classmethod, methods=('GET',), url_prefix=""):
-        self.app.add_url_rule(url_prefix + route, route, view_func=func, methods=methods)
+        self.app.add_url_rule(url_prefix + route, url_prefix + route, view_func=func, methods=methods)
 
     def index(self):
         return self.app.send_static_file('views/index.html')

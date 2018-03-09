@@ -1,4 +1,4 @@
-from tba_py import BlueAllianceAPI
+from tba_py import TBA
 from flask import make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
@@ -11,12 +11,13 @@ from util.runners import Runner
 
 
 class InfoServer(object):
-    def __init__(self, add: classmethod, db: Database, sql_db: SQLAlchemy, tba: BlueAllianceAPI, url_prefix=""):
+    def __init__(self, add: classmethod, db: Database, sql_db: SQLAlchemy, tba: TBA, url_prefix=""):
         self._add = lambda *x, **y: add(*x, **y, url_prefix=url_prefix)
         self.db = db
         self.sql_db = sql_db
         self.tba = tba
         self._register_views()
+        # self.setup_event('2018txda')
 
     def _register_views(self):
         self._add('/events', self.get_available_events)
@@ -102,7 +103,7 @@ class InfoServer(object):
         team_list = self.tba.get_event_teams(entry.id)
         event_start_date = datetime.strptime(event_info["start_date"], "%Y-%m-%d")
         for team_info in team_list:
-            events = self.tba.get_team_events(str(team_info["team_number"]), "2017")
+            events = self.tba.get_team_events(str(team_info["team_number"]), "2018")
             team_info["num_events"] = len(events)
             team_info["prev_events"] = 0
             for event in events:
@@ -114,7 +115,7 @@ class InfoServer(object):
     def setup_event(self, event_id):
         print("Updating Event: {}".format(event_id))
         from server.models import Event
-        tba_info = self.tba.get_event(event_id)
+        tba_info = self.tba.get_event_info(event_id)
         print(tba_info)
         entry = Event.query.filter_by(id=event_id).first()
         if entry:

@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import minimize
 from scipy.stats import percentileofscore
-from tba_py import BlueAllianceAPI
+from tba_py import TBA
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -11,7 +11,7 @@ IGNORE_ELIMS = True
 
 
 class OprCalculator(object):
-    def __init__(self, tba: BlueAllianceAPI):
+    def __init__(self, tba: TBA):
         self.tba = tba
 
     def get_matches_from_tba(self, event):
@@ -20,14 +20,14 @@ class OprCalculator(object):
         for match in match_json:
             if IGNORE_ELIMS and match["comp_level"] != "qm":
                 continue
-            if "frc0" in match["alliances"]["red"]["teams"] or "frc0" in match["alliances"]["blue"]["teams"]:
+            if "frc0" in match["alliances"]["red"]["team_keys"] or "frc0" in match["alliances"]["blue"]["team_keys"]:
                 continue
             for alli in ["red", "blue"]:
                 try:
                     alliance = [
-                        int(match["alliances"][alli]["teams"][0][3:]),
-                        int(match["alliances"][alli]["teams"][1][3:]),
-                        int(match["alliances"][alli]["teams"][2][3:]),
+                        int(match["alliances"][alli]["team_keys"][0][3:]),
+                        int(match["alliances"][alli]["team_keys"][1][3:]),
+                        int(match["alliances"][alli]["team_keys"][2][3:]),
                         match["score_breakdown"][alli]
                     ]
                 except:
@@ -103,16 +103,16 @@ class OprCalculator(object):
         teams = self.get_team_list_from_matches(event_id, matches)
         interactions = self.get_interaction_matrix(matches, teams)
         opr_list = {}
-        for score_type in list(matches[0][-1].keys()) + ['teleGears']:
-            if len(matches) == 0 or score_type in ["tba_rpEarned"]:
+        for score_type in list(matches[0][-1].keys()):  # + ['teleGears']:
+            if len(matches) == 0 or score_type[:4] == "tba_":
                 continue
             temp_matches = []
             for m in matches:
-                if score_type == "teleGears":
-                    val = round(1.0 * float(m[-1]["teleopRotorPoints"]), 2)
-                    val = [0, 2, 6, 12, 13][int(val / 40.0)]
-                    temp_matches += [m[:-1] + [val]]
-                elif type(m[-1][score_type]) in [int, float]:
+                # if score_type == "teleGears":
+                #     val = round(1.0 * float(m[-1]["teleopRotorPoints"]), 2)
+                #     val = [0, 2, 6, 12, 13][int(val / 40.0)]
+                #     temp_matches += [m[:-1] + [val]]
+                if type(m[-1][score_type]) in [int, float]:
                     val = round(1.0 * float(m[-1][score_type]), 2)
                     temp_matches += [m[:-1] + [val]]
 
@@ -152,11 +152,11 @@ class OprCalculator(object):
 
 if __name__ == "__main__":
     from server import sql_db
-    tba = BlueAllianceAPI("Clooney", "Clooney", "2")
+    tba = TBA('GdZrQUIjmwMZ3XVS622b6aVCh8CLbowJkCs5BmjJl2vxNuWivLz3Sf3PaqULUiZW', use_cache=False, cache_filename='../tba.json')
 
-    events = tba.get_events("2017")
+    # events = tba.get_events("2018")
     target_week = 7 #zero index
-    event_keys = ['2017dal']
+    event_keys = ['2018txda']
     # for event in events:
     #     if event["week"] is not None and event["week"] < target_week:
     #         event_keys.append(event["key"])

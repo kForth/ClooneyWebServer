@@ -1,10 +1,10 @@
-from tba_py import BlueAllianceAPI
+from tba_py import TBA
 
 from server.db import Database
 
 
 class ErrorChecker(object):
-    def __init__(self, db: Database, tba: BlueAllianceAPI):
+    def __init__(self, db: Database, tba: TBA):
         self.db = db
         self.tba = tba
 
@@ -18,7 +18,7 @@ class ErrorChecker(object):
         print(match_counts)
 
 if __name__ == "__main__":
-    tba = BlueAllianceAPI('kestin_goforth', 'Clooney', '1.0', enable_caching=True, cache_db_path='../tba.json')
+    tba = TBA('GdZrQUIjmwMZ3XVS622b6aVCh8CLbowJkCs5BmjJl2vxNuWivLz3Sf3PaqULUiZW', use_cache=True, cache_filename='../tba.json')
     db = Database(path_prefix="../")
     check = ErrorChecker(db, tba)
     check.check_event("2017onto2")

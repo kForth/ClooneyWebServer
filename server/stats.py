@@ -2,7 +2,7 @@ import json
 
 from flask import jsonify, make_response, request
 from flask_sqlalchemy import SQLAlchemy
-from tba_py import BlueAllianceAPI
+from tba_py import TBA
 from tinydb import TinyDB
 
 from predict.opr import OprCalculator
@@ -13,7 +13,7 @@ from updaters import AverageCalculator
 import better_exceptions
 
 class StatsServer(object):
-    def __init__(self, add: classmethod, db: Database, sql_db: SQLAlchemy, tba: BlueAllianceAPI, url_prefix=""):
+    def __init__(self, add: classmethod, db: Database, sql_db: SQLAlchemy, tba: TBA, url_prefix=""):
         self._add = lambda *x, **y: add(*x, **y, url_prefix=url_prefix)
         self.db = db
         self.sql_db = sql_db
