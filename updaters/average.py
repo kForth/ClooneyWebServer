@@ -29,7 +29,6 @@ class AverageCalculator(Runner):
 
         sorted_data = {}
         for line in raw:
-            print(line)
             team = line["team"]
             if team not in sorted_data.keys():
                 sorted_data[team] = {}

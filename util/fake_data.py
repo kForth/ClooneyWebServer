@@ -23,7 +23,6 @@ if __name__ == "__main__":
                     'pos': match['alliances'][alliance]['team_keys'].index('frc' + team) + (3 if alliance == 'blue' else 0)
                 }
                 data = dict(payload)
-                print('{}_{}_{}'.format(data['match'], data['pos'], data['team']))
                 for field in sheet:
                     if field['type'] == 'HorizontalOptions':
                         if type(field['options']) is str:
@@ -42,3 +41,4 @@ if __name__ == "__main__":
                 resp = requests.post('http://0.0.0.0:5000/api/sql/add_entry', json=payload)
                 if resp.status_code != 200:
                     print(resp)
+        print("Done")
