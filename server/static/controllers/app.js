@@ -48,7 +48,7 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             })
             .when('/analysis', {
                 templateUrl: '../../../static/views/analysis/graphs.html',
-                controller: 'SingleAnalysisController'
+                controller: 'DoubleAnalysisController'
             })
             .when('/login', {
                 templateUrl: '../../../static/views/account/login.html',
@@ -84,7 +84,7 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
     })
 
 
-    .controller('ApplicationController', function ($scope, $cookies, USER_ROLES, AuthService) {
+    .controller('ApplicationController', function ($location, $scope, $cookies, USER_ROLES, AuthService) {
         $scope.event = {
             name: $cookies.get('selected-event-name'),
             key: $cookies.get('selected-event-id')
@@ -107,9 +107,12 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             };
             return $http
                 .post('/user/login', user_pass)
-                .then(function (res) {
-                    return res.status === 200;
-                });
+                    .then(function (res) {
+                        if(res.status === 200){
+                            return true;
+                        }
+                        return false;
+                    });
         };
 
         authService.isAuthorized = function (minUserLevel) {
@@ -141,7 +144,7 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             this.userRole = null;
         };
     })
-    .controller("LoginController", function ($rootScope, $scope, $cookies, AUTH_EVENTS, AuthService) {
+    .controller("LoginController", function ($rootScope, $scope, $cookies, $location, AUTH_EVENTS, AuthService) {
         $scope.credentials = {
             username: '',
             password: ''
@@ -151,6 +154,7 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             AuthService.login(credentials).then(function (user) {
                 $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 $scope.setCurrentUser(user);
+                $location.path('/');
             }, function () {
                 $scope.errors = true;
                 $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
