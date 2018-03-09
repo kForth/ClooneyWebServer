@@ -29,7 +29,8 @@ class AverageCalculator(Runner):
 
         sorted_data = {}
         for line in raw:
-            team = dict(line)["team_number"]
+            print(line)
+            team = line["team"]
             if team not in sorted_data.keys():
                 sorted_data[team] = {}
             for key in line:
@@ -105,7 +106,7 @@ class AverageCalculator(Runner):
             avg_data = list(map(lambda x: x.to_dict()["data"], entries))
             expressions = json.load(open(self._get_fp('expressions', event) + ".json"))
             for team in avg_data:
-                team_number = team['team_number']["value"]
+                team_number = team['team']["value"]
                 calculator.add_fields(avg=team)
                 if team_number not in oprs.keys():
                     continue

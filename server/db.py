@@ -82,8 +82,6 @@ class Database(object):
             return headers[key]
 
     def get_raw_data(self, event_id):
-        # fp = "clooney/data/{}/raw_data.json".format(event_id)
-        # return self.__get_file(fp) if event_id != "undefined" else []
         from server.models import ScoutingEntry
         entries = ScoutingEntry.query.filter_by(event=event_id).all()
         return [elem.to_dict()["data"] for elem in entries]
@@ -96,7 +94,7 @@ class Database(object):
         calc = dict(zip(map(lambda x: x.team, calc), map(lambda x: x.get_data(), calc)))
         for entry in entries:
             data = entry.get_data()
-            team_number = data["team_number"]["value"]
+            team_number = data["team"]["value"]
             if team_number in oprs.keys():
                 opr_dict = oprs[team_number]
                 data["opr"] = dict(zip(opr_dict.keys(), map(lambda x: round(x, 1), opr_dict.values())))
@@ -106,16 +104,11 @@ class Database(object):
         return dict([(str(elem.team), elem.get_data()) for elem in entries])
 
     def get_avg_data(self, event_id):
-        # fp = "clooney/data/{}/avg_data.json".format(event_id)
-        # data = self.__get_file(fp) if event_id != "undefined" else []
-        # return dict([(str(elem["team_number"]["value"]), elem) for elem in data])
         from server.models import AnalysisEntry
         entries = AnalysisEntry.query.filter_by(event=event_id, key="avg").all()
         return dict([(str(elem.team), elem.get_data()) for elem in entries])
 
     def get_calculated_data(self, event_id):
-        # fp = "clooney/data/{}/calculated.json".format(event_id)
-        # return self.__get_file(fp) if event_id != "undefined" else []
         from server.models import AnalysisEntry
         entries = AnalysisEntry.query.filter_by(event=event_id, key="calc").all()
         return dict([(str(elem.team), elem.get_data()) for elem in entries])

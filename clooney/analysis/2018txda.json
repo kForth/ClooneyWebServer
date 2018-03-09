@@ -1,1 +1,118 @@
-{}
+[
+  {
+    "method":    "count",
+    "key": "match"
+  },
+  {
+    "method":    "mode",
+    "key": "team"
+  },
+  {
+    "method":    "count_true",
+    "key": "auto_no_move"
+  },
+  {
+    "method":    "count_true",
+    "key": "auto_wrong_switch"
+  },
+  {
+    "method":    "count_true",
+    "key": "auto_wrong_scale"
+  },
+  {
+    "method":    "avg",
+    "key": "auto_scored_exchange"
+  },
+  {
+    "method":    "avg",
+    "key": "auto_attemped_exchange"
+  },
+  {
+    "method":    "avg",
+    "key": "auto_scored_switch"
+  },
+  {
+    "method":    "avg",
+    "key": "auto_attempted_switch"
+  },
+  {
+    "method":    "avg",
+    "key": "auto_scored_scale"
+  },
+  {
+    "method":    "avg",
+    "key": "auto_attempted_scale"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_scored_own_switch"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_scored_own_switch"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_scored_opp_switch"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_scored_scale"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_descored_scale"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_dropped_cubes"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_deployed_ramps"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_ramps_used"
+  },
+  {
+    "method":    "mode",
+    "key": "tele_climbed_self"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_partners_lifted"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_partners_attempted"
+  },
+  {
+    "method":    "count_true",
+    "key": "tele_climbed_ramp"
+  },
+  {
+    "method":    "count_true",
+    "key": "tele_lifted_by_partner"
+  },
+  {
+    "method":    "count_true",
+    "key": "tele_no_climb"
+  },
+  {
+    "method":    "count_true",
+    "key": "disabled"
+  },
+  {
+    "method":    "count_true",
+    "key": "no_move"
+  },
+  {
+    "method":    "count_true",
+    "key": "no_show"
+  },
+  {
+    "method":    "mode",
+    "key": "tele_defense"
+  }
+]
