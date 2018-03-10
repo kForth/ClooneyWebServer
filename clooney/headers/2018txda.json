@@ -512,5 +512,28 @@
       "data_class": "",
       "tooltip":    ""
     }
+  ],
+  "avg_best": [
+    {
+      "key":   "tele_scored_scale",
+      "class":      "",
+      "title":      "Avg Scale Cubes Scored",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_scored_own_switch",
+      "class":      "",
+      "title":      "Avg Own Switch Cubes Scored",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_scored_opp_switch",
+      "class":      "",
+      "title":      "Avg Opp Switch Cubes Scored",
+      "data_class": "",
+      "tooltip":    ""
+    }
   ]
 }

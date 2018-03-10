@@ -335,5 +335,205 @@
       "data_class": "",
       "tooltip":    ""
     }
+  ],
+  "stats_avg": [
+    {
+      "key":   "match, value",
+      "class":      "",
+      "title":      "M#",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "team, value",
+      "class":      "",
+      "title":      "T#",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_no_move, value",
+      "class":      "",
+      "title":      "Auto No Move",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_wrong_switch, value",
+      "class":      "",
+      "title":      "Auto Wrong Switch",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_wrong_scale, value",
+      "class":      "",
+      "title":      "Auto Wrong Scale",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_scored_exchange, value",
+      "class":      "",
+      "title":      "Auto Scored Ex",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_attempted_exchange, value",
+      "class":      "",
+      "title":      "Auto Attempt Ex",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_scored_switch, value",
+      "class":      "",
+      "title":      "Auto Scored Switch",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_attempted_switch, value",
+      "class":      "",
+      "title":      "Auto Attempt Switch",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_scored_scale, value",
+      "class":      "",
+      "title":      "Auto Scored Scale",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_attempted_scale, value",
+      "class":      "",
+      "title":      "Auto Attempt Scale",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_scored_own_switch, value",
+      "class":      "",
+      "title":      "Scored Own Switch",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_scored_opp_switch, value",
+      "class":      "",
+      "title":      "Scored Opp Switch",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_scored_scale, value",
+      "class":      "",
+      "title":      "Scored Scale",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_descored_scale, value",
+      "class":      "",
+      "title":      "Knocked Off Scale",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_dropped_cubes, value",
+      "class":      "",
+      "title":      "Dropped Cubes",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_deployed_ramps, value",
+      "class":      "",
+      "title":      "Ramps Deployed",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_ramps_used, value",
+      "class":      "",
+      "title":      "Ramps Used",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_climbed_self, value",
+      "class":      "",
+      "title":      "Lifted Self",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_partners_lifted, value",
+      "class":      "",
+      "title":      "Partners Lifted",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_partners_attempted, value",
+      "class":      "",
+      "title":      "Partners Attempted",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_climbed_ramp, value",
+      "class":      "",
+      "title":      "Climbed Ramp",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_lifted_by_partner, value",
+      "class":      "",
+      "title":      "Lifted By Partner",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_no_climb, value",
+      "class":      "",
+      "title":      "No Climb",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_defense, value",
+      "class":      "",
+      "title":      "Defense",
+      "data_class": "",
+      "tooltip":    ""
+    }
+  ],
+  "avg_best": [
+    {
+      "key":   "tele_scored_scale",
+      "class":      "",
+      "title":      "Avg Scale Cubes Scored",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_scored_own_switch",
+      "class":      "",
+      "title":      "Avg Own Switch Cubes Scored",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_scored_opp_switch",
+      "class":      "",
+      "title":      "Avg Opp Switch Cubes Scored",
+      "data_class": "",
+      "tooltip":    ""
+    }
   ]
 }

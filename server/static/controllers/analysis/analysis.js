@@ -6,6 +6,18 @@ app.controller('HomeController', function ($scope, $cookies, $http, $sessionStor
         key: $cookies.get('selected-event-id')
     };
 
+
+    if($sessionStorage.avg_best_headers === undefined) {
+        $http.get("/api/headers/" + $scope.event.key + "/avg_best", {cache: true})
+            .then(function (response) {
+                $scope.headers = response.data;
+                $sessionStorage.avg_best_headers = response.data;
+            });
+    }
+    else{
+        $scope.headers = $sessionStorage.avg_best_headers;
+    }
+
     if($sessionStorage.avg_best == undefined) {
         $http.get('/api/event/' + $scope.event.key + '/stats/avg/best')
             .then(function (resp) {
