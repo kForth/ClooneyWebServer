@@ -22,7 +22,7 @@ if __name__ == "__main__":
                     'match': match['match_number'],
                     'pos': match['alliances'][alliance]['team_keys'].index('frc' + team) + (3 if alliance == 'blue' else 0)
                 }
-                data = dict(payload)
+                data = payload.copy()
                 for field in sheet:
                     if field['type'] == 'HorizontalOptions':
                         if type(field['options']) is str:

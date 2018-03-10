@@ -20,9 +20,9 @@ class UsersServer(object):
         session["user_info"] = info
 
     def check_auth(self):
-        try:
+        if 'user_info' in session.keys() and isinstance(session['user_info'], dict):
             return make_response(jsonify({'user-level': session["user_info"]["user_level"]}), 200)
-        except:
+        else:
             return make_response(jsonify(), 401)
 
     def log_out(self):

@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restless import APIManager
 from tba_py import TBA
 import better_exceptions
-import os
 
 from server.data import DataServer
 from server.db import Database
@@ -15,7 +14,7 @@ from server.sql import SqlServer
 
 app = Flask(__name__, static_folder='../server/static')
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/db.sqlite'  # 'postgres://localhost:5432'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/db.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "D4&u$VDtwe2Ng!q&"
 sql_db = SQLAlchemy(app)
