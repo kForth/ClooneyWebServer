@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angular-md5', 'chart.js'])
+var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angular-md5', 'chart.js', 'ngStorage'])
     .config(function ($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(false).hashPrefix('');
         $routeProvider
@@ -98,7 +98,7 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             $scope.currentUser = user;
         };
     })
-    .factory('AuthService', function ($http, Session, md5) {
+    .factory('AuthService', function ($http, Session, md5, $sessionStorage) {
         var authService = {};
         authService.login = function (credentials) {
             var user_pass = {
@@ -116,18 +116,27 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
         };
 
         authService.isAuthorized = function (minUserLevel) {
-            return $http.get('/user/check_auth').then(function (response) {
-                if (response)
-                    return {
-                        'allowed': response.data['user-level'] >= minUserLevel,
-                        'level': response.data['user-level']
-                    };
-                else
-                    return {
-                        'allowed': false,
-                        'level': 0
-                    };
-            });
+            if($sessionStorage.user_info === undefined){
+                return $http.get('/user/check_auth').then(function (response) {
+                    $sessionStorage.user_info = response.data;
+                    if (response)
+                        return {
+                            'allowed': response.data['user-level'] >= minUserLevel,
+                            'level': response.data['user-level']
+                        };
+                    else
+                        return {
+                            'allowed': false,
+                            'level': 0
+                        };
+                });
+            }
+            else{
+                return {
+                    'allowed': $sessionStorage.user_info['user-level'] >= minUserLevel,
+                    'level': $sessionStorage.user_info['user-level']
+                };
+            }
         };
 
         return authService;

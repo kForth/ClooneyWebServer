@@ -1,20 +1,26 @@
 var app = angular.module('app');
 
-app.controller('HomeController', function ($scope, $cookies, $http) {
+app.controller('HomeController', function ($scope, $cookies, $http, $sessionStorage) {
     $scope.event = {
         name: $cookies.get('selected-event-name'),
         key: $cookies.get('selected-event-id')
     };
 
-    $http.get('/api/event/' + $scope.event.key + '/stats/avg/best')
-        .then(function (resp) {
-            $scope.data = resp.data;
-        })
+    if($sessionStorage.avg_best == undefined) {
+        $http.get('/api/event/' + $scope.event.key + '/stats/avg/best')
+            .then(function (resp) {
+                $scope.data = resp.data;
+                $sessionStorage.avg_best = resp.data;
+            })
+    }
+    else{
+        $scope.data = $sessionStorage.avg_best;
+    }
 
 });
 
 
-app.controller("SingleAnalysisController", function ($scope, $http, $cookies) {
+app.controller("SingleAnalysisController", function ($scope, $http, $cookies, $sessionStorage) {
     $scope.event = {
         name: $cookies.get('selected-event-name'),
         key: $cookies.get('selected-event-id')
@@ -119,10 +125,16 @@ app.controller("SingleAnalysisController", function ($scope, $http, $cookies) {
         }
     }
 
-    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/avg', {cache: true})
-        .then(function (response) {
-            $scope.avg_data = response.data;
-        });
+    if($sessionStorage.sa_avg == undefined) {
+        $http.get('/api/event/' + $cookies.get('selected-event-id') + '/avg', {cache: true})
+            .then(function (response) {
+                $scope.avg_data = response.data;
+                $sessionStorage.sa_avg = response.data;
+            });
+    }
+    else{
+        $scope.avg_data = $sessionStorage.sa_avg;
+    }
 
 
 });
@@ -287,7 +299,7 @@ app.controller("DoubleAnalysisController", function ($scope, $http, $cookies) {
 
 });
 
-app.controller('MatchesController', function ($scope, $cookies, $http, $sce, $location, $routeParams) {
+app.controller('MatchesController', function ($scope, $cookies, $http, $sce, $location, $routeParams, $sessionStorage) {
     var httpSuffix = "";
     if ($routeParams.level != undefined) {
         if ($routeParams.level != undefined) {
@@ -303,42 +315,69 @@ app.controller('MatchesController', function ($scope, $cookies, $http, $sce, $lo
         key: $cookies.get('selected-event-id')
     };
 
-    $http.get("/api/headers/" + $scope.event.key + "/matches", {cache: true})
-        .then(function (response) {
-            $scope.headers = angular.copy(response.data);
-        });
+    if($sessionStorage.match_headers == undefined) {
+        $http.get("/api/headers/" + $scope.event.key + "/matches", {cache: true})
+            .then(function (response) {
+                $scope.headers = response.data;
+                $sessionStorage.match_headers = response.data;
+            });
+    }
+    else{
+        $scope.headers = $sessionStorage.match_headers;
+    }
 
-    $http.get('/api/event/' + $scope.event.key + '/matches' + httpSuffix, {cache: true})
-        .then(function (response) {
-            if (response.data.length < 1) {
-                angular.element(document.querySelector("#table"))[0].innerHTML = "No matches found.";
-            }
-            $scope.data = angular.copy(response.data);
-        });
-
+    if($sessionStorage.matches == undefined) {
+        $http.get('/api/event/' + $scope.event.key + '/matches' + httpSuffix, {cache: true})
+            .then(function (response) {
+                if (response.data.length < 1) {
+                    angular.element(document.querySelector("#table"))[0].innerHTML = "No matches found.";
+                }
+                else {
+                    $scope.data = response.data;
+                    $sessionStorage.matches = response.data;
+                }
+            });
+    }
+    else{
+        $scope.data = $sessionStorage.matches;
+    }
 });
 
-app.controller('OprsController', function ($scope, $cookies, $http) {
+app.controller('OprsController', function ($scope, $cookies, $http, $sessionStorage) {
     $scope.event = {
         name: $cookies.get('selected-event-name'),
         key: $cookies.get('selected-event-id')
     };
 
-    $http.get("/api/headers/" + $scope.event.key + "/oprs", {cache: true})
-        .then(function (response) {
-            $scope.headers = response.data;
-        });
+    if($sessionStorage.opr_headers == undefined) {
+        $http.get("/api/headers/" + $scope.event.key + "/oprs", {cache: true})
+            .then(function (response) {
+                $scope.headers = response.data;
+                $sessionStorage.opr_headers = response.data;
+            });
+    }
+    else{
+        $scope.headers = $sessionStorage.opr_headers;
+    }
 
-    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/oprs', {cache: true})
-        .then(function (response) {
-            $scope.data = response.data;
-            if (response.data.length < 1) {
-                angular.element(document.querySelector("#table"))[0].innerHTML = "No OPRs found."
-            }
-        });
+    if($sessionStorage.oprs == undefined) {
+        $http.get('/api/event/' + $cookies.get('selected-event-id') + '/oprs', {cache: true})
+            .then(function (response) {
+                if (response.data.length < 1) {
+                    angular.element(document.querySelector("#table"))[0].innerHTML = "No OPRs found."
+                }
+                else{
+                $scope.data = response.data;
+                $sessionStorage.oprs = response.data;
+                }
+            });
+    }
+    else{
+        $scope.data = $sessionStorage.oprs;
+    }
 });
 
-app.controller('PredictionController', function ($scope, $cookies, $http, $routeParams) {
+app.controller('PredictionController', function ($scope, $cookies, $http, $routeParams, $sessionStorage) {
     $scope.event = {
         name: $cookies.get('selected-event-name'),
         key: $cookies.get('selected-event-id')
@@ -362,68 +401,115 @@ app.controller('PredictionController', function ($scope, $cookies, $http, $route
                 angular.element(document.querySelector("#table"))[0].innerHTML = "No predictions available."
             }
         });
+
+    //TODO: Make this useful.
 });
 
-app.controller('RawController', function ($scope, $cookies, $http, $sce) {
+app.controller('RawController', function ($scope, $cookies, $http, $sessionStorage) {
     $scope.event = {
         name: $cookies.get('selected-event-name'),
         key: $cookies.get('selected-event-id')
     };
 
-    $http.get("/api/headers/" + $scope.event.key + "/stats_raw", {cache: true})
-        .then(function (response) {
-            $scope.headers = response.data;
-        });
+    if($sessionStorage.raw_headers == undefined) {
+        $http.get("/api/headers/" + $scope.event.key + "/stats_raw", {cache: true})
+            .then(function (response) {
+                $scope.headers = response.data;
+                $sessionStorage.raw_headers = response.data;
+            });
+    }
+    else{
+        $scope.headers = $sessionStorage.raw_headers;
+    }
 
-    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/raw', {cache: true})
-        .then(function (response) {
-            $scope.data = response.data;
-            if (response.data.length < 1) {
-                angular.element(document.querySelector("#table"))[0].innerHTML = "No data available."
-            }
-        });
+    if($sessionStorage.raw === undefined) {
+        $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/raw', {cache: true})
+            .then(function (response) {
+                if (response.data.length < 1) {
+                    angular.element(document.querySelector("#table"))[0].innerHTML = "No data available."
+                }
+                else{
+                    $scope.data = response.data;
+                    $sessionStorage.raw = response.data;
+                }
+            });
+        console.log($sessionStorage.raw);
+        console.log($sessionStorage.raw);
+    }
+    else{
+        $scope.data = $sessionStorage.raw;
+        console.log($sessionStorage.raw);
+    }
 
 });
 
-app.controller('TeamsController', function ($scope, $cookies, $http) {
+app.controller('TeamsController', function ($scope, $cookies, $http, $sessionStorage) {
     $scope.event = {
         name: $cookies.get('selected-event-name'),
         key: $cookies.get('selected-event-id')
     };
 
-    $http.get("/api/headers/" + $scope.event.key + "/teams", {cache: true})
-        .then(function (response) {
-            $scope.headers = response.data;
-        });
+    if($sessionStorage.teams_headers === undefined) {
+        $http.get("/api/headers/" + $scope.event.key + "/teams", {cache: true})
+            .then(function (response) {
+                $scope.headers = response.data;
+                $sessionStorage.teams_headers = response.data;
+            });
+    }
+    else{
+        $scope.headers = $sessionStorage.teams_headers;
+    }
 
-    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/teams', {cache: true})
-        .then(function (response) {
-            $scope.data = response.data;
-            if (response.data.length < 1) {
-                angular.element(document.querySelector("#table"))[0].innerHTML = "No teams registered.";
-            }
-        });
+    if($sessionStorage.teams == undefined) {
+        $http.get('/api/event/' + $cookies.get('selected-event-id') + '/teams', {cache: true})
+            .then(function (response) {
+                if (response.data.length < 1) {
+                    angular.element(document.querySelector("#table"))[0].innerHTML = "No teams registered.";
+                }
+                else{
+                    $scope.data = response.data;
+                    $sessionStorage.teams = response.data;
+                }
+            });
+    }
+    else{
+        $scope.data = $sessionStorage.teams;
+    }
 
 });
 
-app.controller('StatsController', function ($scope, $cookies, $http) {
+app.controller('StatsController', function ($scope, $cookies, $http, $sessionStorage) {
     $scope.event = {
         name: $cookies.get('selected-event-name'),
         key: $cookies.get('selected-event-id')
     };
 
-    $http.get("/api/headers/" + $scope.event.key + "/stats_avg", {cache: true})
-        .then(function (response) {
-            $scope.headers = response.data;
-        });
+    if($sessionStorage.avg_headers === undefined) {
+        $http.get("/api/headers/" + $scope.event.key + "/stats_avg", {cache: true})
+            .then(function (response) {
+                $scope.headers = response.data;
+                $sessionStorage.avg_headers = response.data;
+            });
+    }
+    else{
+        $scope.headers = $sessionStorage.avg_headers;
+    }
 
-    $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/avg', {cache: true})
-        .then(function (response) {
-            $scope.data = response.data;
-            if (response.data.length < 1) {
-                angular.element(document.querySelector("#table"))[0].innerHTML = "No stats available."
-            }
-        });
+    if($sessionStorage.avg === undefined) {
+        $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/avg', {cache: true})
+            .then(function (response) {
+                if (response.data.length < 1) {
+                    angular.element(document.querySelector("#table"))[0].innerHTML = "No stats available."
+                }
+                else{
+                    $scope.data = response.data;
+                    $sessionStorage.avg = response.data;
+                }
+            });
+    }
+    else{
+        $scope.data = $sessionStorage.avg;
+    }
 
 });
 

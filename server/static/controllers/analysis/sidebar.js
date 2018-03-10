@@ -1,6 +1,22 @@
 var app = angular.module('app');
 
-app.controller('EventSidebarController', function ($scope, $location, $cookies, $http, $route, AuthService) {
+app.controller('EventSidebarController', function ($scope, $location, $cookies, $http, $route, AuthService, $sessionStorage) {
+    function clearSessionStorage(){
+        $sessionStorage.avg = undefined;
+        $sessionStorage.avg_headers = undefined;
+        $sessionStorage.avg_best = undefined;
+        $sessionStorage.sa_avg = undefined;
+        $sessionStorage.match_headers = undefined;
+        $sessionStorage.matches = undefined;
+        $sessionStorage.opr_headers = undefined;
+        $sessionStorage.oprs = undefined;
+        $sessionStorage.raw_headers = undefined;
+        $sessionStorage.raw = undefined;
+        $sessionStorage.teams_headers = undefined;
+        $sessionStorage.teams = undefined;
+        $sessionStorage.events = undefined;
+    }
+
     $scope.isActive = function (viewLocation) {
         return viewLocation.replace("/", "") === $location.path().split('/')[1];
     };
@@ -15,6 +31,7 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
     $scope.updateEvent = function(){
         var event = $cookies.get('selected-event-id');
         if(event != undefined){
+            clearSessionStorage();
             $http.get('/api/event/' + event + '/update', ['avg']);
         }
     };
@@ -49,6 +66,7 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
     };
 
     $scope.selectEvent = function (event) {
+        clearSessionStorage();
         $cookies.put('selected-event-id', event.id);
         $cookies.put('selected-event-name', event.name);
         $route.reload()
@@ -86,11 +104,16 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
         }
     };
 
-    $http.get("/api/events")
-        .then(function (response) {
-            $scope.events = response.data;
-            console.log(response.data);
-        });
+    if($sessionStorage.events === undefined) {
+        $http.get("/api/events")
+            .then(function (response) {
+                $scope.events = response.data;
+                $sessionStorage.events = response.data;
+            });
+    }
+    else{
+        $scope.events = $sessionStorage.events;
+    }
 
 });
 
