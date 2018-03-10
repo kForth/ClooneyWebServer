@@ -389,6 +389,40 @@ app.controller('OprsController', function ($scope, $cookies, $http, $sessionStor
     }
 });
 
+app.controller('EventOprsController', function ($scope, $cookies, $http, $sessionStorage) {
+    $scope.event = {
+        name: $cookies.get('selected-event-name'),
+        key: $cookies.get('selected-event-id')
+    };
+
+    if($sessionStorage.opr_headers == undefined) {
+        $http.get("/api/headers/" + $scope.event.key + "/oprs", {cache: true})
+            .then(function (response) {
+                $scope.headers = response.data;
+                $sessionStorage.opr_headers = response.data;
+            });
+    }
+    else{
+        $scope.headers = $sessionStorage.opr_headers;
+    }
+
+    if($sessionStorage.event_oprs == undefined) {
+        $http.get('/api/event/' + $cookies.get('selected-event-id') + '/event_oprs', {cache: true})
+            .then(function (response) {
+                if (response.data.length < 1) {
+                    angular.element(document.querySelector("#table"))[0].innerHTML = "No OPRs found."
+                }
+                else{
+                $scope.data = response.data;
+                $sessionStorage.event_oprs = response.data;
+                }
+            });
+    }
+    else{
+        $scope.data = $sessionStorage.event_oprs;
+    }
+});
+
 app.controller('PredictionController', function ($scope, $cookies, $http, $routeParams, $sessionStorage) {
     $scope.event = {
         name: $cookies.get('selected-event-name'),

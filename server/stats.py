@@ -34,6 +34,7 @@ class StatsServer(object):
         self._add('/event/<event_id>/stats/raw/<int:team_number>', self.get_team_stats_raw)
         self._add('/event/<event_id>/pit', self.get_event_pit_data)
         self._add('/event/<event_id>/oprs', self.get_best_oprs)
+        self._add('/event/<event_id>/event_oprs', self.get_event_oprs)
         self._add('/event/<event_id>/predictions/<int:team_number>', self.get_match_predictions)
         self._add('/event/<event_id>/predictions', self.get_match_predictions)
         self._add('/event/<event>/expressions', self.get_expressions, methods=['GET', 'POST'])
@@ -79,6 +80,27 @@ class StatsServer(object):
                 if header["title"] == "Team":
                     continue
                 entries = OprEntry.query.filter_by(team=team, score_key=header["key"]).all()
+                if entries:
+                    line[header["sort_id"]] = round(max(map(lambda x: x.value, entries)), 2)
+                else:
+                    line[header["sort_id"]] = 0
+            data.append(line)
+        return make_response(jsonify(data))
+
+    def get_event_oprs(self, event_id):
+        from server.models import OprEntry, Event
+        headers = self.db.get_table_headers(event_id, "oprs")
+        event = Event.query.filter_by(id=event_id).first()
+        teams = list(map(lambda x: x["team_number"], event.get_team_list()))
+        data = []
+        for team in teams:
+            line = {
+                'a': team
+            }
+            for header in headers:
+                if header["title"] == "Team":
+                    continue
+                entries = OprEntry.query.filter_by(team=team, score_key=header["key"], event=event_id).all()
                 if entries:
                     line[header["sort_id"]] = round(max(map(lambda x: x.value, entries)), 2)
                 else:

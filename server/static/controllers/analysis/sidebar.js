@@ -10,6 +10,7 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
         $sessionStorage.matches = undefined;
         $sessionStorage.opr_headers = undefined;
         $sessionStorage.oprs = undefined;
+        $sessionStorage.event_oprs = undefined;
         $sessionStorage.raw_headers = undefined;
         $sessionStorage.raw = undefined;
         $sessionStorage.teams_headers = undefined;

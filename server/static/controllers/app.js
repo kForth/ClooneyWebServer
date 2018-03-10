@@ -38,6 +38,10 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
                 templateUrl: '../../../static/views/analysis/table.html',
                 controller: 'OprsController'
             })
+            .when('/event_oprs', {
+                templateUrl: '../../../static/views/analysis/table.html',
+                controller: 'EventOprsController'
+            })
             .when('/pred/:team_number', {
                 templateUrl: '../../../static/views/analysis/table.html',
                 controller: 'PredictionController'
