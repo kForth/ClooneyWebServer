@@ -3,7 +3,8 @@ import json
 
 
 class DataServer(object):
-    def __init__(self, add: classmethod, url_prefix=""):
+    def __init__(self, add: classmethod, url_prefix="", working_dir=""):
+        self.working_dir = working_dir
         self._add = lambda *x, **y: add(*x, **y, url_prefix=url_prefix)
         self._register_views()
 
@@ -12,7 +13,8 @@ class DataServer(object):
         self._add('/headers/<event>', self.get_table_headers, methods=['GET'])
 
     def get_table_headers(self, event, key=None):
-        file_path = 'clooney/headers/{}.json'.format(event)
+        print(self.working_dir)
+        file_path = self.working_dir + 'clooney/headers/{}.json'.format(event)
         headers = json.load(open(file_path))
         if request.method == "GET":
             if key is None:

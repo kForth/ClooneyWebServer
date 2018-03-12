@@ -36,7 +36,7 @@ class ClooneyServer(object):
         self.db = Database()
 
         self._register_views()
-        self.data_server = DataServer(self._add, "/api")
+        self.data_server = DataServer(self._add, "/api", working_dir=app.instance_path)
         self.stats_server = StatsServer(self._add, self.db, self.sql_db, self.tba, "/api")
         self.info_server = InfoServer(self._add, self.db, self.sql_db, self.tba, "/api")
         self.sql_server = SqlServer(self._add, self.sql_db, "/api/sql")
