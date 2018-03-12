@@ -72,7 +72,7 @@ class Database(object):
         self._dump_file(oprs, self.opr_fp)
 
     def get_table_headers(self, event, key):
-        file_path = 'clooney/headers/{}.json'.format(event)
+        file_path = self.path_prefix + 'clooney/headers/{}.json'.format(event)
         headers = json.load(open(file_path))
         if key not in headers.keys():
             return []
