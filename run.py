@@ -1,3 +1,3 @@
-from server import application
+from server import server
 
-application.run("0.0.0.0", debug=True, threaded=True)
+server.run("0.0.0.0", debug=True, threaded=True)
