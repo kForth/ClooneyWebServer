@@ -32,14 +32,14 @@ class ClooneyServer(object):
         self.api_manager = APIManager(app, flask_sqlalchemy_db=sql_db)
         self.api_manager.create_api(OprEntry, methods=['GET'], results_per_page=-1, url_prefix="/api/sql/")
 
-        self.tba = TBA('GdZrQUIjmwMZ3XVS622b6aVCh8CLbowJkCs5BmjJl2vxNuWivLz3Sf3PaqULUiZW', use_cache=False, cache_filename='./tba.json')
         root_path = '/'.join(app.root_path.split('/')[:-1]) + '/'
+        self.tba = TBA('GdZrQUIjmwMZ3XVS622b6aVCh8CLbowJkCs5BmjJl2vxNuWivLz3Sf3PaqULUiZW', use_cache=False, cache_filename=root_path + 'tba.json')
         self.db = Database(path_prefix=root_path)
 
         self._register_views()
         self.data_server = DataServer(self._add, "/api", working_dir=root_path)
         self.stats_server = StatsServer(self._add, self.db, self.sql_db, self.tba, "/api")
-        self.info_server = InfoServer(self._add, self.db, self.sql_db, self.tba, "/api")
+        self.info_server = InfoServer(self._add, self.db, self.sql_db, self.tba, "/api", path_prefix=root_path)
         self.sql_server = SqlServer(self._add, self.sql_db, "/api/sql")
         self.user_server = UsersServer(self._add, url_prefix="/user")
 

@@ -12,11 +12,12 @@ from util.runners import Runner
 
 
 class InfoServer(object):
-    def __init__(self, add: classmethod, db: Database, sql_db: SQLAlchemy, tba: TBA, url_prefix=""):
+    def __init__(self, add: classmethod, db: Database, sql_db: SQLAlchemy, tba: TBA, url_prefix="", path_prefix=""):
         self._add = lambda *x, **y: add(*x, **y, url_prefix=url_prefix)
         self.db = db
         self.sql_db = sql_db
         self.tba = tba
+        self.path_prefix = path_prefix
         self._register_views()
 
     def _register_views(self):
@@ -42,13 +43,12 @@ class InfoServer(object):
             return make_response(jsonify([]), 400)
         return make_response(jsonify(team_info))
 
-    @staticmethod
-    def get_team_images(event_id, team_number):
+    def get_team_images(self, event_id, team_number):
         images = []
         file_types = ["jpg", "png", "gif", "jpeg", "JPG", "PNG", "GIF", "JPEG"]
-        if path.isdir("server/static/robot_pics/" + str(team_number)):
+        if path.isdir(self.path_prefix + "server/static/robot_pics/" + str(team_number)):
             for file_type in file_types:
-                images += glob("server/static/robot_pics/{0}/*.{1}".format(team_number, file_type))
+                images += glob(self.path_prefix + "server/static/robot_pics/{0}/*.{1}".format(team_number, file_type))
         images = list(map(lambda x: x.split("/")[-1], images))
         return make_response(jsonify(images))
 
