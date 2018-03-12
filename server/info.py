@@ -64,7 +64,7 @@ class InfoServer(object):
             if level is None or str(level).lower() == match["comp_level"].lower():
                 teams = {}
                 for alli in ["red", "blue"]:
-                    teams[alli] = match['alliances'][alli]['teams']
+                    teams[alli] = match['alliances'][alli]['team_keys']
                     match['alliances'][alli]['teams'] = dict(
                         zip(map(str, range(1, len(teams[alli]) + 1)), map(lambda x: x[3:], teams[alli])))
                 if team_number is None or team_number in teams["red"] + teams["blue"]:
