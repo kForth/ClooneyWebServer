@@ -33,8 +33,7 @@ class ClooneyServer(object):
         self.api_manager.create_api(OprEntry, methods=['GET'], results_per_page=-1, url_prefix="/api/sql/")
 
         self.tba = TBA('GdZrQUIjmwMZ3XVS622b6aVCh8CLbowJkCs5BmjJl2vxNuWivLz3Sf3PaqULUiZW', use_cache=False, cache_filename='./tba.json')
-        root_path = app.root_path + '/'
-        print(root_path)
+        root_path = '/'.join(app.root_path.split('/')[:-1]) + '/'
         self.db = Database(path_prefix=root_path)
 
         self._register_views()
