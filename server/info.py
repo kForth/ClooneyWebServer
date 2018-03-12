@@ -31,6 +31,7 @@ class InfoServer(object):
         self._add('/event/<event_id>/matches/<level>/<int:team_number>', self.get_matches)
         self._add('/event/<event_id>/matches/<level>', self.get_matches)
         self._add('/event/<event_id>/matches', self.get_matches)
+        self._add('/event/<event_id>/match/<key>', self.get_match)
         self._add('/setups/<event_id>', self.trigger_event_setup, methods=['POST'])
 
     def get_team_info(self, event_id, team_number):
@@ -73,10 +74,15 @@ class InfoServer(object):
         event_info = Event.query.filter_by(id=event_id).first().get_tba_info()
         return make_response(jsonify(event_info))
 
+    def get_match(self, event_id, key):
+        match = self.tba.get_match_info(event_id + "_" + key)
+        return make_response(jsonify(match))
+
     def get_matches(self, event_id, level=None, team_number=None):
         headers = self.db.get_table_headers(event_id, 'matches')
         lines = []
         for match in self.tba.get_event_matches(event_id):
+            match["short_key"] = match["key"].split("_")[-1]
             if level is None or str(level).lower() == match["comp_level"].lower():
                 teams = {}
                 for alli in ["red", "blue"]:

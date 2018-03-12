@@ -31,9 +31,9 @@
   ],
   "matches": [
     {
-      "key":   "comp_level",
+      "key":   "short_key",
       "class":      "",
-      "title":      "Level",
+      "title":      "Key",
       "data_class": "",
       "tooltip":    ""
     },
@@ -746,6 +746,113 @@
       "key":   "motto",
       "class":      "",
       "title":      "Motto",
+      "data_class": "",
+      "tooltip":    ""
+    }
+  ],
+  "match_single_team_data": [
+    {
+      "key":   "match, value",
+      "class":      "",
+      "title":      "M#",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "team, value",
+      "class":      "",
+      "title":      "T#",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_no_move, raw",
+      "class":      "",
+      "title":      "Auto No Move",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_scored_exchange, raw",
+      "class":      "",
+      "title":      "Auto Scored Ex",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_scored_switch, raw",
+      "class":      "",
+      "title":      "Auto Scored Switch",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "auto_scored_scale, raw",
+      "class":      "",
+      "title":      "Auto Scored Scale",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_scored_own_switch, raw",
+      "class":      "",
+      "title":      "Scored Own Switch",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_scored_opp_switch, raw",
+      "class":      "",
+      "title":      "Scored Opp Switch",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_scored_scale, raw",
+      "class":      "",
+      "title":      "Scored Scale",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_descored_scale, raw",
+      "class":      "",
+      "title":      "Knocked Off Scale",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_dropped_cubes, raw",
+      "class":      "",
+      "title":      "Dropped Cubes",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_climbed_self, raw",
+      "class":      "",
+      "title":      "Lifted Self",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_partners_lifted, raw",
+      "class":      "",
+      "title":      "Partners Lifted",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_partners_attempted, raw",
+      "class":      "",
+      "title":      "Partners Attempted",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_defense, raw",
+      "class":      "",
+      "title":      "Defense",
       "data_class": "",
       "tooltip":    ""
     }

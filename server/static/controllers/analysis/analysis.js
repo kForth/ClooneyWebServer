@@ -763,3 +763,44 @@ app.controller('SingleTeamController', function ($scope, $http, $location, $cook
     };
 
 });
+
+app.controller('MatchPreviewController', function($scope, $http, $sessionStorage, $location, $cookies){
+    $scope.match_key = $location.url().split("/")[2];
+    $scope.event = {
+        name: $cookies.get('selected-event-name'),
+        key: $cookies.get('selected-event-id')
+    };
+
+    $http.get('/api/event/' + $scope.event.key + '/match/' + $scope.match_key)
+        .then(function(response){
+            $scope.match_info = response.data;
+            $scope.alliance_data = {
+                'red': [],
+                'blue': []
+            };
+            ['red', 'blue'].forEach(function(alliance){
+                $scope.match_info['alliances'][alliance]['team_keys'].forEach(function(team){
+                    var team_number = ('' + team).substr(3);
+                    $http.get("/api/event/" + $scope.event.key + "/stats/avg/" + team_number)
+                        .then(function(response){
+                            $scope.alliance_data[alliance].push(response.data);
+                            console.log($scope.alliance_data[alliance]);
+                        });
+                });
+            });
+        });
+
+    if ($sessionStorage.match_single_team_data_headers == undefined) {
+        $http.get("/api/headers/" + $scope.event.key + "/match_single_team_data", {cache: true})
+            .then(function (response) {
+                console.log(response.data);
+                $scope.data_headers = response.data;
+                $sessionStorage.match_single_team_data_headers = $scope.data_headers;
+                console.log($scope.data_headers);
+            });
+    }
+    else {
+        $scope.data_headers = $sessionStorage.match_single_team_data_headers;
+    }
+
+});

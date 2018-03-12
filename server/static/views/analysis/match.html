@@ -1,0 +1,50 @@
+<div ng-controller="EventSidebarController" ng-include="'../../../static/views/analysis/sidebar.html'"></div>
+
+<div class="inner-content" ng-class="{'shrink-left-sidebar': leftSidebarVisible && rightSidebarVisible,
+                                      'shrink-right-sidebar': !leftSidebarVisible && !rightSidebarVisible,
+                                      'shrink-left-right-sidebar': leftSidebarVisible && !rightSidebarVisible}"
+     ng-show="event.name != undefined">
+    <div class="info-holder">
+        <div class="info-block">
+            <div class="event-name" ng-cloak>
+                Pokédex | {{ match_key }}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="info-holder col-xs-12 col-md-6" ng-repeat="alliance in ['red', 'blue']">
+        <div class="info-holder info-block" ng-class="{'red-alliance-title': alliance === 'red', 'blue-alliance-title': alliance == 'blue'}">
+            <div class="event-name">
+                {{ alliance.toProperCase() }} | {{ match_info['alliances'][alliance]['score'] }}
+            </div>
+        </div>
+        <div class="info-table info-block single-team-table">
+            <table id="table" class="table team-data-table" ng-show="team.length > 0" multi-sort-table ng-cloak>
+                <thead>
+                <tr>
+                    <th ng-repeat="header in data_headers" class="data-header clickable {{ header.class }}"
+                        ng-click="sortData($event, header.sort_id)">
+                        {{ header.title }}
+                        <span ng-show="sorts.indexOf(header.sort_id) > -1"
+                              class="glyphicon glyphicon-chevron-up">{{ sorts.indexOf(header.sort_id)+1 }}</span>
+                        <span ng-show="sorts.indexOf('-' + header.sort_id) > -1"
+                              class="glyphicon glyphicon-chevron-down">{{ sorts.indexOf("-" + header.sort_id)+1 }}</span>
+                        <span ng-show="sorts.indexOf(header.sort_id) < 0 && sorts.indexOf(header.sort_id) < 0"
+                              class="glyphicon glyphicon-none"> </span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="team in alliance_data[alliance] | orderBy:sort_id">
+                    <td ng-repeat="header in data_headers" class="data-box" ng-class="header.data_class"
+                        ng-bind="getData(team, header.key)">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>

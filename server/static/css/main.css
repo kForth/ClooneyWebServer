@@ -106,6 +106,16 @@
     text-align: right;
 }
 
+.red-alliance-title {
+    color: #500;
+    background: #eccccc;
+}
+
+.blue-alliance-title {
+    color: #005;
+    background: #ccccec;
+}
+
 tr:nth-child(even) {
     background: #dddddd;
 }

@@ -1,3 +1,9 @@
+String.prototype.toProperCase = function () {
+    return this.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+};
+
 var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angular-md5', 'chart.js', 'ngStorage'])
     .config(function ($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(false).hashPrefix('');
@@ -17,6 +23,10 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             .when('/matches/:level', {
                 templateUrl: '../../../static/views/analysis/table.html',
                 controller: 'MatchesController'
+            })
+            .when('/match/:key', {
+                templateUrl: '../../../static/views/analysis/match.html',
+                controller: 'MatchPreviewController'
             })
             .when('/teams', {
                 templateUrl: '../../../static/views/analysis/table.html',

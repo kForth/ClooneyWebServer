@@ -16,6 +16,10 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
         $sessionStorage.teams_headers = undefined;
         $sessionStorage.teams = undefined;
         $sessionStorage.events = undefined;
+        $sessionStorage.match_single_team_data_headers = undefined;
+        $sessionStorage.single_team_data_headers = undefined;
+        $sessionStorage.single_team_data_info_headers = undefined;
+        $sessionStorage.single_team_info_headers = undefined;
         $sessionStorage.team_info = {};
         $sessionStorage.team_stats_avg = {};
         $sessionStorage.team_raw_data = {};
