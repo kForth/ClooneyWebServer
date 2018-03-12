@@ -479,12 +479,9 @@ app.controller('RawController', function ($scope, $cookies, $http, $sessionStora
                     $sessionStorage.raw = response.data;
                 }
             });
-        console.log($sessionStorage.raw);
-        console.log($sessionStorage.raw);
     }
     else {
         $scope.data = $sessionStorage.raw;
-        console.log($sessionStorage.raw);
     }
 
 });

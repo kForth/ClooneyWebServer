@@ -7,3 +7,5 @@ sheets/pdf
 server/static/robot_pics/
 */__pycache__/
 *.pyc
+
+upload_robot_pics.sh
