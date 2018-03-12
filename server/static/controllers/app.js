@@ -112,16 +112,16 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             };
             return $http
                 .post('/user/login', user_pass)
-                    .then(function (res) {
-                        if(res.status === 200){
-                            return true;
-                        }
-                        return false;
-                    });
+                .then(function (res) {
+                    if (res.status === 200) {
+                        return true;
+                    }
+                    return false;
+                });
         };
 
         authService.isAuthorized = function (minUserLevel) {
-            if($sessionStorage.user_info === undefined){
+            if ($sessionStorage.user_info === undefined) {
                 return $http.get('/user/check_auth').then(function (response) {
                     $sessionStorage.user_info = response.data;
                     if (response)
@@ -136,7 +136,7 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
                         };
                 });
             }
-            else{
+            else {
                 return {
                     'allowed': $sessionStorage.user_info['user-level'] >= minUserLevel,
                     'level': $sessionStorage.user_info['user-level']
@@ -174,102 +174,8 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
                 $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
             });
         };
-    })
-    .controller('SingleTeamController', function ($scope, $http, $location, $cookies) {
-        $scope.team_number = parseInt($location.url().split("/")[2]);
-
-        $scope.team_info = {};
-        $scope.avg_data = {};
-        $scope.raw_data = [];
-        $scope.images = [];
-
-        $scope.interval = 5000;
-        $scope.noWrapSlides = false;
-        $scope.active = 0;
-
-        $http.get("/api/event/" + $scope.event.key + "/team/" + $scope.team_number + "/images")
-            .then(function (response) {
-                var i = 0;
-                response.data.forEach(function (elem) {
-                    $scope.images.push({
-                        image: "../../../static/robot_pics/" + $scope.event.key + "/" + $scope.team_number + "/" + elem,
-                        id: i++
-                    });
-                });
-            });
-
-        $http.get("/api/event/" + $scope.event.key + "/team/" + $scope.team_number)
-            .then(function (response) {
-                $scope.team_info = response.data;
-            });
-        $http.get("/api/event/" + $scope.event.key + "/stats/avg/" + $scope.team_number)
-            .then(function (response) {
-                $scope.avg_data = response.data;
-            });
-        $http.get("/api/event/" + $scope.event.key + "/stats/raw/" + $scope.team_number)
-            .then(function (response) {
-                $scope.raw_data = response.data;
-                $scope.raw_data.sort(function (a, b) {
-                    return b["match"] - a["match"];
-                });
-            });
-
-
-        $http.get("/api/headers/" + $scope.event.key + "/single_team_info", {cache: true})
-            .then(function (response) {
-                $scope.team_info_headers = response.data;
-            });
-        $http.get("/api/headers/" + $scope.event.key + "/single_team_data_info", {cache: true})
-            .then(function (response) {
-                $scope.data_info_headers = response.data;
-            });
-        $http.get("/api/headers/" + $scope.event.key + "/single_team_data", {cache: true})
-            .then(function (response) {
-                $scope.data_headers = response.data;
-            });
-
-        $scope.sortId = $cookies.get('matches-sort-id');
-        $scope.sortReverse = $cookies.get('matches-sort-reverse');
-
-        $scope.sortData = function (key) {
-            if ($scope.sortReverse === undefined) {
-                $scope.sortReverse = true;
-            }
-            if ($scope.sortId === key) {
-                $scope.sortReverse = !$scope.sortReverse;
-            }
-            else {
-                $scope.sortId = key;
-                $scope.sortReverse = true;
-            }
-
-            $cookies.put('matches-sort-id', $scope.sortId);
-            $cookies.put('matches-sort-reverse', $scope.sortReverse);
-        };
-
-
-        $scope.getData = function (elem, key) {
-            if (elem === undefined)
-                return "";
-            if (key.includes(",")) {
-                var keys = key.split(",");
-                var val = elem;
-                keys.forEach(function (k) {
-                    if (val === undefined) {
-                        val = "";
-                    }
-                    else {
-                        val = val[k.trim()];
-                    }
-                });
-                return val;
-            }
-            else {
-                return elem[key];
-            }
-        };
-
     });
+
 
 app.directive('fixedTableHeaders', ['$timeout', function ($timeout) {
     return {

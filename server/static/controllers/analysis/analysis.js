@@ -7,25 +7,25 @@ app.controller('HomeController', function ($scope, $cookies, $http, $sessionStor
     };
 
 
-    if($sessionStorage.avg_best_headers === undefined) {
+    if ($sessionStorage.avg_best_headers === undefined) {
         $http.get("/api/headers/" + $scope.event.key + "/avg_best", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
                 $sessionStorage.avg_best_headers = response.data;
             });
     }
-    else{
+    else {
         $scope.headers = $sessionStorage.avg_best_headers;
     }
 
-    if($sessionStorage.avg_best == undefined) {
+    if ($sessionStorage.avg_best == undefined) {
         $http.get('/api/event/' + $scope.event.key + '/stats/avg/best')
             .then(function (resp) {
                 $scope.data = resp.data;
                 $sessionStorage.avg_best = resp.data;
             })
     }
-    else{
+    else {
         $scope.data = $sessionStorage.avg_best;
     }
 
@@ -71,10 +71,10 @@ app.controller("SingleAnalysisController", function ($scope, $http, $cookies, $s
         var points = [];
         var vals = [];
         var teams = [];
-        for(var i in $scope.target_data) {
+        for (var i in $scope.target_data) {
             var entry = $scope.target_data[i];
             var value = getData(entry, key_set);
-            points.push({ val: value, team: $scope.target_data[i]["team_number"]["value"]});
+            points.push({val: value, team: $scope.target_data[i]["team_number"]["value"]});
             vals.push(value);
             if ($scope.source == "oprs") {
                 teams.push($scope.target_data[i]["team_number"]);
@@ -137,14 +137,14 @@ app.controller("SingleAnalysisController", function ($scope, $http, $cookies, $s
         }
     }
 
-    if($sessionStorage.sa_avg == undefined) {
+    if ($sessionStorage.sa_avg == undefined) {
         $http.get('/api/event/' + $cookies.get('selected-event-id') + '/avg', {cache: true})
             .then(function (response) {
                 $scope.avg_data = response.data;
                 $sessionStorage.sa_avg = response.data;
             });
     }
-    else{
+    else {
         $scope.avg_data = $sessionStorage.sa_avg;
     }
 
@@ -215,13 +215,13 @@ app.controller("DoubleAnalysisController", function ($scope, $http, $cookies) {
         $scope.x_secondary_keys = {};
         if ($scope.x_source === "avg_data")
             console.log($scope.avg_data);
-            $scope.x_target_data = $scope.avg_data.sort(function (a, b) {
-                var keyA = a["team_number"]["value"];
-                var keyB = b["team_number"]["value"];
-                if (keyA < keyB) return -1;
-                if (keyA > keyB) return 1;
-                return 0;
-            });
+        $scope.x_target_data = $scope.avg_data.sort(function (a, b) {
+            var keyA = a["team_number"]["value"];
+            var keyB = b["team_number"]["value"];
+            if (keyA < keyB) return -1;
+            if (keyA > keyB) return 1;
+            return 0;
+        });
         // if ($scope.x_source === "oprs")
         //     $scope.x_target_data = $scope.opr_data.sort(function (a, b) {
         //         var keyA = a["team_number"];
@@ -327,18 +327,18 @@ app.controller('MatchesController', function ($scope, $cookies, $http, $sce, $lo
         key: $cookies.get('selected-event-id')
     };
 
-    if($sessionStorage.match_headers == undefined) {
+    if ($sessionStorage.match_headers == undefined) {
         $http.get("/api/headers/" + $scope.event.key + "/matches", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
                 $sessionStorage.match_headers = response.data;
             });
     }
-    else{
+    else {
         $scope.headers = $sessionStorage.match_headers;
     }
 
-    if($sessionStorage.matches == undefined) {
+    if ($sessionStorage.matches == undefined) {
         $http.get('/api/event/' + $scope.event.key + '/matches' + httpSuffix, {cache: true})
             .then(function (response) {
                 if (response.data.length < 1) {
@@ -350,7 +350,7 @@ app.controller('MatchesController', function ($scope, $cookies, $http, $sce, $lo
                 }
             });
     }
-    else{
+    else {
         $scope.data = $sessionStorage.matches;
     }
 });
@@ -361,30 +361,30 @@ app.controller('OprsController', function ($scope, $cookies, $http, $sessionStor
         key: $cookies.get('selected-event-id')
     };
 
-    if($sessionStorage.opr_headers == undefined) {
+    if ($sessionStorage.opr_headers == undefined) {
         $http.get("/api/headers/" + $scope.event.key + "/oprs", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
                 $sessionStorage.opr_headers = response.data;
             });
     }
-    else{
+    else {
         $scope.headers = $sessionStorage.opr_headers;
     }
 
-    if($sessionStorage.oprs == undefined) {
+    if ($sessionStorage.oprs == undefined) {
         $http.get('/api/event/' + $cookies.get('selected-event-id') + '/oprs', {cache: true})
             .then(function (response) {
                 if (response.data.length < 1) {
                     angular.element(document.querySelector("#table"))[0].innerHTML = "No OPRs found."
                 }
-                else{
-                $scope.data = response.data;
-                $sessionStorage.oprs = response.data;
+                else {
+                    $scope.data = response.data;
+                    $sessionStorage.oprs = response.data;
                 }
             });
     }
-    else{
+    else {
         $scope.data = $sessionStorage.oprs;
     }
 });
@@ -395,30 +395,30 @@ app.controller('EventOprsController', function ($scope, $cookies, $http, $sessio
         key: $cookies.get('selected-event-id')
     };
 
-    if($sessionStorage.opr_headers == undefined) {
+    if ($sessionStorage.opr_headers == undefined) {
         $http.get("/api/headers/" + $scope.event.key + "/oprs", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
                 $sessionStorage.opr_headers = response.data;
             });
     }
-    else{
+    else {
         $scope.headers = $sessionStorage.opr_headers;
     }
 
-    if($sessionStorage.event_oprs == undefined) {
+    if ($sessionStorage.event_oprs == undefined) {
         $http.get('/api/event/' + $cookies.get('selected-event-id') + '/event_oprs', {cache: true})
             .then(function (response) {
                 if (response.data.length < 1) {
                     angular.element(document.querySelector("#table"))[0].innerHTML = "No OPRs found."
                 }
-                else{
-                $scope.data = response.data;
-                $sessionStorage.event_oprs = response.data;
+                else {
+                    $scope.data = response.data;
+                    $sessionStorage.event_oprs = response.data;
                 }
             });
     }
-    else{
+    else {
         $scope.data = $sessionStorage.event_oprs;
     }
 });
@@ -457,24 +457,24 @@ app.controller('RawController', function ($scope, $cookies, $http, $sessionStora
         key: $cookies.get('selected-event-id')
     };
 
-    if($sessionStorage.raw_headers == undefined) {
+    if ($sessionStorage.raw_headers == undefined) {
         $http.get("/api/headers/" + $scope.event.key + "/stats_raw", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
                 $sessionStorage.raw_headers = response.data;
             });
     }
-    else{
+    else {
         $scope.headers = $sessionStorage.raw_headers;
     }
 
-    if($sessionStorage.raw === undefined) {
+    if ($sessionStorage.raw === undefined) {
         $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/raw', {cache: true})
             .then(function (response) {
                 if (response.data.length < 1) {
                     angular.element(document.querySelector("#table"))[0].innerHTML = "No data available."
                 }
-                else{
+                else {
                     $scope.data = response.data;
                     $sessionStorage.raw = response.data;
                 }
@@ -482,7 +482,7 @@ app.controller('RawController', function ($scope, $cookies, $http, $sessionStora
         console.log($sessionStorage.raw);
         console.log($sessionStorage.raw);
     }
-    else{
+    else {
         $scope.data = $sessionStorage.raw;
         console.log($sessionStorage.raw);
     }
@@ -495,30 +495,30 @@ app.controller('TeamsController', function ($scope, $cookies, $http, $sessionSto
         key: $cookies.get('selected-event-id')
     };
 
-    if($sessionStorage.teams_headers === undefined) {
+    if ($sessionStorage.teams_headers === undefined) {
         $http.get("/api/headers/" + $scope.event.key + "/teams", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
                 $sessionStorage.teams_headers = response.data;
             });
     }
-    else{
+    else {
         $scope.headers = $sessionStorage.teams_headers;
     }
 
-    if($sessionStorage.teams == undefined) {
+    if ($sessionStorage.teams == undefined) {
         $http.get('/api/event/' + $cookies.get('selected-event-id') + '/teams', {cache: true})
             .then(function (response) {
                 if (response.data.length < 1) {
                     angular.element(document.querySelector("#table"))[0].innerHTML = "No teams registered.";
                 }
-                else{
+                else {
                     $scope.data = response.data;
                     $sessionStorage.teams = response.data;
                 }
             });
     }
-    else{
+    else {
         $scope.data = $sessionStorage.teams;
     }
 
@@ -530,30 +530,30 @@ app.controller('StatsController', function ($scope, $cookies, $http, $sessionSto
         key: $cookies.get('selected-event-id')
     };
 
-    if($sessionStorage.avg_headers === undefined) {
+    if ($sessionStorage.avg_headers === undefined) {
         $http.get("/api/headers/" + $scope.event.key + "/stats_avg", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
                 $sessionStorage.avg_headers = response.data;
             });
     }
-    else{
+    else {
         $scope.headers = $sessionStorage.avg_headers;
     }
 
-    if($sessionStorage.avg === undefined) {
+    if ($sessionStorage.avg === undefined) {
         $http.get('/api/event/' + $cookies.get('selected-event-id') + '/stats/avg', {cache: true})
             .then(function (response) {
                 if (response.data.length < 1) {
                     angular.element(document.querySelector("#table"))[0].innerHTML = "No stats available."
                 }
-                else{
+                else {
                     $scope.data = response.data;
                     $sessionStorage.avg = response.data;
                 }
             });
     }
-    else{
+    else {
         $scope.data = $sessionStorage.avg;
     }
 
@@ -562,15 +562,16 @@ app.controller('StatsController', function ($scope, $cookies, $http, $sessionSto
 app.directive('highlightTable', function ($location, $cookies) {
     function link(scope) {
         // var cookie_prefix = $location.$$path.replace("/", "");
-        try{
+        try {
             scope.colours = JSON.parse($cookies.get("highlighted-rows"));
         }
-        catch(ex){}
-        if(scope.colours === undefined)
+        catch (ex) {
+        }
+        if (scope.colours === undefined)
             scope.colours = {};
 
-        scope.cycleColour = function(index){
-            if(scope.colours[index] === undefined)
+        scope.cycleColour = function (index) {
+            if (scope.colours[index] === undefined)
                 scope.colours[index] = 0;
             scope.colours[index]++;
             $cookies.put("highlighted-rows", JSON.stringify(scope.colours));
@@ -588,33 +589,34 @@ app.directive('multiSortTable', function ($location, $cookies) {
 
     function link(scope) {
         var cookie_prefix = $location.$$path.replace("/", "");
-        try{
+        try {
             scope.sorts = JSON.parse($cookies.get(cookie_prefix + '-table-sort'));
         }
-        catch(ex){}
+        catch (ex) {
+        }
 
-        if(scope.sorts === undefined)
+        if (scope.sorts === undefined)
             scope.sorts = [];
 
         scope.sortData = function (event, key) {
-            if(event.shiftKey){
+            if (event.shiftKey) {
                 scope.sorts = [];
                 // if(scope.sorts.indexOf("-" + key) > -1)
                 //     scope.sorts.splice(scope.sorts.indexOf("-" + key), 1);
                 // if(scope.sorts.indexOf(key) > -1)
                 //     scope.sorts.splice(scope.sorts.indexOf(key), 1);
             }
-            if(scope.sorts.indexOf("-" + key) > -1){
+            if (scope.sorts.indexOf("-" + key) > -1) {
                 var index = scope.sorts.indexOf("-" + key);
                 // scope.sorts.splice(index, 1);
                 scope.sorts[index] = key;
             }
-            else if(scope.sorts.indexOf(key) > -1){
+            else if (scope.sorts.indexOf(key) > -1) {
                 var index = scope.sorts.indexOf(key);
                 scope.sorts.splice(index, 1);
                 // scope.sorts[index] = "-" + key;
             }
-            else{
+            else {
                 scope.sorts.push("-" + key);
             }
 
@@ -626,4 +628,141 @@ app.directive('multiSortTable', function ($location, $cookies) {
         link: link,
         restrict: 'A'
     };
+});
+
+app.controller('SingleTeamController', function ($scope, $http, $location, $cookies, $sessionStorage) {
+    $scope.team_number = parseInt($location.url().split("/")[2]);
+
+    $scope.team_info = {};
+    $scope.avg_data = {};
+    $scope.raw_data = [];
+    $scope.images = [];
+
+    $scope.interval = 5000;
+    $scope.noWrapSlides = false;
+    $scope.active = 0;
+
+    $http.get("/api/event/" + $scope.event.key + "/team/" + $scope.team_number + "/images")
+        .then(function (response) {
+            var i = 0;
+            response.data.forEach(function (elem) {
+                $scope.images.push({
+                    image: "../../../static/robot_pics/" + $scope.team_number + "/" + elem,
+                    id: i++
+                });
+            });
+        });
+
+    if ($sessionStorage.team_info === undefined) $sessionStorage.team_info = {};
+    if ($sessionStorage.team_stats_avg === undefined) $sessionStorage.team_stats_avg = {};
+    if ($sessionStorage.team_raw_data === undefined) $sessionStorage.team_raw_data = {};
+
+    if ($sessionStorage.team_info[$scope.team_number] == undefined) {
+        $http.get("/api/event/" + $scope.event.key + "/team/" + $scope.team_number)
+            .then(function (response) {
+                $scope.team_info = response.data;
+                $sessionStorage.team_info[$scope.team_number] = response.data;
+            });
+    }
+    else {
+        $scope.team_info = $sessionStorage.team_info[$scope.team_number];
+    }
+    if ($sessionStorage.team_stats_avg[$scope.team_number] == undefined) {
+        $http.get("/api/event/" + $scope.event.key + "/stats/avg/" + $scope.team_number)
+            .then(function (response) {
+                $scope.avg_data = response.data;
+                $sessionStorage.team_stats_avg[$scope.team_number] = response.data;
+            });
+    }
+    else {
+        $scope.avg_data = $sessionStorage.team_stats_avg[$scope.team_number];
+    }
+    if ($sessionStorage.team_raw_data[$scope.team_number] == undefined) {
+        $http.get("/api/event/" + $scope.event.key + "/stats/raw/" + $scope.team_number)
+            .then(function (response) {
+                $scope.raw_data = response.data;
+                $scope.raw_data.sort(function (a, b) {
+                    return b["match"] - a["match"];
+                });
+                $sessionStorage.team_raw_data[$scope.team_number] = $scope.raw_data;
+            });
+    }
+    else {
+        $scope.raw_data = $sessionStorage.team_raw_data[$scope.team_number];
+    }
+
+    if ($sessionStorage.single_team_info_headers == undefined) {
+        $http.get("/api/headers/" + $scope.event.key + "/single_team_info", {cache: true})
+            .then(function (response) {
+                $scope.team_info_headers = response.data;
+                $sessionStorage.single_team_info_headers = response.data;
+            });
+    }
+    else {
+        $scope.team_info_headers = $sessionStorage.single_team_info_headers;
+    }
+
+    if ($sessionStorage.single_team_data_info_headers == undefined) {
+        $http.get("/api/headers/" + $scope.event.key + "/single_team_data_info", {cache: true})
+            .then(function (response) {
+                $scope.data_info_headers = response.data;
+                $sessionStorage.single_team_data_info_headers = response.data;
+            });
+    }
+    else {
+        $scope.data_info_headers = $sessionStorage.single_team_data_info_headers;
+    }
+
+    if ($sessionStorage.single_team_data_headers == undefined) {
+        $http.get("/api/headers/" + $scope.event.key + "/single_team_data", {cache: true})
+            .then(function (response) {
+                $scope.data_headers = response.data;
+                $sessionStorage.single_team_data_headers = response.data;
+            });
+    }
+    else {
+        $scope.data_headers = $sessionStorage.single_team_data_headers;
+    }
+
+    $scope.sortId = $cookies.get('matches-sort-id');
+    $scope.sortReverse = $cookies.get('matches-sort-reverse');
+
+    $scope.sortData = function (key) {
+        if ($scope.sortReverse === undefined) {
+            $scope.sortReverse = true;
+        }
+        if ($scope.sortId === key) {
+            $scope.sortReverse = !$scope.sortReverse;
+        }
+        else {
+            $scope.sortId = key;
+            $scope.sortReverse = true;
+        }
+
+        $cookies.put('matches-sort-id', $scope.sortId);
+        $cookies.put('matches-sort-reverse', $scope.sortReverse);
+    };
+
+
+    $scope.getData = function (elem, key) {
+        if (elem === undefined)
+            return "";
+        if (key.includes(",")) {
+            var keys = key.split(",");
+            var val = elem;
+            keys.forEach(function (k) {
+                if (val === undefined) {
+                    val = "";
+                }
+                else {
+                    val = val[k.trim()];
+                }
+            });
+            return val;
+        }
+        else {
+            return elem[key];
+        }
+    };
+
 });

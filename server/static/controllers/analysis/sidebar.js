@@ -16,6 +16,9 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
         $sessionStorage.teams_headers = undefined;
         $sessionStorage.teams = undefined;
         $sessionStorage.events = undefined;
+        $sessionStorage.team_info = {};
+        $sessionStorage.team_stats_avg = {};
+        $sessionStorage.team_raw_data = {};
     }
 
     $scope.isActive = function (viewLocation) {

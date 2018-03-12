@@ -46,9 +46,9 @@ class InfoServer(object):
     def get_team_images(event_id, team_number):
         images = []
         file_types = ["jpg", "png", "gif", "jpeg", "JPG", "PNG", "GIF", "JPEG"]
-        if path.isdir("server/static/robot_pics/" + event_id + "/" + str(team_number)):
+        if path.isdir("server/static/robot_pics/" + str(team_number)):
             for file_type in file_types:
-                images += glob("server/static/robot_pics/{0}/{1}/*.{2}".format(event_id, team_number, file_type))
+                images += glob("server/static/robot_pics/{0}/*.{1}".format(team_number, file_type))
         images = list(map(lambda x: x.split("/")[-1], images))
         return make_response(jsonify(images))
 
