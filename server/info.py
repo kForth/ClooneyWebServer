@@ -1,12 +1,13 @@
-from tba_py import TBA
-from flask import make_response, jsonify
-from flask_sqlalchemy import SQLAlchemy
-
+import json
 from datetime import datetime
 from glob import glob
 from os import path
 
+from flask import jsonify, make_response
+from flask_sqlalchemy import SQLAlchemy
+
 from server.db import Database
+from tba_py import TBA
 from util.runners import Runner
 
 
@@ -17,7 +18,6 @@ class InfoServer(object):
         self.sql_db = sql_db
         self.tba = tba
         self._register_views()
-        # self.setup_event('2018txda')
 
     def _register_views(self):
         self._add('/events', self.get_available_events)
@@ -65,7 +65,8 @@ class InfoServer(object):
                 teams = {}
                 for alli in ["red", "blue"]:
                     teams[alli] = match['alliances'][alli]['teams']
-                    match['alliances'][alli]['teams'] = dict(zip(map(str, range(1, len(teams[alli])+1)), map(lambda x: x[3:], teams[alli])))
+                    match['alliances'][alli]['teams'] = dict(
+                        zip(map(str, range(1, len(teams[alli]) + 1)), map(lambda x: x[3:], teams[alli])))
                 if team_number is None or team_number in teams["red"] + teams["blue"]:
                     line = {}
                     for header in headers:
@@ -127,6 +128,10 @@ class InfoServer(object):
             self.sql_db.session.commit()
 
         self.get_teams_for_event(entry)
+        filename = 'clooney/{0}/{1}.json'
+        json.dump(json.load(open(filename.format('analysis', 'default' + event_id[:4]))), open(filename.format('analysis', event_id), 'w+'))
+        json.dump(json.load(open(filename.format('expressions', 'default' + event_id[:4]))), open(filename.format('expressions', event_id), 'w+'))
+        json.dump(json.load(open(filename.format('headers', 'default' + event_id[:4]))), open(filename.format('headers', event_id), 'w+'))
         print("Updating Event: {}... Done".format(event_id))
 
     def trigger_event_setup(self, event_id):

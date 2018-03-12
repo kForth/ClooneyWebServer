@@ -1,9 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
-from tba_py import BlueAllianceAPI
+from tba_py import TBA
 
 
 class MatchPredictor:
-    def __init__(self, tba: BlueAllianceAPI, sql_db: SQLAlchemy):
+    def __init__(self, tba: TBA, sql_db: SQLAlchemy):
         self.tba = tba
         self.sql_db = sql_db
 
@@ -20,14 +20,14 @@ class MatchPredictor:
                 continue
             red_score = 0
             match['alliances']['red']['team_list'] = {}
-            for i in range(len(match['alliances']['red']['teams'])):
-                team = int(match['alliances']['red']['teams'][i][3:])
+            for i in range(len(match['alliances']['red']['team_keys'])):
+                team = int(match['alliances']['red']['team_keys'][i][3:])
                 match['alliances']['red']['team_list'][str(i+1)] = team
                 red_score += opr_dict[team]
             blue_score = 0
             match['alliances']['blue']['team_list'] = {}
-            for i in range(len(match['alliances']['blue']['teams'])):
-                team = int(match['alliances']['blue']['teams'][i][3:])
+            for i in range(len(match['alliances']['blue']['team_keys'])):
+                team = int(match['alliances']['blue']['team_keys'][i][3:])
                 match['alliances']['blue']['team_list'][str(i+1)] = team
                 blue_score += opr_dict[team]
             match['alliances']['red']['predict_score'] = int(red_score)
@@ -54,5 +54,5 @@ class MatchPredictor:
 
 if __name__ == "__main__":
     from server import sql_db
-    mp = MatchPredictor(BlueAllianceAPI('kestin', 'clooney', '2.0', enable_caching=True, cache_db_path='../tba.json'), sql_db)
+    mp = MatchPredictor(TBA('GdZrQUIjmwMZ3XVS622b6aVCh8CLbowJkCs5BmjJl2vxNuWivLz3Sf3PaqULUiZW'), sql_db)
     mp.process_event("2017oncmp")

@@ -43,10 +43,10 @@
                 </td>
                 <td ng-repeat="header in headers" class="data-box {{ header.data_class }}"
                     ng-class="{'highlight-green': colours[elem.a] % 4 == 1 || elem[header.sort_id] == highlight_val, 'highlight-red': colours[elem.a] % 4 == 2, 'highlight-blue': colours[elem.a] % 4 == 3}">
-                    <a ng-show="header.title === 'Team'" href="#/team/{{ elem[header.sort_id] }}" class="team-link"
+                    <a ng-show="['Team Number', 'Team', 'T#'].indexOf(header.title) >= 0" href="#/team/{{ elem[header.sort_id] }}" class="team-link"
                        ng-bind="elem[header.sort_id]">
                     </a>
-                    <span ng-show="header.title != 'Team'" ng-bind="elem[header.sort_id]"
+                    <span ng-show="['Team Number', 'Team', 'T#'].indexOf(header.title) < 0" ng-bind="elem[header.sort_id]"
                           uib-tooltip="{{ header.title }}: {{ elem[header.sort_id + 'tooltip'] }}" tooltip-placement="top"></span>
                 </td>
             </tr>
