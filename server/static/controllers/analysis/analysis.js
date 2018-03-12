@@ -582,7 +582,7 @@ app.directive('highlightTable', function ($location, $cookies) {
 });
 
 
-app.directive('multiSortTable', function ($location, $cookies) {
+app.directive('multiSortTable', function ($location, $cookies, $sce, $sessionStorage) {
 
     function link(scope) {
         var cookie_prefix = $location.$$path.replace("/", "");

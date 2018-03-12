@@ -19,6 +19,11 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
         $sessionStorage.team_info = {};
         $sessionStorage.team_stats_avg = {};
         $sessionStorage.team_raw_data = {};
+        $sessionStorage.team_images = {};
+        $http.get('/api/event/' + $cookies.get('selected-event-id') + '/team_images')
+            .then(function(response){
+                $sessionStorage.team_images = response.data;
+            });
     }
 
     $scope.isActive = function (viewLocation) {
@@ -73,7 +78,7 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
         clearSessionStorage();
         $cookies.put('selected-event-id', event.id);
         $cookies.put('selected-event-name', event.name);
-        $route.reload()
+        $route.reload();
     };
 
     $scope.match_levels = [
@@ -117,6 +122,13 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
     }
     else{
         $scope.events = $sessionStorage.events;
+    }
+
+    if($sessionStorage.team_images === undefined) {
+        $http.get('/api/event/' + $cookies.get('selected-event-id') + '/team_images')
+            .then(function (response) {
+                $sessionStorage.team_images = response.data;
+            });
     }
 
 });

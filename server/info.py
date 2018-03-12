@@ -27,6 +27,7 @@ class InfoServer(object):
         self._add('/event/<event_id>/teams', self.get_event_teams)
         self._add('/event/<event_id>/team/<int:team_number>', self.get_team_info)
         self._add('/event/<event_id>/team/<int:team_number>/images', self.get_team_images)
+        self._add('/event/<event_id>/team_images', self.get_team_images_for_event)
         self._add('/event/<event_id>/matches/<level>/<int:team_number>', self.get_matches)
         self._add('/event/<event_id>/matches/<level>', self.get_matches)
         self._add('/event/<event_id>/matches', self.get_matches)
@@ -42,6 +43,21 @@ class InfoServer(object):
         else:
             return make_response(jsonify([]), 400)
         return make_response(jsonify(team_info))
+
+    def get_team_images_for_event(self, event_id):
+        from server.models import Event
+        images = {}
+        file_types = ["jpg", "png", "gif", "jpeg"]
+        teams = Event.query.filter_by(id=event_id).first().get_team_list()
+        for team in teams:
+            team_number = str(team['team_number'])
+            if path.isdir(self.path_prefix + "server/static/robot_pics/" + str(team_number)):
+                images[team_number] = []
+                for file_type in file_types + [e.upper() for e in file_types]:
+                    img_paths = glob(self.path_prefix + "server/static/robot_pics/{0}/*.{1}".format(team_number, file_type))
+                    img_names = list(map(lambda x: x.split("/")[-1], img_paths))
+                    images[team_number] += img_names
+        return make_response(jsonify(images))
 
     def get_team_images(self, event_id, team_number):
         images = []
