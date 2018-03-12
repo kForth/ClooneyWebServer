@@ -62,11 +62,12 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
                 templateUrl: '../../../static/views/account/login.html',
                 controller: 'LogoutController'
             })
-            .when('/', {
-                templateUrl: '../../../static/views/home.html',
-                controller: 'MainViewController'
-            })
-            .otherwise({redirectTo: '/'});
+            .when('/', {redirectTo: '/event'})
+            // .when('/', {
+            //     templateUrl: '../../../static/views/home.html',
+            //     controller: 'MainViewController'
+            // })
+            .otherwise({redirectTo: '/event'});
     })
     .constant('AUTH_EVENTS', {
         loginSuccess: 'auth-login-success',
