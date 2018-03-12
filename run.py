@@ -1,4 +1,3 @@
-from server import ClooneyServer
+from server import application
 
-server = ClooneyServer()
-server.run("0.0.0.0", debug=True, threaded=True)
+application.run("0.0.0.0", debug=True, threaded=True)

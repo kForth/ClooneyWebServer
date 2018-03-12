@@ -52,3 +52,6 @@ class ClooneyServer(object):
 
     def index(self):
         return self.app.send_static_file('views/index.html')
+
+
+server = ClooneyServer()
