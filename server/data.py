@@ -13,7 +13,6 @@ class DataServer(object):
         self._add('/headers/<event>', self.get_table_headers, methods=['GET'])
 
     def get_table_headers(self, event, key=None):
-        print(self.working_dir)
         file_path = self.working_dir + 'clooney/headers/{}.json'.format(event)
         headers = json.load(open(file_path))
         if request.method == "GET":
