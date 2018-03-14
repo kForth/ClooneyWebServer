@@ -1,1 +1,98 @@
-{}
+[
+  {
+    "method":    "count",
+    "key": "match"
+  },
+  {
+    "method":    "mode",
+    "key": "team"
+  },
+  {
+    "method":    "count_true",
+    "key": "auto_no_move"
+  },
+  {
+    "method":    "count_true",
+    "key": "auto_wrong_switch"
+  },
+  {
+    "method":    "avg",
+    "key": "auto_scored_exchange"
+  },
+  {
+    "method":    "avg",
+    "key": "auto_scored_switch"
+  },
+  {
+    "method":    "avg",
+    "key": "auto_scored_scale"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_scored_exchange"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_scored_own_switch"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_scored_opp_switch"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_scored_scale"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_descored_scale"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_dropped_cubes"
+  },
+  {
+    "method":   "mode",
+    "key": "tele_setup_climb_time"
+  },
+  {
+    "method":    "mode",
+    "key": "tele_climbed_self"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_partners_lifted"
+  },
+  {
+    "method":    "avg",
+    "key": "tele_partners_attempted"
+  },
+  {
+    "method":    "count_true",
+    "key": "tele_partner_dropped"
+  },
+  {
+    "method":    "count_true",
+    "key": "tele_lifted_by_partner"
+  },
+  {
+    "method":    "count_true",
+    "key": "tele_parked"
+  },
+  {
+    "method":    "count_true",
+    "key": "disabled"
+  },
+  {
+    "method":    "count_true",
+    "key": "no_move"
+  },
+  {
+    "method":    "count_true",
+    "key": "no_show"
+  },
+  {
+    "method":    "mode",
+    "key": "tele_defense"
+  }
+]

@@ -138,23 +138,9 @@
       "tooltip":    ""
     },
     {
-      "key":   "auto_wrong_scale",
-      "class":      "",
-      "title":      "Auto Wrong Scale",
-      "data_class": "",
-      "tooltip":    ""
-    },
-    {
       "key":   "auto_scored_exchange",
       "class":      "",
       "title":      "Auto Scored Ex",
-      "data_class": "",
-      "tooltip":    ""
-    },
-    {
-      "key":   "auto_attempted_exchange",
-      "class":      "",
-      "title":      "Auto Attempt Ex",
       "data_class": "",
       "tooltip":    ""
     },
@@ -166,23 +152,9 @@
       "tooltip":    ""
     },
     {
-      "key":   "auto_attempted_switch",
-      "class":      "",
-      "title":      "Auto Attempt Switch",
-      "data_class": "",
-      "tooltip":    ""
-    },
-    {
       "key":   "auto_scored_scale",
       "class":      "",
       "title":      "Auto Scored Scale",
-      "data_class": "",
-      "tooltip":    ""
-    },
-    {
-      "key":   "auto_attempted_scale",
-      "class":      "",
-      "title":      "Auto Attempt Scale",
       "data_class": "",
       "tooltip":    ""
     },
@@ -222,23 +194,16 @@
       "tooltip":    ""
     },
     {
-      "key":   "tele_deployed_ramps",
-      "class":      "",
-      "title":      "Ramps Deployed",
-      "data_class": "",
-      "tooltip":    ""
-    },
-    {
-      "key":   "tele_ramps_used",
-      "class":      "",
-      "title":      "Ramps Used",
-      "data_class": "",
-      "tooltip":    ""
-    },
-    {
       "key":   "tele_climbed_self",
       "class":      "",
       "title":      "Lifted Self",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_setup_climb_time",
+      "class":      "",
+      "title":      "Setup Climb",
       "data_class": "",
       "tooltip":    ""
     },
@@ -257,9 +222,9 @@
       "tooltip":    ""
     },
     {
-      "key":   "tele_climbed_ramp",
+      "key":   "tele_partner_dropped",
       "class":      "",
-      "title":      "Climbed Ramp",
+      "title":      "Dropped Partner",
       "data_class": "",
       "tooltip":    ""
     },
@@ -271,9 +236,9 @@
       "tooltip":    ""
     },
     {
-      "key":   "tele_no_climb",
+      "key":   "tele_parked",
       "class":      "",
-      "title":      "No Climb",
+      "title":      "Parked",
       "data_class": "",
       "tooltip":    ""
     },
@@ -361,14 +326,7 @@
     {
       "key":   "auto_wrong_switch, value",
       "class":      "",
-      "title":      "Auto Wrong Switch",
-      "data_class": "",
-      "tooltip":    ""
-    },
-    {
-      "key":   "auto_wrong_scale, value",
-      "class":      "",
-      "title":      "Auto Wrong Scale",
+      "title":      "Auto Wrong Side",
       "data_class": "",
       "tooltip":    ""
     },
@@ -380,23 +338,9 @@
       "tooltip":    ""
     },
     {
-      "key":   "auto_attempted_exchange, value",
-      "class":      "",
-      "title":      "Auto Attempt Ex",
-      "data_class": "",
-      "tooltip":    ""
-    },
-    {
       "key":   "auto_scored_switch, value",
       "class":      "",
       "title":      "Auto Scored Switch",
-      "data_class": "",
-      "tooltip":    ""
-    },
-    {
-      "key":   "auto_attempted_switch, value",
-      "class":      "",
-      "title":      "Auto Attempt Switch",
       "data_class": "",
       "tooltip":    ""
     },
@@ -408,9 +352,9 @@
       "tooltip":    ""
     },
     {
-      "key":   "auto_attempted_scale, value",
+      "key":   "tele_scored_exchange, value",
       "class":      "",
-      "title":      "Auto Attempt Scale",
+      "title":      "Scored Exchange",
       "data_class": "",
       "tooltip":    ""
     },
@@ -450,23 +394,16 @@
       "tooltip":    ""
     },
     {
-      "key":   "tele_deployed_ramps, value",
-      "class":      "",
-      "title":      "Ramps Deployed",
-      "data_class": "",
-      "tooltip":    ""
-    },
-    {
-      "key":   "tele_ramps_used, value",
-      "class":      "",
-      "title":      "Ramps Used",
-      "data_class": "",
-      "tooltip":    ""
-    },
-    {
       "key":   "tele_climbed_self, value",
       "class":      "",
       "title":      "Lifted Self",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_setup_climb_time, value",
+      "class":      "",
+      "title":      "Setup Climb",
       "data_class": "",
       "tooltip":    ""
     },
@@ -485,9 +422,9 @@
       "tooltip":    ""
     },
     {
-      "key":   "tele_climbed_ramp, value",
+      "key":   "tele_partner_dropped, value",
       "class":      "",
-      "title":      "Climbed Ramp",
+      "title":      "Dropped Partner",
       "data_class": "",
       "tooltip":    ""
     },
@@ -499,9 +436,9 @@
       "tooltip":    ""
     },
     {
-      "key":   "tele_no_climb, value",
+      "key":   "tele_parked, value",
       "class":      "",
-      "title":      "No Climb",
+      "title":      "Parked",
       "data_class": "",
       "tooltip":    ""
     },
@@ -511,6 +448,13 @@
       "title":      "Defense",
       "data_class": "",
       "tooltip":    ""
+    },
+    {
+      "key":   "calc,tele_cubes_scored",
+      "class":      "",
+      "title":      "*Cubes Scored",
+      "data_class": "",
+      "tooltip":    ""
     }
   ],
   "avg_best": [
@@ -518,6 +462,13 @@
       "key":   "tele_scored_scale",
       "class":      "",
       "title":      "Avg Scale Cubes Scored",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_scored_exchange",
+      "class":      "",
+      "title":      "Avg Exchange Cubes Scored",
       "data_class": "",
       "tooltip":    ""
     },
@@ -532,6 +483,13 @@
       "key":   "tele_scored_opp_switch",
       "class":      "",
       "title":      "Avg Opp Switch Cubes Scored",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
+      "key":   "tele_cubes_scored",
+      "class":      "",
+      "title":      "Avg Cubes Scored",
       "data_class": "",
       "tooltip":    ""
     }

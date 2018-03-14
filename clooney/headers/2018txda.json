@@ -415,6 +415,13 @@
       "tooltip":    ""
     },
     {
+      "key":   "tele_scored_exchange, value",
+      "class":      "",
+      "title":      "Scored Echange",
+      "data_class": "",
+      "tooltip":    ""
+    },
+    {
       "key":   "tele_scored_own_switch, value",
       "class":      "",
       "title":      "Scored Own Switch",

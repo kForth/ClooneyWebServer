@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Total Cubes",
+    "expression": "avg['tele_scored_own_switch']['value'] + avg['tele_scored_opp_switch']['value'] + avg['tele_scored_scale']['value']",
+    "round": 1,
+    "key": "tele_cubes_scored"
+  }
+]

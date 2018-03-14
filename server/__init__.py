@@ -38,7 +38,7 @@ class ClooneyServer(object):
 
         self._register_views()
         self.data_server = DataServer(self._add, "/api", working_dir=root_path)
-        self.stats_server = StatsServer(self._add, self.db, self.sql_db, self.tba, "/api")
+        self.stats_server = StatsServer(self._add, self.db, self.sql_db, self.tba, "/api", root_path)
         self.info_server = InfoServer(self._add, self.db, self.sql_db, self.tba, "/api", path_prefix=root_path)
         self.sql_server = SqlServer(self._add, self.sql_db, "/api/sql")
         self.user_server = UsersServer(self._add, url_prefix="/user")
