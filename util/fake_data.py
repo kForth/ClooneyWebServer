@@ -7,11 +7,29 @@ from tba_py import TBA
 
 if __name__ == "__main__":
     tba = TBA('GdZrQUIjmwMZ3XVS622b6aVCh8CLbowJkCs5BmjJl2vxNuWivLz3Sf3PaqULUiZW')
-    event_key = '2018txda'
-    sheet = json.load(open('/Users/kestin/Projects/ClooneySheetGen/resources/powerup_test_2.json'))
+    event_key = '2018onto1'
+    sheet = json.load(open('/Users/kestin/Projects/ClooneySheetGen/resources/powerup_test_3.json'))
     matches = tba.get_event_matches(event_key)
+    if not matches:
+        matches = []
+        teams = tba.get_event_teams(event_key)
+        for match_num in range(100):
+            match = {
+                'match_number': match_num + 1,
+                'alliances': {
+                    'red': {
+                        'team_keys': []
+                    },
+                    'blue': {
+                        'team_keys': []
+                    }
+                }
+            }
+            for alliance in ['red', 'blue']:
+                for i in range(3):
+                    match['alliances'][alliance]['team_keys'] += ['frc' + str(random.choice(teams)['team_number'])]
+            matches += [match]
 
-    i = 0
     for match in matches:
         for alliance in sorted(match['alliances'].keys()):
             for team in match['alliances'][alliance]['team_keys']:
@@ -41,4 +59,4 @@ if __name__ == "__main__":
                 resp = requests.post('http://0.0.0.0:5000/api/sql/add_entry', json=payload)
                 if resp.status_code != 200:
                     print(resp)
-        print("Done")
+    print("Done")
