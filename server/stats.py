@@ -11,13 +11,13 @@ from updaters import AverageCalculator
 
 
 class StatsServer(object):
-    def __init__(self, add: classmethod, db: Database, sql_db: SQLAlchemy, tba: TBA, url_prefix=""):
+    def __init__(self, add: classmethod, db: Database, sql_db: SQLAlchemy, tba: TBA, url_prefix="", path_prefix=""):
         self._add = lambda *x, **y: add(*x, **y, url_prefix=url_prefix)
         self.db = db
         self.sql_db = sql_db
         self.tba = tba
         self._register_views()
-        self.avg_calc = AverageCalculator(sql_db, db)
+        self.avg_calc = AverageCalculator(sql_db, db, path_prefix)
         self.opr_calc = OprCalculator(tba)
 
     def _get_event_db(self, event):

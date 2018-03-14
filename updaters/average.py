@@ -10,13 +10,14 @@ from util.runners import Runner
 
 
 class AverageCalculator(Runner):
-    def __init__(self, sql_db: SQLAlchemy, db: Database):
+    def __init__(self, sql_db: SQLAlchemy, db: Database, path_prefix):
         Runner.__init__(self, self._process)
         self.sql_db = sql_db
         self.db = db
+        self.path_prefix = path_prefix
 
     def _get_fp(self, folder, event):
-        return "clooney/{0}/{1}".format(folder, event)
+        return self.path_prefix + "clooney/{0}/{1}".format(folder, event)
 
     def update(self, event):
         Runner.run(self, event)
@@ -101,15 +102,15 @@ class AverageCalculator(Runner):
         calculator = Calc()
         entries = AnalysisEntry.query.filter_by(event=event, key="avg").all()
         oprs = self.db.get_event_oprs(event)
+        print(oprs)
         if entries:
             avg_data = list(map(lambda x: x.to_dict()["data"], entries))
             expressions = json.load(open(self._get_fp('expressions', event) + ".json"))
             for team in avg_data:
                 team_number = team['team']["value"]
                 calculator.add_fields(avg=team)
-                if team_number not in oprs.keys():
-                    continue
-                calculator.add_fields(opr=oprs[team_number])
+                if team_number in oprs.keys():
+                    calculator.add_fields(opr=oprs[team_number])
                 team_calc = {}
                 for expression in expressions:
                     calculator.add_fields(calculated=team_calc)
@@ -120,7 +121,6 @@ class AverageCalculator(Runner):
                             val = round(val, int(expression["round"]))
                         team_calc[expression["key"]] = val
                     except Exception as ex:
-                        print(eq)
                         raise ex
                     team['calculated'] = team_calc
                 entry_id = "{0}_{1}_{2}".format(event, "calc", team_number)
