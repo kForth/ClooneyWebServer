@@ -47,9 +47,13 @@ class ClooneyServer(object):
 
     def _register_views(self):
         self._add('/', self.index)
+        self._add('/printable_stats', self.printable_stats)
 
     def _add(self, route: str, func: classmethod, methods=('GET',), url_prefix=""):
         self.app.add_url_rule(url_prefix + route, url_prefix + route, view_func=func, methods=methods)
+
+    def printable_stats(self):
+        return self.app.send_static_file('views/printable_stats.html')
 
     def index(self):
         return self.app.send_static_file('views/index.html')
