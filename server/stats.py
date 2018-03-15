@@ -12,7 +12,7 @@ from updaters import AverageCalculator
 
 class StatsServer(object):
     def __init__(self, add: classmethod, db: Database, sql_db: SQLAlchemy, tba: TBA, url_prefix="", path_prefix=""):
-        self._add = lambda *x, **y: add(*x, **y, url_prefix=url_prefix)
+        self._add = lambda *x, **y: add(*x, url_prefix=url_prefix, **y)
         self.db = db
         self.sql_db = sql_db
         self.tba = tba

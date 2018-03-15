@@ -3,7 +3,7 @@ from flask import jsonify, make_response, request, redirect, session
 
 class UsersServer(object):
     def __init__(self, add: classmethod, url_prefix=""):
-        self._add = lambda *args, **kwarg: add(*args, **kwarg, url_prefix=url_prefix)
+        self._add = lambda *args, **kwarg: add(*args, url_prefix=url_prefix, **kwarg)
         self._register_views()
 
     def _register_views(self):

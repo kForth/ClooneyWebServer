@@ -6,7 +6,7 @@ import json
 
 class SqlServer(object):
     def __init__(self, add: classmethod, sql_db: SQLAlchemy, url_prefix=""):
-        self._add = lambda *x, **y: add(*x, **y, url_prefix=url_prefix)
+        self._add = lambda *x, **y: add(*x, url_prefix=url_prefix, **y)
         self.db = sql_db
         self._register_views()
 

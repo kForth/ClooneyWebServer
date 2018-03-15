@@ -5,7 +5,7 @@ import json
 class DataServer(object):
     def __init__(self, add: classmethod, url_prefix="", working_dir=""):
         self.working_dir = working_dir
-        self._add = lambda *x, **y: add(*x, **y, url_prefix=url_prefix)
+        self._add = lambda *x, **y: add(*x, url_prefix=url_prefix, **y)
         self._register_views()
 
     def _register_views(self):
