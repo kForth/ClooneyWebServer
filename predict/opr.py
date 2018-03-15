@@ -1,6 +1,4 @@
 import numpy as np
-from scipy.optimize import minimize
-from scipy.stats import percentileofscore
 from tba_py import TBA
 
 from flask_sqlalchemy import SQLAlchemy
@@ -86,11 +84,11 @@ class OprCalculator(object):
     def solve(interactions, scores):
         return np.linalg.solve(interactions, scores)
 
-    @staticmethod
-    def minimize(interactions, scores):
-        n = len(scores)
-        func = lambda x: np.linalg.norm(np.dot(interactions, x) - scores)
-        return minimize(func, np.zeros(n), method='L-BFGS-B', bounds=[(0., None) for _ in range(n)])["x"]
+    # @staticmethod
+    # def minimize(interactions, scores):
+    #     n = len(scores)
+    #     func = lambda x: np.linalg.norm(np.dot(interactions, x) - scores)
+    #     return minimize(func, np.zeros(n), method='L-BFGS-B', bounds=[(0., None) for _ in range(n)])["x"]
 
     def get_event_oprs(self, event_id, minimize=False, db=None):
         from server.models import OprEntry
@@ -119,15 +117,15 @@ class OprCalculator(object):
             dump, scores = self.get_score_sums(temp_matches, list(teams))
 
             solve_start_time = time.time()
-            if minimize:
-                oprs = self.minimize(interactions, scores)
-            else:
-                oprs = self.solve(interactions, scores)
+            # if minimize:
+            #     oprs = self.minimize(interactions, scores)
+            # else:
+            oprs = self.solve(interactions, scores)
             solve_time_accum += time.time() - solve_start_time
             opr_dict = dict(zip(teams, oprs))
             for team in teams:
                 if db is not None and type(db) is SQLAlchemy:
-                    percentile = percentileofscore(oprs, opr_dict[team])
+                    percentile = 0  # percentileofscore(oprs, opr_dict[team])
                     entry_id = "_".join([str(team), event_id, score_type])
                     entry = OprEntry.query.filter_by(id=entry_id).first()
                     if entry:
