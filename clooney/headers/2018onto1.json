@@ -117,7 +117,7 @@
       "tooltip":    ""
     },
     {
-      "key":   "team",
+      "key":   "team_number",
       "class":      "",
       "title":      "T#",
       "data_class": "",
