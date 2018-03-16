@@ -310,7 +310,7 @@
       "tooltip":    ""
     },
     {
-      "key":   "team, value",
+      "key":   "team_number, value",
       "class":      "",
       "title":      "T#",
       "data_class": "",

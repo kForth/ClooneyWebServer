@@ -5,7 +5,7 @@
   },
   {
     "method":    "mode",
-    "key": "team"
+    "key": "team_number"
   },
   {
     "method":    "count_true",

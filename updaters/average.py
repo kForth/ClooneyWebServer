@@ -30,7 +30,7 @@ class AverageCalculator(Runner):
 
         sorted_data = {}
         for line in raw:
-            team = line["team"]
+            team = line["team_number"]
             if team not in sorted_data.keys():
                 sorted_data[team] = {}
             for key in line:

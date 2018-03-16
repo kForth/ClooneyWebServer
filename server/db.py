@@ -94,7 +94,7 @@ class Database(object):
         calc = dict(zip(map(lambda x: x.team, calc), map(lambda x: x.get_data(), calc)))
         for entry in entries:
             data = entry.get_data()
-            team_number = data["team"]["value"]
+            team_number = data["team_number"]["value"]
             if team_number in oprs.keys():
                 opr_dict = oprs[team_number]
                 data["opr"] = dict(zip(opr_dict.keys(), map(lambda x: round(x, 1), opr_dict.values())))
