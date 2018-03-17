@@ -138,7 +138,7 @@ class StatsServer(object):
         data = self.db.get_raw_data(event_id)
         output = []
         for line in data:
-            if str(line["team"]) == str(team_number):
+            if str(line["team_number"]) == str(team_number):
                 output.append(line)
         table_data = self._create_table_data(self.db.get_table_headers(event_id, "single_team_data"), output)
         return make_response(jsonify(table_data))
