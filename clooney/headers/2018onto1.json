@@ -592,7 +592,7 @@
       "tooltip":    ""
     },
     {
-      "key":   "calc,tele_cubes_scored",
+      "key":   "calc, tele_cubes_scored",
       "class":      "",
       "title":      "*Cubes Scored",
       "data_class": "",

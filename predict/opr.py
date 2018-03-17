@@ -152,12 +152,12 @@ if __name__ == "__main__":
     from server import sql_db
     tba = TBA('GdZrQUIjmwMZ3XVS622b6aVCh8CLbowJkCs5BmjJl2vxNuWivLz3Sf3PaqULUiZW', use_cache=False, cache_filename='../tba.json')
 
-    events = tba.get_events("2018")
-    target_week = 1 #zero index
-    event_keys = []
-    for event in events:
-        if event["week"] is not None and event["week"] == target_week:
-            event_keys.append(event["key"])
+    # events = tba.get_events("2018")
+    # target_week = 1 #zero index
+    event_keys = ['2018onto1']
+    # for event in events:
+    #     if event["week"] is not None and event["week"] == target_week:
+    #         event_keys.append(event["key"])
 
     opr = OprCalculator(tba)
 

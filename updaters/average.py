@@ -102,7 +102,6 @@ class AverageCalculator(Runner):
         calculator = Calc()
         entries = AnalysisEntry.query.filter_by(event=event, key="avg").all()
         oprs = self.db.get_event_oprs(event)
-        print(oprs)
         if entries:
             avg_data = list(map(lambda x: x.to_dict()["data"], entries))
             expressions = json.load(open(self._get_fp('expressions', event) + ".json"))

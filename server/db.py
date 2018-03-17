@@ -98,8 +98,8 @@ class Database(object):
             if team_number in oprs.keys():
                 opr_dict = oprs[team_number]
                 data["opr"] = dict(zip(opr_dict.keys(), map(lambda x: round(x, 1), opr_dict.values())))
-                if team_number in calc.keys():
-                    data["calc"] = calc[team_number]
+            if team_number in calc.keys():
+                data["calc"] = calc[int(team_number)]
             entry.set_data(data)
         return dict([(str(elem.team), elem.get_data()) for elem in entries])
 
