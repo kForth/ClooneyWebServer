@@ -107,7 +107,7 @@ class AverageCalculator(Runner):
             avg_data = list(map(lambda x: x.to_dict()["data"], entries))
             expressions = json.load(open(self._get_fp('expressions', event) + ".json"))
             for team in avg_data:
-                team_number = team['team']["value"]
+                team_number = team['team_number']["value"]
                 calculator.add_fields(avg=team)
                 if team_number in oprs.keys():
                     calculator.add_fields(opr=oprs[team_number])
