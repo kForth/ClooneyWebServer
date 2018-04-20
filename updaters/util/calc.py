@@ -8,10 +8,12 @@ class Calc(object):
             'min': min,
             'max': max,
             'mode': statistics.mode,
+            'mean': statistics.mean,
             'print': print,
             'len': len,
             'round': round,
-            'zip': zip,
+            'zip': lambda *x: list(zip(*x)),
+            'zip_sum': lambda x: [sum(e) for e in x],
             'sum': sum,
             'map': map,
             'int': int,
@@ -23,4 +25,10 @@ class Calc(object):
             self.fields[key] = value
 
     def solve(self, equation):
-        return eval(equation, {"__builtins__": None}, self.fields)
+        try:
+            value = eval(equation, {"__builtins__": None}, self.fields)
+            return value
+        except Exception as ex:
+            print(equation)
+            print(ex)
+            raise ex

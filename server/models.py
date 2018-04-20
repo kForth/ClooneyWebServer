@@ -53,6 +53,15 @@ class Event(db.Model):
         }
 
 
+class LastModifiedEntry(db.Model):
+    __tablename__ = "last_modified"
+
+    id = db.Column(db.INTEGER, primary_key=True)
+    event = db.Column(db.TEXT, nullable=False)
+    key = db.Column(db.TEXT, nullable=False)
+    last_modified = db.Column(db.TEXT, nullable=True)
+
+
 class ScoutingEntry(db.Model):
     __tablename__ = "scouting_entries"
 

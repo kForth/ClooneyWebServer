@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "name": "Total Cubes",
+    "expression": "mean(zip_sum(zip(avg['tele_scored_own_switch']['raw'], avg['tele_scored_opp_switch']['raw'], avg['tele_scored_scale']['raw'], avg['tele_scored_exchange']['raw'])))",
+    "round": 1,
+    "key": "tele_cubes_scored"
+  },
+  {
+    "name": "Total Switch Cubes",
+    "expression": "mean(zip_sum(zip(avg['tele_scored_own_switch']['raw'], avg['tele_scored_opp_switch']['raw'])))",
+    "round": 1,
+    "key": "tele_switch_cubes_scored"
+  },
+  {
+    "name": "Total Auto Cubes",
+    "expression": "mean(zip_sum(zip(avg['auto_scored_switch']['raw'], avg['auto_scored_scale']['raw'])))",
+    "round": 1,
+    "key": "auto_cubes_scored"
+  }
+]

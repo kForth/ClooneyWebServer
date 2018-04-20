@@ -45,56 +45,56 @@
       "tooltip_key":    ""
     },
     {
-      "key":   "alliances.red.teams.1",
+      "key":   "alliances,red,teams,1",
       "class":      "",
       "title":      "Red 1",
       "data_class": "red-alliance team",
       "tooltip_key":    ""
     },
     {
-      "key":   "alliances.red.teams.2",
+      "key":   "alliances,red,teams,2",
       "class":      "",
       "title":      "Red 2",
       "data_class": "red-alliance team",
       "tooltip_key":    ""
     },
     {
-      "key":   "alliances.red.teams.3",
+      "key":   "alliances,red,teams,3",
       "class":      "",
       "title":      "Red 3",
       "data_class": "red-alliance team",
       "tooltip_key":    ""
     },
     {
-      "key":   "alliances.blue.teams.1",
+      "key":   "alliances,blue,teams,1",
       "class":      "",
       "title":      "Blue 1",
       "data_class": "blue-alliance team",
       "tooltip_key":    ""
     },
     {
-      "key":   "alliances.blue.teams.2",
+      "key":   "alliances,blue,teams,2",
       "class":      "",
       "title":      "Blue 2",
       "data_class": "blue-alliance team",
       "tooltip_key":    ""
     },
     {
-      "key":   "alliances.blue.teams.3",
+      "key":   "alliances,blue,teams,3",
       "class":      "",
       "title":      "Blue 3",
       "data_class": "blue-alliance team",
       "tooltip_key":    ""
     },
     {
-      "key":   "score_breakdown.red.totalPoints",
+      "key":   "score_breakdown,red,totalPoints",
       "class":      "",
       "title":      "Red Score",
       "data_class": "red-alliance",
       "tooltip_key":    ""
     },
     {
-      "key":   "score_breakdown.blue.totalPoints",
+      "key":   "score_breakdown,blue,totalPoints",
       "class":      "",
       "title":      "Blue Score",
       "data_class": "blue-alliance",
@@ -452,77 +452,77 @@
   ],
   "stats_avg": [
     {
-      "key":   "match.value",
+      "key":   "match,value",
       "class":      "",
       "title":      "M#",
       "data_class": "",
       "tooltip_key":    "match"
     },
     {
-      "key":   "team_number.value",
+      "key":   "team_number,value",
       "class":      "",
       "title":      "T#",
       "data_class": "",
-      "tooltip_key":    "team_number.value"
+      "tooltip_key":    "team_number,value"
     },
     {
-      "key":   "auto_wrong_switch.value",
+      "key":   "auto_wrong_switch,value",
       "class":      "",
       "title":      "Auto Wrong Side",
       "data_class": "",
       "tooltip_key":    "auto_wrong_switch"
     },
     {
-      "key":   "auto_scored_exchange.value",
+      "key":   "auto_scored_exchange,value",
       "class":      "",
       "title":      "Auto Scored Ex",
       "data_class": "",
       "tooltip_key":    "auto_scored_exchange"
     },
     {
-      "key":   "auto_scored_switch.value",
+      "key":   "auto_scored_switch,value",
       "class":      "",
       "title":      "Auto Scored Switch",
       "data_class": "",
       "tooltip_key":    "auto_scored_switch"
     },
     {
-      "key":   "auto_scored_scale.value",
+      "key":   "auto_scored_scale,value",
       "class":      "",
       "title":      "Auto Scored Scale",
       "data_class": "",
       "tooltip_key":    "auto_scored_scale"
     },
     {
-      "key":   "tele_scored_exchange.value",
+      "key":   "tele_scored_exchange,value",
       "class":      "",
       "title":      "Scored Exchange",
       "data_class": "",
       "tooltip_key":    "tele_scored_exchange"
     },
     {
-      "key":   "tele_scored_own_switch.value",
+      "key":   "tele_scored_own_switch,value",
       "class":      "",
       "title":      "Scored Own Switch",
       "data_class": "",
       "tooltip_key":    "tele_scored_own_switch"
     },
     {
-      "key":   "tele_scored_opp_switch.value",
+      "key":   "tele_scored_opp_switch,value",
       "class":      "",
       "title":      "Scored Opp Switch",
       "data_class": "",
       "tooltip_key":    "tele_scored_opp_switch"
     },
     {
-      "key":   "tele_scored_scale.value",
+      "key":   "tele_scored_scale,value",
       "class":      "",
       "title":      "Scored Scale",
       "data_class": "",
       "tooltip_key":    "tele_scored_scale"
     },
     {
-      "key":   "tele_dropped_cubes.value",
+      "key":   "tele_dropped_cubes,value",
       "class":      "",
       "title":      "Dropped Cubes",
       "data_class": "",
@@ -532,60 +532,60 @@
       "title": "Total Cubes",
       "class": "",
       "data_class": "",
-      "key": "calc.tele_cubes_scored",
+      "key": "calc,tele_cubes_scored",
       "tooltip_key": "tele_cubes_scored"
     },
     {
       "title": "Total Switch Cubes",
       "class": "",
       "data_class": "",
-      "key": "calc.tele_switch_cubes_scored",
+      "key": "calc,tele_switch_cubes_scored",
       "tooltip_key": "tele_switch_cubes_scored"
     },
     {
       "title": "Total Auto Cubes",
       "class": "",
       "data_class": "",
-      "key": "calc.auto_cubes_scored",
+      "key": "calc,auto_cubes_scored",
       "tooltip_key": "auto_cubes_scored"
     },
     {
-      "key":   "calc.tele_cubes_scored",
+      "key":   "calc,tele_cubes_scored",
       "class":      "",
       "title":      "Total Cubes Scored",
       "data_class": "",
-      "tooltip_key":    "calc.tele_cubes_scored"
+      "tooltip_key":    "calc,tele_cubes_scored"
     },
     {
       "title":      "Lifted Self",
       "class":      "",
       "data_class": "",
-      "key":   "tele_climbed_self.count_common",
+      "key":   "tele_climbed_self,count_common",
       "tooltip_key":    "tele_climbed_self"
     },
     {
       "title":      "Setup Climb",
       "class":      "",
       "data_class": "",
-      "key":   "tele_setup_climb_time.value",
+      "key":   "tele_setup_climb_time,value",
       "tooltip_key":    "tele_setup_climb_time"
     },
     {
       "title":      "Partners Lifted",
       "class":      "",
       "data_class": "",
-      "key":   "tele_partners_lifted.value",
+      "key":   "tele_partners_lifted,value",
       "tooltip_key":    "tele_partners_lifted"
     },
     {
-      "key":   "tele_partner_dropped.value",
+      "key":   "tele_partner_dropped,value",
       "class":      "",
       "title":      "Dropped Partner",
       "data_class": "",
       "tooltip_key":    "tele_partner_dropped"
     },
     {
-      "key":   "tele_defense.count_common",
+      "key":   "tele_defense,count_common",
       "class":      "",
       "title":      "Defense",
       "data_class": "",
@@ -598,35 +598,35 @@
       "class":      "",
       "title":      "Avg Scale Cubes Scored",
       "data_class": "",
-      "tooltip_key":    "tele_scored_scale.raw"
+      "tooltip_key":    "tele_scored_scale,raw"
     },
     {
       "key":   "tele_scored_exchange",
       "class":      "",
       "title":      "Avg Exchange Cubes Scored",
       "data_class": "",
-      "tooltip_key":    "tele_scored_exchange.raw"
+      "tooltip_key":    "tele_scored_exchange,raw"
     },
     {
       "key":   "tele_scored_own_switch",
       "class":      "",
       "title":      "Avg Own Switch Cubes Scored",
       "data_class": "",
-      "tooltip_key":    "tele_scored_own_switch.raw"
+      "tooltip_key":    "tele_scored_own_switch,raw"
     },
     {
       "key":   "tele_scored_opp_switch",
       "class":      "",
       "title":      "Avg Opp Switch Cubes Scored",
       "data_class": "",
-      "tooltip_key":    "tele_scored_opp_switch.raw"
+      "tooltip_key":    "tele_scored_opp_switch,raw"
     },
     {
-      "key":   "calc.tele_cubes_scored",
+      "key":   "calc,tele_cubes_scored",
       "class":      "",
       "title":      "Avg Cubes Scored",
       "data_class": "",
-      "tooltip_key":    "calc.tele_cubes_scored"
+      "tooltip_key":    "calc,tele_cubes_scored"
     }
   ],
   "single_team_info": [
@@ -661,105 +661,105 @@
   ],
   "match_single_team_data": [
     {
-      "key":   "match.value",
+      "key":   "match,value",
       "class":      "",
       "title":      "M#",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "team_number.value",
+      "key":   "team_number,value",
       "class":      "",
       "title":      "T#",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "auto_no_move.raw",
+      "key":   "auto_no_move,raw",
       "class":      "",
       "title":      "Auto No Move",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "auto_scored_exchange.raw",
+      "key":   "auto_scored_exchange,raw",
       "class":      "",
       "title":      "Auto Scored Ex",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "auto_scored_switch.raw",
+      "key":   "auto_scored_switch,raw",
       "class":      "",
       "title":      "Auto Scored Switch",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "auto_scored_scale.raw",
+      "key":   "auto_scored_scale,raw",
       "class":      "",
       "title":      "Auto Scored Scale",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "tele_scored_own_switch.raw",
+      "key":   "tele_scored_own_switch,raw",
       "class":      "",
       "title":      "Scored Own Switch",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "tele_scored_opp_switch.raw",
+      "key":   "tele_scored_opp_switch,raw",
       "class":      "",
       "title":      "Scored Opp Switch",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "tele_scored_scale.raw",
+      "key":   "tele_scored_scale,raw",
       "class":      "",
       "title":      "Scored Scale",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "tele_descored_scale.raw",
+      "key":   "tele_descored_scale,raw",
       "class":      "",
       "title":      "Knocked Off Scale",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "tele_dropped_cubes.raw",
+      "key":   "tele_dropped_cubes,raw",
       "class":      "",
       "title":      "Dropped Cubes",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "tele_climbed_self.raw",
+      "key":   "tele_climbed_self,raw",
       "class":      "",
       "title":      "Lifted Self",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "tele_partners_lifted.raw",
+      "key":   "tele_partners_lifted,raw",
       "class":      "",
       "title":      "Partners Lifted",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "tele_partners_attempted.raw",
+      "key":   "tele_partners_attempted,raw",
       "class":      "",
       "title":      "Partners Attempted",
       "data_class": "",
       "tooltip_key":    ""
     },
     {
-      "key":   "tele_defense.raw",
+      "key":   "tele_defense,raw",
       "class":      "",
       "title":      "Defense",
       "data_class": "",

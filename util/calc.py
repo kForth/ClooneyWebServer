@@ -25,4 +25,10 @@ class Calc(object):
             self.fields[key] = value
 
     def solve(self, equation):
-        return eval(equation, {"__builtins__": None}, self.fields)
+        try:
+            value = eval(equation, {"__builtins__": None}, self.fields)
+            return value
+        except Exception as ex:
+            print(equation)
+            print(ex)
+            raise ex

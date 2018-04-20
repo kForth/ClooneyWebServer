@@ -26,11 +26,11 @@
                         <td>Value</td>
                     </tr>
                 </thead>
-                <tbody ng-repeat="elem in data | orderBy:header.key:true | limitTo:5">
+                <tbody ng-repeat="elem in data | orderBy:(header.key+'.value'):true | limitTo:5">
                     <tr>
                         <td><b>{{ $index+1 }}</b></td>
-                        <td><a href="#/team/{{ elem.team.value }}" class="team-link">
-                            {{ elem.team.value }}
+                        <td><a href="#/team/{{ elem.team_number.value }}" class="team-link">
+                            {{ elem.team_number.value }}
                         </a></td>
                         <td uib-tooltip="{{ elem[header.key].raw }}" tooltip-placement="top-left">
                             {{ elem[header.key].value }}

@@ -1,3 +1,4 @@
+import datetime
 import numpy as np
 from tba_py import TBA
 
@@ -91,7 +92,7 @@ class OprCalculator(object):
     #     return minimize(func, np.zeros(n), method='L-BFGS-B', bounds=[(0., None) for _ in range(n)])["x"]
 
     def get_event_oprs(self, event_id, minimize=False, db=None):
-        from server.models import OprEntry
+        from server.models import OprEntry, LastModifiedEntry
         print("Working on: {}".format(event_id))
         start_time = time.time()
         solve_time_accum = 0
@@ -141,6 +142,11 @@ class OprCalculator(object):
                 opr_list[team]["oprs"][score_type] = round(opr_dict[team], 2)
 
         if db is not None and type(db) is SQLAlchemy:
+            entry = LastModifiedEntry.query.filter_by(event='all', key='opr').first()
+            if not entry:
+                entry = LastModifiedEntry(event='all', key='opr')
+            entry.last_modified = datetime.datetime.utcnow()
+            db.session.add(entry)
             db.session.commit()
 
         print("Finished Event: {}".format(event_id))
@@ -152,14 +158,15 @@ if __name__ == "__main__":
     from server import sql_db
     tba = TBA('GdZrQUIjmwMZ3XVS622b6aVCh8CLbowJkCs5BmjJl2vxNuWivLz3Sf3PaqULUiZW', use_cache=False, cache_filename='../tba.json')
 
-    # events = tba.get_events("2018")
-    # target_week = 1 #zero index
-    event_keys = ['2018onto1']
-    # for event in events:
-    #     if event["week"] is not None and event["week"] == target_week:
-    #         event_keys.append(event["key"])
+    events = tba.get_events("2018")
+    target_week = 6  # zero index
+    event_keys = []
+    for event in events:
+        if event["week"] is not None and event["week"] == target_week:
+            event_keys.append(event["key"])
 
     opr = OprCalculator(tba)
 
     for event_key in event_keys:
         opr.get_event_oprs(event_key, db=sql_db)
+    print("Done.")

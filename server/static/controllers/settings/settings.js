@@ -1,15 +1,15 @@
 var app = angular.module('settingsApp', ['ngRoute', 'ui.bootstrap', 'ngCookies']);
 
-app.controller("SettingsHomeController", function(){
+app.controller("SettingsHomeController", function(EventDataService){
 
 });
 
-app.controller('HeaderEditController', function ($http, $scope, $location, $cookies) {
+app.controller('HeaderEditController', function ($http, $scope, $location, $cookies, EventDataService) {
 
     $scope.add_message = "Add Header";
     $scope.event = {
         name: $cookies.get('selected-event-name'),
-        key: $cookies.get('selected-event-id')
+        key: EventDataService.getSelectedEventKey()
     };
 
     $scope.reset = function () {
@@ -64,12 +64,12 @@ app.controller('HeaderEditController', function ($http, $scope, $location, $cook
 
 });
 
-app.controller('ExpressionEditController', function ($http, $scope, $location, $cookies) {
+app.controller('ExpressionEditController', function ($http, $scope, $location, $cookies, EventDataService) {
 
     $scope.add_message = "Add Expression";
     $scope.event = {
         name: $cookies.get('selected-event-name'),
-        key: $cookies.get('selected-event-id')
+        key: EventDataService.getSelectedEventKey()
     };
 
     var headerTarget = "/api/event/" + $scope.event.key + "/expressions";
@@ -123,7 +123,7 @@ app.controller('ExpressionEditController', function ($http, $scope, $location, $
 
 });
 
-app.controller('SidebarController', function ($scope, $location, $cookies, $http, $route) {
+app.controller('SidebarController', function ($scope, $location, $cookies, $http, $route, EventDataService) {
 
     $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
@@ -137,13 +137,13 @@ app.controller('SidebarController', function ($scope, $location, $cookies, $http
         return event;
     };
     $scope.isSelectedEvent = function (event) {
-        return event === $cookies.get('selected-event-id');
+        return event === EventDataService.getSelectedEventKey();
     };
     $scope.selectEvent = function (event) {
         $cookies.put('selected-event-id', event.id);
         $cookies.put('selected-event-name', event.name);
         loadGroups();
-        $route.reload()
+        // $route.reload()
     };
 
     $http.get("/api/events")
@@ -164,19 +164,19 @@ app.controller('SidebarController', function ($scope, $location, $cookies, $http
     $scope.selectHeaders = function (group) {
         $scope.headerGroup = group;
         $cookies.put('selected-header-group', group);
-        $route.reload()
+        // $route.reload()
     };
 
     function loadGroups(){
         $http.get('/api/headers/' + $scope.event.key).then(function (response) {
             $scope.headerGroups = angular.copy(response.data);
-            $route.reload()
+            // $route.reload()
         });
     }
 
     $scope.event = {
         name: $cookies.get('selected-event-name'),
-        key: $cookies.get('selected-event-id')
+        key: EventDataService.getSelectedEventKey()
     };
     $scope.headerGroup = "";
     if($scope.event.key != undefined){
@@ -184,16 +184,3 @@ app.controller('SidebarController', function ($scope, $location, $cookies, $http
     }
 
 });
-
-// app.config(function ($routeProvider) {
-//     $routeProvider
-//         .when('/h', {
-//             templateUrl: '../../../../static/views/settings/edit_table.html',
-//             controller: 'HeaderEditController'
-//         })
-//         .when('/e', {
-//             templateUrl: '../../../../static/views/settings/edit_table.html',
-//             controller: 'ExpressionEditController'
-//         })
-//         .otherwise({redirectTo: '/h'});
-// });

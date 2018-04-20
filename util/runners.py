@@ -1,5 +1,5 @@
 from threading import Thread
-from time import sleep, time
+import time
 
 
 class Runner(object):
@@ -28,7 +28,7 @@ class Runner(object):
 
     @staticmethod
     def sleep(delay: float, tick: float):
-        sleep(delay - (time() - tick))
+        time.sleep(max(0, delay - (time.time() - tick)))
 
 
 class RepeatingRunner(Runner):
@@ -58,7 +58,7 @@ class RepeatingRunner(Runner):
 
     def join(self):
         while self.is_running():
-            sleep(0.01)
+            time.sleep(0.01)
 
     def work(self):
         while self.running:
@@ -98,20 +98,72 @@ class PeriodicRunner(Runner):
     def is_running(self) -> bool:
         return self.running
 
-    """
-    Thread liveliness is checked at 100Hz.
-    """
-
     def join(self):
+        """
+        Thread liveliness is checked at min 100Hz.
+        """
         while self.is_running():
-            sleep(0.01)
+            time.sleep(min(0.01, self.delay))
 
     def work(self):
         while self.running:
             self.iter = (self.iter + 1) % 5
-            tick = time()
+            tick = time.time()
             self.target()
             self.sleep(self.delay, tick)
+
+
+class TriggeredPeriodicRunner(Runner):
+    """
+    A Runner that runs at a fixed period, but only when triggered.
+    """
+
+    def __init__(self, target: classmethod, auto_start=True, period=1.0):
+        Runner.__init__(self, self._work)
+        self._period = period
+        self._target = target
+        self._should_run_again = False
+
+        self._running = False
+
+        if auto_start:
+            self.start()
+
+    def will_run_again(self):
+        return self._should_run_again
+
+    def set_period(self, delay: float):
+        self._period = delay
+
+    def get_period(self):
+        return self._period
+
+    def start(self):
+        if not self._running:
+            self._should_run_again = False
+            self._running = True
+            self.run()
+            self._running = False
+            if self._should_run_again:
+                self.start()
+        else:
+            self._should_run_again = True
+
+    def stop(self):
+        self._running = False
+        self._should_run_again = False
+
+    def is_running(self) -> bool:
+        return self._running
+
+    def join(self):
+        while self.is_running():
+            time.sleep(0.01)
+
+    def _work(self):
+        tick = time.time()
+        self._target()
+        self.sleep(self._period, tick)
 
 
 class RunnerQueue(Runner):
@@ -179,7 +231,7 @@ class ConcurrentRunner(RunnerQueue):
         return False
 
     def work(self):
-        tick = time()
+        tick = time.time()
         for runner in self.runners:
             runner.start()
         while self.is_running():

@@ -64,13 +64,13 @@
                 <thead>
                 <tr>
                     <th ng-repeat="header in data_headers" class="data-header clickable {{ header.class }}"
-                        ng-click="sortData($event, header.sort_id)">
+                        ng-click="sortData($event, header.key)">
                         {{ header.title }}
-                        <span ng-show="sorts.indexOf(header.sort_id) > -1"
-                              class="glyphicon glyphicon-chevron-up">{{ sorts.indexOf(header.sort_id)+1 }}</span>
-                        <span ng-show="sorts.indexOf('-' + header.sort_id) > -1"
-                              class="glyphicon glyphicon-chevron-down">{{ sorts.indexOf("-" + header.sort_id)+1 }}</span>
-                        <span ng-show="sorts.indexOf(header.sort_id) < 0 && sorts.indexOf(header.sort_id) < 0"
+                        <span ng-show="sorts.indexOf(header.key) > -1"
+                              class="glyphicon glyphicon-chevron-up">{{ sorts.indexOf(header.key)+1 }}</span>
+                        <span ng-show="sorts.indexOf('-' + header.key) > -1"
+                              class="glyphicon glyphicon-chevron-down">{{ sorts.indexOf("-" + header.key)+1 }}</span>
+                        <span ng-show="sorts.indexOf(header.key) < 0 && sorts.indexOf(header.key) < 0"
                               class="glyphicon glyphicon-none"> </span>
                     </th>
                 </tr>
@@ -78,12 +78,12 @@
                 <tbody>
                 <tr>
                     <td ng-repeat="header in data_headers" class="data-box bold-data {{ header.data_class }}"
-                        ng-bind="getData(avg_data, header.key + ', value')">
+                        ng-bind="avg_data[header.key]['value']">
                     </td>
                 </tr>
                 <tr ng-repeat="elem in raw_data | orderBy:sorts">
                     <td ng-repeat="header in data_headers" class="data-box {{ header.data_class }}"
-                        ng-bind="elem[header.sort_id]">
+                        ng-bind="elem[header.key]">
                     </td>
                 </tr>
                 </tbody>

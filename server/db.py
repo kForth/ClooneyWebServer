@@ -1,14 +1,13 @@
 import json
 from os import path
 
+import datetime
+
 
 class Database(object):
     def __init__(self, dirpath="db/", path_prefix=""):
         self.folder_path = dirpath
         self.path_prefix = path_prefix
-
-        self.event_info_fp = "events.json"
-        self.opr_fp = "oprs.json"
 
     def _load_file(self, filename: str, default="{}"):
         fp = self.path_prefix + self.folder_path + filename
@@ -28,33 +27,6 @@ class Database(object):
         if not path.isfile(self.path_prefix + fp):
             open(self.path_prefix + fp, "w+").write(default)
 
-    def add_scouting_entry(self, event: str, entry: dict):
-        fp = "event/{}/raw.json".format(event)
-        data = self._load_file(fp, default="[]")
-        data.append(entry)
-        self._dump_file(data, fp)
-
-    def get_event_info(self, event_id: str):
-        events = self.get_events()
-        return events[event_id] if event_id in events.keys() else {}
-
-    def set_event_info(self, event_id: str, info: dict):
-        events = self.get_events()
-        events[event_id] = info
-        self._set_events(events)
-
-    def get_events(self):
-        return self._load_file(self.event_info_fp)
-
-    def _set_events(self, data: list):
-        self._dump_file(data, self.event_info_fp)
-
-    def add_event(self, key: str, info: dict):
-        d = self.get_events()
-        if key not in d.keys():
-            d[key] = info
-        self._set_events(d)
-
     def get_event_oprs(self, event_id):
         from server.models import OprEntry
         entries = OprEntry.query.filter_by(event=event_id).all()
@@ -65,11 +37,6 @@ class Database(object):
             if entry.score_key not in data[entry.team].keys():
                 data[entry.team][entry.score_key] = entry.value
         return data
-
-    def set_event_oprs(self, event_id, opr_dict):
-        oprs = self._load_file(self.opr_fp)
-        oprs[event_id] = opr_dict
-        self._dump_file(oprs, self.opr_fp)
 
     def get_table_headers(self, event, key):
         file_path = self.path_prefix + 'clooney/headers/{}.json'.format(event)
@@ -85,6 +52,46 @@ class Database(object):
         from server.models import ScoutingEntry
         entries = ScoutingEntry.query.filter_by(event=event_id).all()
         return [elem.to_dict()["data"] for elem in entries]
+
+    def get_stats_last_modified(self, event_id):
+        from server.models import LastModifiedEntry
+        entry = LastModifiedEntry.query.filter_by(event=event_id, key="stats").first()
+        if entry:
+            return datetime.datetime.strptime(entry.last_modified, '%Y-%m-%d %H:%M:%S.%f')
+        else:
+            return datetime.datetime.utcnow()
+
+    def get_raw_last_modified(self, event_id):
+        from server.models import LastModifiedEntry
+        entry = LastModifiedEntry.query.filter_by(event=event_id, key="raw").first()
+        if entry:
+            return datetime.datetime.strptime(entry.last_modified, '%Y-%m-%d %H:%M:%S.%f')
+        else:
+            return datetime.datetime.utcnow()
+
+    def get_event_list_last_modified(self):
+        from server.models import LastModifiedEntry
+        entry = LastModifiedEntry.query.filter_by(event='all', key="event_list").first()
+        if entry:
+            return datetime.datetime.strptime(entry.last_modified, '%Y-%m-%d %H:%M:%S.%f')
+        else:
+            return datetime.datetime.utcnow()
+
+    def get_opr_last_modified(self):
+        from server.models import LastModifiedEntry
+        entry = LastModifiedEntry.query.filter_by(event='all', key="opr").first()
+        if entry:
+            return datetime.datetime.strptime(entry.last_modified, '%Y-%m-%d %H:%M:%S.%f')
+        else:
+            return datetime.datetime.utcnow()
+
+    def get_event_last_modified(self, event_id):
+        from server.models import LastModifiedEntry
+        entry = LastModifiedEntry.query.filter_by(event=event_id, key="event").first()
+        if entry:
+            return datetime.datetime.strptime(entry.last_modified, '%Y-%m-%d %H:%M:%S.%f')
+        else:
+            return datetime.datetime.utcnow()
 
     def get_stats(self, event_id):
         from server.models import AnalysisEntry

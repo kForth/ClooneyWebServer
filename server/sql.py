@@ -1,3 +1,4 @@
+import datetime
 from flask import make_response, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 
@@ -13,7 +14,6 @@ class SqlServer(object):
     def _register_views(self):
         self._add('/opr/events', lambda: self._get_unique_values('oprs', 'event'))
         self._add('/opr/teams', lambda: self._get_unique_values('oprs', 'team'))
-        self._add('/add_entry', self.add_scouting_entry, methods=["POST"])
 
     def _get_unique_values(self, table, column):
         query = "SELECT DISTINCT %s FROM %s"
@@ -21,21 +21,3 @@ class SqlServer(object):
         result = self.db.engine.execute(query, data)
         unique_list = list(map(lambda x: x[0], result))
         return make_response(jsonify(unique_list), 200)
-
-    def add_scouting_entry(self):
-        from server.models import ScoutingEntry
-        data = request.json
-        data["data"] = json.dumps(data["data"])
-        try:
-            entry = ScoutingEntry.query.filter_by(id=data['id']).first()
-            if entry:
-                entry.update(**data)
-            else:
-                raise KeyError('ID Not found in DB')
-        except KeyError as _:
-            if 'id' in data.keys():
-                del data['id']
-            entry = ScoutingEntry(**data)
-            self.db.session.add(entry)
-        self.db.session.commit()
-        return make_response(jsonify({'id': entry.id}), 200)

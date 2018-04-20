@@ -6,38 +6,42 @@
 </head>
 <body ng-controller="ApplicationController">
     <div ng-show="event.name != undefined" ng-controller="StatsController">
-        <b>{{ event.name }}</b> <small>{{ "The Current Time and Date" }}</small>
+        <b>{{ event.name }}</b> <small>{{ "" }}</small>
 
         <div class="info-holder info-table printable-tabe">
-            <table id="table" class="table info-block table-striped table-condensed" style="font-size: 12px" ng-cloak multi-sort-table highlight-table>
-                <thead>
-                <tr>
-                    <th></th>
-                    <th ng-repeat="header in headers" class="data-header clickable {{ header.class }}"
-                        ng-click="sortData($event, header.sort_id)">
-                        <span>{{ header.title }}</span>
-                        <span ng-show="sorts.indexOf(header.sort_id) > -1"
-                              class="glyphicon glyphicon-chevron-up">{{ sorts.indexOf(header.sort_id)+1 }}</span>
-                        <span ng-show="sorts.indexOf('-' + header.sort_id) > -1"
-                              class="glyphicon glyphicon-chevron-down">{{ sorts.indexOf("-" + header.sort_id)+1 }}</span>
-                        <span ng-show="sorts.indexOf(header.sort_id) < 0 && sorts.indexOf(header.sort_id) < 0"
-                              class="glyphicon glyphicon-none"> </span>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="elem in data | orderBy:sorts">
-                    <td ng-click="cycleColour(elem.a)"
-                        ng-class="{'highlight-green': colours[elem.a] % 4 == 1, 'highlight-red': colours[elem.a] % 4 == 2, 'highlight-blue': colours[elem.a] % 4 == 3}">
-                        <b>{{ $index+1 }}</b>
-                    </td>
-                    <td ng-repeat="header in headers" class="data-box {{ header.data_class }}"
-                        ng-class="{'highlight-green': colours[elem.a] % 4 == 1 || elem[header.sort_id] == highlight_val, 'highlight-red': colours[elem.a] % 4 == 2, 'highlight-blue': colours[elem.a] % 4 == 3}">
-                        <span ng-bind="elem[header.sort_id]"></span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <table id="table" class="table info-block table-striped table-condensed" style="font-size: 14px" ng-cloak multi-sort-table highlight-table>
+            <thead>
+            <tr>
+                <th></th>
+                <th ng-repeat="header in headers" class="data-header clickable {{ header.class }}"
+                    ng-click="sortData($event, header.sort_id)">
+                    <span uib-tooltip="{{ header.tooltip }}" tooltip-placement="top">{{ header.title }}</span>
+                    <span ng-show="sorts.indexOf(header.sort_id) > -1"
+                          class="glyphicon glyphicon-chevron-up">{{ sorts.indexOf(header.sort_id)+1 }}</span>
+                    <span ng-show="sorts.indexOf('-' + header.sort_id) > -1"
+                          class="glyphicon glyphicon-chevron-down">{{ sorts.indexOf("-" + header.sort_id)+1 }}</span>
+                    <span ng-show="sorts.indexOf(header.sort_id) < 0 && sorts.indexOf(header.sort_id) < 0"
+                          class="glyphicon glyphicon-none"> </span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="elem in data | orderBy:sorts">
+                <td ng-click="cycleColour(elem)"
+                    ng-class="{'highlight-green': colours[elem] % 4 == 1, 'highlight-red': colours[elem] % 4 == 2, 'highlight-blue': colours[elem] % 4 == 3}">
+                    <b>{{ $index+1 }}</b>
+                </td>
+                <td ng-repeat="header in headers" class="data-box {{ header.data_class }}"
+                    ng-class="{'highlight-green': colours[elem] % 4 == 1 || elem[header.sort_id] == highlight_val, 'highlight-red': colours[elem] % 4 == 2, 'highlight-blue': colours[elem] % 4 == 3}">
+                    <a ng-show="['Team Number', 'Team', 'T#'].indexOf(header.title) >= 0" href="#/team/{{ getData(elem, header.key) }}" class="team-link"
+                       ng-bind="getData(elem, header.key)">
+                    </a>
+                    <span ng-show="['Team Number', 'Team', 'T#'].indexOf(header.title) < 0" ng-bind="getData(elem, header.key)"
+                          uib-tooltip="{{ header.title }}" tooltip-placement="top"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
         </div>
     </div>
 

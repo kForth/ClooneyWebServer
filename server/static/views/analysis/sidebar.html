@@ -18,7 +18,7 @@
     <div class="sidebar-block" uib-dropdown>
         <div class="row" id="event-select" uib-dropdown-toggle>
             <div class="col-xs-2 event-select-label">Event:</div>
-            <div class="col-xs-10 event-select-event">{{ getSelectedEvent() }}<span class="caret"></span></div>
+            <div class="col-xs-10 event-select-event">{{ getSelectedEvent().name || "Select" }}<span class="caret"></span></div>
         </div>
         <ul class="dropdown-menu event-select-dropdown" uib-dropdown-menu role="menu"
             aria-labelledby="event-select">
