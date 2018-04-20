@@ -107,7 +107,6 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
         };
     })
     .factory('EventDataService', function ($http, $sessionStorage, $localStorage, $q, $route) {
-
         function getCurrentDateString() {
             return new Date().toISOString();
         }
@@ -222,7 +221,9 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
 
         service.updateEventList = function () {
             var headers = {};
-            if ($localStorage.event_list !== undefined) {
+            if ($localStorage.event_list !== undefined &&
+                $localStorage.last_modified !== undefined &&
+                $localStorage.last_modified.event_list !== undefined) {
                 headers = {'If-Modified-Since': $localStorage.last_modified.event_list};
             }
             return $http.get('/api/events', {headers: headers})
