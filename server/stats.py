@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from predict.opr import OprCalculator
 from server.db import Database
+from server.generator import SpreadsheetGenerator
 from tba_py import TBA
 from updaters import AverageCalculator
 import datetime
@@ -23,6 +24,7 @@ class StatsServer(object):
         self.opr_calc = OprCalculator(tba)
         self.events_to_update = []
         self.event_updater = TriggeredPeriodicRunner(self.update_events, auto_start=False, period=20)
+        self.spreadsheet_gen = SpreadsheetGenerator(sql_db, tba)
 
     def _register_views(self):
         self._add('/event/<event_id>/stats/avg/best', self.get_event_stats_avg_best)
@@ -43,6 +45,10 @@ class StatsServer(object):
     def update_events(self):
         for event in self.events_to_update:
             self.update_event(event)
+            filename = "Clooney_{}.xlsx".format(event)
+            google_filename = "Clooney {}".format(event.title())
+            self.spreadsheet_gen.create_spreadsheet_for_event(event, filename=filename)
+            self.spreadsheet_gen.upload_to_google_drive(filename, upload_filename=google_filename)
             print("updated {}".format(event))
         self.events_to_update = []
 
