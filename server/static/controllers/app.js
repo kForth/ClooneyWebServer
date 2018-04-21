@@ -222,8 +222,7 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
         service.updateEventList = function () {
             var headers = {};
             if ($localStorage.event_list !== undefined &&
-                $localStorage.last_modified !== undefined &&
-                $localStorage.last_modified.event_list !== undefined) {
+                $localStorage.event_list.length > 0) {
                 headers = {'If-Modified-Since': $localStorage.last_modified.event_list};
             }
             return $http.get('/api/events', {headers: headers})
