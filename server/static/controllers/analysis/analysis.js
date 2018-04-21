@@ -361,16 +361,18 @@ app.controller('SingleTeamController', function ($scope, $http, $location, $cook
     $scope.getData = function (elem, key) {
         if (elem === undefined)
             return "";
-        if (key.includes(",")) {
+        if (key.includes(",") || key.includes(".")) {
             var keys = key.split(",");
             var val = elem;
             keys.forEach(function (k) {
-                if (val === undefined) {
-                    val = "";
-                }
-                else {
-                    val = val[k.trim()];
-                }
+                k.split(".").forEach(function(e){
+                    if (val === undefined) {
+                        val = "";
+                    }
+                    else {
+                        val = val[e.trim()];
+                    }
+                });
             });
             return val;
         }
