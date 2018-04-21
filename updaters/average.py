@@ -121,7 +121,6 @@ class AverageCalculator(Runner):
                         team_calc[expression["key"]] = val
                     except Exception as ex:
                         raise ex
-                    team['calculated'] = team_calc
                 entry_id = "{0}_{1}_{2}".format(event, "calc", team_number)
                 entry = AnalysisEntry.query.filter_by(id=entry_id).first()
                 if entry:

@@ -231,7 +231,7 @@ app.directive('multiSortTable', function ($location, $cookies, $sce, $sessionSto
             if (elem === undefined || key === undefined){
                 return "";
             }
-            if (key.includes(",") || key.includes(".")) {
+            if (key.indexOf(",") > -1 || key.indexOf(".") > -1) {
                 key.replaceAll(".", ",");
                 var keys = key.split(",");
                 var val = elem;
@@ -266,9 +266,32 @@ app.directive('multiSortTable', function ($location, $cookies, $sce, $sessionSto
             else {
                 scope.sorts.push("-" + key);
             }
-
             $cookies.put(cookie_prefix + '-table-sort', JSON.stringify(scope.sorts));
+            scope.updateSort();
         };
+
+        scope.updateSort = function(){
+            if(scope.data === undefined){
+                return;
+            }
+            scope.data = scope.data.sort(function(a, b){
+                for(var i in scope.sorts){
+                    var key = scope.sorts[i];
+                    var val = 1;
+                    if(key.charAt(0) === '-'){
+                        key = key.slice(1);
+                        val = -1;
+                    }
+                    var a_val = scope.getData(a, key);
+                    var b_val = scope.getData(b, key);
+                    if(a_val !== b_val){
+                        return a_val > b_val ? val : -val;
+                    }
+                }
+                return 0;
+            });
+        };
+        scope.updateSort();
     }
 
     return {
@@ -362,7 +385,7 @@ app.controller('SingleTeamController', function ($scope, $http, $location, $cook
         if (elem === undefined || key === undefined) {
             return "";
         }
-        if (key.includes(",") || key.includes(".")) {
+        if (key.indexOf(",") > -1 || key.indexOf(".") > -1) {
             key = key.replaceAll(".", ",");
             var keys = key.split(",");
             var val = elem;

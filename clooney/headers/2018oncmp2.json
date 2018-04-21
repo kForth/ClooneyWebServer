@@ -533,21 +533,21 @@
       "class": "",
       "data_class": "",
       "key": "calc,tele_cubes_scored",
-      "tooltip_key": "tele_cubes_scored"
+      "tooltip_key": "calc,tele_cubes_scored"
     },
     {
       "title": "Total Switch Cubes",
       "class": "",
       "data_class": "",
       "key": "calc,tele_switch_cubes_scored",
-      "tooltip_key": "tele_switch_cubes_scored"
+      "tooltip_key": "calc,tele_switch_cubes_scored"
     },
     {
       "title": "Total Auto Cubes",
       "class": "",
       "data_class": "",
       "key": "calc,auto_cubes_scored",
-      "tooltip_key": "auto_cubes_scored"
+      "tooltip_key": "calc,auto_cubes_scored"
     },
     {
       "key":   "calc,tele_cubes_scored",

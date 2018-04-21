@@ -25,7 +25,7 @@
                 <th></th>
                 <th ng-repeat="header in headers" class="data-header clickable {{ header.class }}"
                     ng-click="sortData($event, header.key)">
-                    <span uib-tooltip="{{ header.tooltip }}" tooltip-placement="top">{{ header.title }}</span>
+                    <span uib-tooltip="{{ header.tooltip }}">{{ header.title }}</span>
                     <span ng-show="sorts.indexOf(header.key) > -1"
                           class="glyphicon glyphicon-chevron-up">{{ sorts.indexOf(header.key)+1 }}</span>
                     <span ng-show="sorts.indexOf('-' + header.key) > -1"
@@ -36,7 +36,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="elem in data | orderBy:sorts">
+            <tr ng-repeat="elem in data">
                 <td ng-click="cycleColour(data.indexOf(elem))"
                     ng-class="{'highlight-green': colours[data.indexOf(elem)] % 4 == 1, 'highlight-red': colours[data.indexOf(elem)] % 4 == 2, 'highlight-blue': colours[data.indexOf(elem)] % 4 == 3}">
                     <b>{{ $index+1 }}</b>
