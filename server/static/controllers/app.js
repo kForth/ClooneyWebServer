@@ -303,11 +303,14 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
         service.getTeamRaw = function (team_number, cached_callback) {
             if (cached_callback !== undefined) {
                 var team_data = [];
-                getCachedData("event_raw").forEach(function (elem) {
-                    if (elem.team_number == team_number) {
-                        team_data.push(elem);
-                    }
-                });
+                var data = getCachedData("event_raw");
+                if(data !== undefined){
+                    data.forEach(function (elem) {
+                        if (elem.team_number == team_number) {
+                            team_data.push(elem);
+                        }
+                    });
+                }
                 cached_callback(team_data);
             }
             return service.getEventRaw()
@@ -325,11 +328,14 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
         service.getTeamStats = function (team_number, cached_callback) {
             if (cached_callback !== undefined) {
                 var team_data = [];
-                getCachedData("event_stats").forEach(function (elem) {
-                    if (elem.team_number == team_number) {
-                        team_data.push(elem);
-                    }
-                });
+                var data = getCachedData("event_stats");
+                if (data !== undefined) {
+                    data.forEach(function (elem) {
+                        if (elem.team_number == team_number) {
+                            team_data.push(elem);
+                        }
+                    });
+                }
                 cached_callback(team_data);
             }
             return service.getEventStats()
