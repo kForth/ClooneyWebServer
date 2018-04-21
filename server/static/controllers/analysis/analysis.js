@@ -15,10 +15,10 @@ app.controller('HomeController', function ($scope, $cookies, $http, $sessionStor
     }
 
     EventDataService.getEventStats(
-        function(data){
+        function (data) {
             $scope.data = data;
         })
-        .then(function(data){
+        .then(function (data) {
             $scope.data = data;
             $scope.data_loaded = true;
         });
@@ -81,10 +81,10 @@ app.controller('OprsController', function ($scope, $cookies, $http, $sessionStor
     }
 
     EventDataService.getBestOprs(
-        function(data){
+        function (data) {
             $scope.data = data;
         })
-        .then(function(data){
+        .then(function (data) {
             $scope.data = data;
             $scope.data_loaded = true;
         });
@@ -105,10 +105,10 @@ app.controller('EventOprsController', function ($scope, $cookies, $http, $sessio
     }
 
     EventDataService.getEventOprs(
-        function(data){
+        function (data) {
             $scope.data = data;
         })
-        .then(function(data){
+        .then(function (data) {
             $scope.data = data;
             $scope.data_loaded = true;
         });
@@ -129,10 +129,10 @@ app.controller('RawController', function ($scope, $cookies, $http, $sessionStora
     }
 
     EventDataService.getEventRaw(
-        function(data){
+        function (data) {
             $scope.data = data;
         })
-        .then(function(data){
+        .then(function (data) {
             $scope.data = data;
             $scope.data_loaded = true;
         });
@@ -154,10 +154,10 @@ app.controller('TeamsController', function ($scope, $cookies, $http, $sessionSto
     }
 
     EventDataService.getEventTeams(
-        function(data){
+        function (data) {
             $scope.data = data;
         })
-        .then(function(data){
+        .then(function (data) {
             $scope.data = data;
             $scope.data_loaded = true;
         });
@@ -179,10 +179,10 @@ app.controller('StatsController', function ($scope, $cookies, $http, $sessionSto
     }
 
     EventDataService.getEventStats(
-        function(data){
+        function (data) {
             $scope.data = data;
         })
-        .then(function(data){
+        .then(function (data) {
             $scope.data = data;
             $scope.data_loaded = true;
         });
@@ -228,7 +228,7 @@ app.directive('multiSortTable', function ($location, $cookies, $sce, $sessionSto
             scope.sorts = [];
 
         scope.getData = function (elem, key) {
-            if (elem === undefined || key === undefined){
+            if (elem === undefined || key === undefined) {
                 return "";
             }
             if (key.indexOf(",") > -1 || key.indexOf(".") > -1) {
@@ -270,21 +270,35 @@ app.directive('multiSortTable', function ($location, $cookies, $sce, $sessionSto
             scope.updateSort();
         };
 
-        scope.updateSort = function(){
-            if(scope.data === undefined){
+        if ($sessionStorage.use_fuzzy_sort === undefined) {
+            $sessionStorage.use_fuzzy_sort = false;
+        }
+        if ($sessionStorage.fuzzy_sort_tolerance === undefined) {
+            $sessionStorage.fuzzy_sort_tolerance = 0.2;
+        }
+        scope.fuzzy_sort_tolerance = 0.2;
+        scope.updateSort = function () {
+            if (scope.data === undefined) {
                 return;
             }
-            scope.data = scope.data.sort(function(a, b){
-                for(var i in scope.sorts){
+            scope.data = scope.data.sort(function (a, b) {
+                for (var i in scope.sorts) {
                     var key = scope.sorts[i];
                     var val = 1;
-                    if(key.charAt(0) === '-'){
+                    if (key.charAt(0) === '-') {
                         key = key.slice(1);
                         val = -1;
                     }
                     var a_val = scope.getData(a, key);
                     var b_val = scope.getData(b, key);
-                    if(a_val !== b_val){
+                    if (typeof a_val == 'number' &&
+                        $sessionStorage.use_fuzzy_sort === true &&
+                        i < scope.sorts.length - 1) {
+                        if (Math.abs(a_val - b_val) <= $sessionStorage.fuzzy_sort_tolerance) {
+                            continue
+                        }
+                    }
+                    if (a_val !== b_val) {
                         return a_val > b_val ? val : -val;
                     }
                 }
@@ -325,27 +339,29 @@ app.controller('SingleTeamController', function ($scope, $http, $location, $cook
         });
 
     EventDataService.getTeamInfo($scope.team_number,
-        function(data){
+        function (data) {
             $scope.team_info = data;
         })
-        .then(function(data){
+        .then(function (data) {
             $scope.team_info = data;
         });
 
     EventDataService.getTeamStats($scope.team_number,
-        function(data){
+        function (data) {
             $scope.avg_data = data;
         })
-        .then(function(data){
+        .then(function (data) {
             $scope.avg_data = data;
         });
 
     EventDataService.getTeamRaw($scope.team_number,
-        function(data){
+        function (data) {
             $scope.raw_data = data;
         })
-        .then(function(data){
+        .then(function (data) {
             $scope.raw_data = data;
+            updateCubeChart();
+            updateAutoCubeChart();
         });
 
     if ($sessionStorage.single_team_info_headers == undefined && $scope.event !== undefined) {
@@ -410,7 +426,7 @@ app.controller('MatchPreviewController', function ($scope, $http, $sessionStorag
     $scope.match_key = $location.url().split("/")[2];
     $scope.event = EventDataService.getSelectedEvent();
 
-    if($scope.event !== undefined) {
+    if ($scope.event !== undefined) {
         $http.get('/api/event/' + $scope.event.id + '/match/' + $scope.match_key)
             .then(function (response) {
                 $scope.match_info = response.data;
@@ -442,7 +458,7 @@ app.controller('MatchPreviewController', function ($scope, $http, $sessionStorag
     }
 
     EventDataService.getEventStats(
-        function(data) {
+        function (data) {
             if (data != undefined) {
                 $scope.avg_data = {};
                 data.forEach(function (elem) {
@@ -450,7 +466,7 @@ app.controller('MatchPreviewController', function ($scope, $http, $sessionStorag
                 })
             }
         })
-        .then(function(data){
+        .then(function (data) {
             if (data != undefined) {
                 $scope.avg_data = {};
                 data.forEach(function (elem) {

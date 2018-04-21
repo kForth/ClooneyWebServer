@@ -23,6 +23,8 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
         $window.location.reload();
     };
 
+    $scope.$storage = $sessionStorage;
+
     $scope.$parent.leftSidebarVisible = $cookies.get('left-sidebar-visible');
     if($scope.$parent.leftSidebarVisible === undefined) $scope.$parent.leftSidebarVisible = true;
 

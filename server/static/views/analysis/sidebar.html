@@ -53,6 +53,23 @@
         <li class="sidebar-spacer"></li>
         <li class="sidebar-item"><a ng-click="updateEvent()">Update Event</a></li>
         <li class="sidebar-item"><a ng-click="resetCache($event)" target="_blank">Reset Cache</a></li>
+        <li class="sidebar-spacer"></li>
+        <li class="sidebar-block">
+            <div class="row" id="fuzzy-sort-checkbox" uib-dropdown-toggle>
+                <div class="col-xs-8 event-select-label">Fuzzy Sort</div>
+                <div class="col-xs-4 event-select-event">
+                    <input type="checkbox" ng-model="$storage.use_fuzzy_sort" ng-change="updateSort()">
+                </div>
+            </div>
+        </li>
+        <li class="sidebar-block" ng-show="$storage.use_fuzzy_sort">
+            <div class="row" id="fuzzy-sort-checkbox" uib-dropdown-toggle>
+                <div class="col-xs-6 event-select-label">Tolerance</div>
+                <div class="col-xs-6 event-select-event">
+                    <input type="number" ng-model="$storage.fuzzy_sort_tolerance" style="width: 60px;" ng-change="updateSort()">
+                </div>
+            </div>
+        </li>
     </ul>
 
 </div>
