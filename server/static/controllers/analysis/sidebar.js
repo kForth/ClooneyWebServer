@@ -1,6 +1,6 @@
 var app = angular.module('app');
 
-app.controller('EventSidebarController', function ($scope, $location, $cookies, $http, $route, AuthService, $sessionStorage, EventDataService) {
+app.controller('EventSidebarController', function ($scope, $location, $cookies, $http, $route, AuthService, $sessionStorage, $localStorage, $window, EventDataService) {
 
     $scope.isActive = function (viewLocation) {
         return viewLocation.replace("/", "") === $location.path().split('/')[1];
@@ -13,6 +13,14 @@ app.controller('EventSidebarController', function ($scope, $location, $cookies, 
             // EventDataService.clearStorage();
             $http.get('/api/event/' + event + '/update');
         }
+    };
+
+    $scope.resetCache = function (event) {
+        if(event.shiftKey || event.CtrlKey){
+            $sessionStorage.$reset();
+        }
+        $localStorage.$reset();
+        $window.location.reload();
     };
 
     $scope.$parent.leftSidebarVisible = $cookies.get('left-sidebar-visible');

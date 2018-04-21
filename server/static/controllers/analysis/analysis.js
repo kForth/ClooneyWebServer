@@ -117,7 +117,7 @@ app.controller('EventOprsController', function ($scope, $cookies, $http, $sessio
 app.controller('RawController', function ($scope, $cookies, $http, $sessionStorage, EventDataService) {
     $scope.event = EventDataService.getSelectedEvent();
 
-    if ($sessionStorage.raw_headers == undefined) {
+    if ($sessionStorage.raw_headers == undefined && $scope.event !== undefined) {
         $http.get("/api/headers/" + $scope.event.id + "/stats_raw", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
@@ -362,17 +362,16 @@ app.controller('SingleTeamController', function ($scope, $http, $location, $cook
         if (elem === undefined)
             return "";
         if (key.includes(",") || key.includes(".")) {
+            key = key.replaceAll(".", ",");
             var keys = key.split(",");
             var val = elem;
             keys.forEach(function (k) {
-                k.split(".").forEach(function(e){
-                    if (val === undefined) {
-                        val = "";
-                    }
-                    else {
-                        val = val[e.trim()];
-                    }
-                });
+                if (val === undefined) {
+                    val = "";
+                }
+                else {
+                    val = val[k.trim()];
+                }
             });
             return val;
         }
