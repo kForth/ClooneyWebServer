@@ -49,6 +49,13 @@
     text-align: left;
 }
 
+.sidebar-spacer {
+    height: 10px;
+    background: inherit;
+    width: 100%;
+    display: block;
+}
+
 .sidebar-block-bottom {
     position: fixed;
     margin-top: -30px;

@@ -43,10 +43,13 @@
                 </td>
                 <td ng-repeat="header in headers" class="data-box {{ header.data_class }}"
                     ng-class="{'highlight-green': colours[data.indexOf(elem)] % 4 == 1, 'highlight-red': colours[data.indexOf(elem)] % 4 == 2, 'highlight-blue': colours[data.indexOf(elem)] % 4 == 3}">
-                    <a ng-show="['Team Number', 'Team', 'T#'].indexOf(header.title) >= 0" href="#/team/{{ getData(elem, header.key) }}" class="team-link"
+                    <a ng-show="['Team Number', 'Team', 'T#'].indexOf(header.title) > -1" href="#/team/{{ getData(elem, header.key) }}" class="team-link"
                        ng-bind="getData(elem, header.key)">
                     </a>
-                    <span ng-show="['Team Number', 'Team', 'T#'].indexOf(header.title) < 0" ng-bind="getData(elem, header.key)"
+                    <a ng-show="['Key'].indexOf(header.title) > -1" href="#/match/{{ getData(elem, header.key) }}" class="team-link"
+                        ng-bind="getData(elem, header.key)">
+                    </a>
+                    <span ng-show="['Team Number', 'Team', 'T#', 'Key'].indexOf(header.title) < 0" ng-bind="getData(elem, header.key)"
                           uib-tooltip="{{ header.title }}: {{ getData(elem, header.tooltip_key) }}" tooltip-placement="top"></span>
                 </td>
             </tr>

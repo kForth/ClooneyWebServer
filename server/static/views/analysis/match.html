@@ -19,31 +19,25 @@
                 {{ alliance.toProperCase() }} | {{ match_info['alliances'][alliance]['score'] }}
             </div>
         </div>
-        <div class="info-table info-block single-team-table">
-            <table id="table" class="table team-data-table" ng-show="team.length > 0" multi-sort-table ng-cloak>
-                <thead>
-                <tr>
-                    <th ng-repeat="header in data_headers" class="data-header clickable {{ header.class }}"
-                        ng-click="sortData($event, header.sort_id)">
-                        {{ header.title }}
-                        <span ng-show="sorts.indexOf(header.sort_id) > -1"
-                              class="glyphicon glyphicon-chevron-up">{{ sorts.indexOf(header.sort_id)+1 }}</span>
-                        <span ng-show="sorts.indexOf('-' + header.sort_id) > -1"
-                              class="glyphicon glyphicon-chevron-down">{{ sorts.indexOf("-" + header.sort_id)+1 }}</span>
-                        <span ng-show="sorts.indexOf(header.sort_id) < 0 && sorts.indexOf(header.sort_id) < 0"
-                              class="glyphicon glyphicon-none"> </span>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="team in alliance_data[alliance] | orderBy:sort_id">
-                    <td ng-repeat="header in data_headers" class="data-box" ng-class="header.data_class"
-                        ng-bind="getData(team, header.key)">
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <!--<div class="info-holder info-block">
+            <div class="row">
+                <div class="col-xs-5">
+                </div>
+                <div class="col-xs-2" ng-repeat="team_key in match_info['alliances'][alliance]['team_keys']"
+                    style="padding: 5px; background: #eee; font-weight: 500; font-size: 16px;">
+                    {{ team_key.slice(3) }}
+                </div>
+            </div>
+            <div class="row" ng-repeat="header in data_headers">
+                <div class="col-xs-5" style="text-align: right; font-weight: 500; color:#0f9c00; padding: 5px;">
+                    {{ header.title }}:
+                </div>
+                <div class="col-xs-2" ng-repeat="team_key in match_info['alliances'][alliance]['team_keys']"
+                    style="padding: 5px; background: #eee; font-weight: 500; font-size: 16px;">
+                    {{ getData(avg_data[team_key.slice(3)], header.key) }}
+                </div>
+            </div>
+        </div>-->
     </div>
 </div>
 

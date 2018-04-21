@@ -410,33 +410,76 @@ app.controller('MatchPreviewController', function ($scope, $http, $sessionStorag
     $scope.match_key = $location.url().split("/")[2];
     $scope.event = EventDataService.getSelectedEvent();
 
-    $http.get('/api/event/' + $scope.event.id + '/match/' + $scope.match_key)
-        .then(function (response) {
-            $scope.match_info = response.data;
-            $scope.alliance_data = {
-                'red': [],
-                'blue': []
-            };
-            ['red', 'blue'].forEach(function (alliance) {
-                $scope.match_info['alliances'][alliance]['team_keys'].forEach(function (team) {
-                    var team_number = ('' + team).substr(3);
-                    $http.get("/api/event/" + $scope.event.id + "/stats/avg/" + team_number)
-                        .then(function (response) {
-                            $scope.alliance_data[alliance].push(response.data);
-                        });
+    if($scope.event !== undefined) {
+        $http.get('/api/event/' + $scope.event.id + '/match/' + $scope.match_key)
+            .then(function (response) {
+                $scope.match_info = response.data;
+                $scope.alliance_data = {
+                    'red': [],
+                    'blue': []
+                };
+                ['red', 'blue'].forEach(function (alliance) {
+                    $scope.match_info['alliances'][alliance]['team_keys'].forEach(function (team) {
+                        var team_number = ('' + team).substr(3);
+                        $http.get("/api/event/" + $scope.event.id + "/stats/avg/" + team_number)
+                            .then(function (response) {
+                                $scope.alliance_data[alliance].push(response.data);
+                            });
+                    });
                 });
             });
-        });
+    }
 
-    if ($sessionStorage.match_single_team_data_headers == undefined && $scope.event !== undefined) {
-        $http.get("/api/headers/" + $scope.event.id + "/match_single_team_data", {cache: true})
+    if ($sessionStorage.stats_avg_headers == undefined && $scope.event !== undefined) {
+        $http.get("/api/headers/" + $scope.event.id + "/stats_avg", {cache: true})
             .then(function (response) {
                 $scope.data_headers = response.data;
-                $sessionStorage.match_single_team_data_headers = $scope.data_headers;
+                $sessionStorage.stats_avg_headers = $scope.data_headers;
             });
     }
     else {
-        $scope.data_headers = $sessionStorage.match_single_team_data_headers;
+        $scope.data_headers = $sessionStorage.stats_avg_headers;
     }
+
+    EventDataService.getEventStats(
+        function(data) {
+            if (data != undefined) {
+                $scope.avg_data = {};
+                data.forEach(function (elem) {
+                    $scope.avg_data[elem.team_number.value] = elem;
+                })
+            }
+        })
+        .then(function(data){
+            if (data != undefined) {
+                $scope.avg_data = {};
+                data.forEach(function (elem) {
+                    $scope.avg_data[elem.team_number.value] = elem;
+                })
+            }
+        });
+
+    $scope.getData = function (elem, key) {
+        if (elem === undefined || key === undefined) {
+            return "";
+        }
+        if (key.indexOf(",") > -1 || key.indexOf(".") > -1) {
+            key = key.replaceAll(".", ",");
+            var keys = key.split(",");
+            var val = elem;
+            keys.forEach(function (k) {
+                if (val === undefined) {
+                    val = "";
+                }
+                else {
+                    val = val[k.trim()];
+                }
+            });
+            return val;
+        }
+        else {
+            return elem[key];
+        }
+    };
 
 });
