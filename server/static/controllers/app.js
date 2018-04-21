@@ -106,7 +106,7 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             $scope.currentUser = user;
         };
     })
-    .factory('EventDataService', function ($http, $sessionStorage, $localStorage, $q, $route) {
+    .factory('EventDataService', function ($http, $sessionStorage, $localStorage, $q, $window) {
         function getCurrentDateString() {
             return new Date().toISOString();
         }
