@@ -24,7 +24,7 @@ class StatsServer(object):
         self.opr_calc = OprCalculator(tba)
         self.events_to_update = []
         self.event_updater = TriggeredPeriodicRunner(self.update_events, auto_start=False, period=20)
-        self.spreadsheet_gen = SpreadsheetGenerator(sql_db, tba)
+        self.spreadsheet_gen = SpreadsheetGenerator(sql_db, tba, path_prefix)
 
     def _register_views(self):
         self._add('/event/<event_id>/stats/avg/best', self.get_event_stats_avg_best)

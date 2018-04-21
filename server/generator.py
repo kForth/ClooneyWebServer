@@ -9,9 +9,10 @@ from tba_py import TBA
 
 
 class SpreadsheetGenerator:
-    def __init__(self, db_path, tba):
+    def __init__(self, db_path, tba, path_prefix):
         self.db_path = db_path
         self.tba = tba
+        self.path_prefix = path_prefix
 
         self.workbook = None
         self.formats = None
@@ -1497,11 +1498,10 @@ class SpreadsheetGenerator:
                 raise ex
         return val
 
-    @staticmethod
-    def upload_to_google_drive(filename, upload_filename="Clooney.xlsx"):
-        gauth = GoogleAuth()
+    def upload_to_google_drive(self, filename, upload_filename="Clooney.xlsx"):
+        gauth = GoogleAuth(settings_file=self.path_prefix + "/gauth.yaml")
         # Try to load saved client credentials
-        gauth.LoadCredentialsFile("credentials.json")
+        gauth.LoadCredentialsFile(self.path_prefix + "/credentials.json")
         if gauth.credentials is None:
             # Authenticate if they're not there
             gauth.LocalWebserverAuth()
@@ -1512,7 +1512,7 @@ class SpreadsheetGenerator:
             # Initialize the saved creds
             gauth.Authorize()
         # Save the current credentials to a file
-        gauth.SaveCredentialsFile("credentials.json")
+        gauth.SaveCredentialsFile(self.path_prefix + "/credentials.json")
 
         drive = GoogleDrive(gauth)
 
