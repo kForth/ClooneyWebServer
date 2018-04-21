@@ -232,8 +232,8 @@ app.directive('multiSortTable', function ($location, $cookies, $sce, $sessionSto
                 return "";
             }
             if (key.includes(",") || key.includes(".")) {
-                var keys = [];
-                key.split(",").forEach(function(elem){elem.split(".").forEach(function(e){keys.push(e)});});
+                key.replaceAll(".", ",");
+                var keys = key.split(",");
                 var val = elem;
                 keys.forEach(function (k) {
                     if (val === undefined) {
@@ -359,8 +359,9 @@ app.controller('SingleTeamController', function ($scope, $http, $location, $cook
     }
 
     $scope.getData = function (elem, key) {
-        if (elem === undefined)
+        if (elem === undefined || key === undefined) {
             return "";
+        }
         if (key.includes(",") || key.includes(".")) {
             key = key.replaceAll(".", ",");
             var keys = key.split(",");

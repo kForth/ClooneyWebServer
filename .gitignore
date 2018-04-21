@@ -9,3 +9,5 @@ server/static/robot_pics/
 *.pyc
 
 upload_robot_pics.sh
+
+credentials.json
