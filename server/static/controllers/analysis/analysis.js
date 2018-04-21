@@ -38,7 +38,7 @@ app.controller('MatchesController', function ($scope, $cookies, $http, $sce, $lo
 
     $scope.event = EventDataService.getSelectedEvent();
 
-    if ($sessionStorage.match_headers == undefined && scope.event !== undefined) {
+    if ($sessionStorage.match_headers == undefined && $scope.event !== undefined) {
         $http.get("/api/headers/" + $scope.event.id + "/matches", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
@@ -49,7 +49,7 @@ app.controller('MatchesController', function ($scope, $cookies, $http, $sce, $lo
         $scope.headers = $sessionStorage.match_headers;
     }
 
-    if ($sessionStorage.matches == undefined && scope.event !== undefined) {
+    if ($sessionStorage.matches == undefined && $scope.event !== undefined) {
         $http.get('/api/event/' + $scope.event.id + '/matches' + httpSuffix, {cache: true})
             .then(function (response) {
                 if (response.data.length < 1) {
@@ -69,7 +69,7 @@ app.controller('MatchesController', function ($scope, $cookies, $http, $sce, $lo
 app.controller('OprsController', function ($scope, $cookies, $http, $sessionStorage, EventDataService) {
     $scope.event = EventDataService.getSelectedEvent();
 
-    if ($sessionStorage.opr_headers == undefined && scope.event !== undefined) {
+    if ($sessionStorage.opr_headers == undefined && $scope.event !== undefined) {
         $http.get("/api/headers/" + $scope.event.id + "/oprs", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
@@ -93,7 +93,7 @@ app.controller('OprsController', function ($scope, $cookies, $http, $sessionStor
 app.controller('EventOprsController', function ($scope, $cookies, $http, $sessionStorage, EventDataService) {
     $scope.event = EventDataService.getSelectedEvent();
 
-    if ($sessionStorage.opr_headers == undefined && scope.event !== undefined) {
+    if ($sessionStorage.opr_headers == undefined && $scope.event !== undefined) {
         $http.get("/api/headers/" + $scope.event.id + "/oprs", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
@@ -142,7 +142,7 @@ app.controller('RawController', function ($scope, $cookies, $http, $sessionStora
 app.controller('TeamsController', function ($scope, $cookies, $http, $sessionStorage, EventDataService) {
     $scope.event = EventDataService.getSelectedEvent();
 
-    if ($sessionStorage.teams_headers === undefined && scope.event !== undefined) {
+    if ($sessionStorage.teams_headers === undefined && $scope.event !== undefined) {
         $http.get("/api/headers/" + $scope.event.id + "/teams", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
@@ -167,7 +167,7 @@ app.controller('TeamsController', function ($scope, $cookies, $http, $sessionSto
 app.controller('StatsController', function ($scope, $cookies, $http, $sessionStorage, EventDataService, $localStorage) {
     $scope.event = EventDataService.getSelectedEvent();
 
-    if ($sessionStorage.avg_headers === undefined && scope.event !== undefined) {
+    if ($sessionStorage.avg_headers === undefined && $scope.event !== undefined) {
         $http.get("/api/headers/" + $scope.event.id + "/stats_avg", {cache: true})
             .then(function (response) {
                 $scope.headers = response.data;
@@ -325,7 +325,7 @@ app.controller('SingleTeamController', function ($scope, $http, $location, $cook
             $scope.raw_data = data;
         });
 
-    if ($sessionStorage.single_team_info_headers == undefined && scope.event !== undefined) {
+    if ($sessionStorage.single_team_info_headers == undefined && $scope.event !== undefined) {
         $http.get("/api/headers/" + $scope.event.id + "/single_team_info", {cache: true})
             .then(function (response) {
                 $scope.team_info_headers = response.data;
@@ -336,7 +336,7 @@ app.controller('SingleTeamController', function ($scope, $http, $location, $cook
         $scope.team_info_headers = $sessionStorage.single_team_info_headers;
     }
 
-    if ($sessionStorage.single_team_data_info_headers == undefined && scope.event !== undefined) {
+    if ($sessionStorage.single_team_data_info_headers == undefined && $scope.event !== undefined) {
         $http.get("/api/headers/" + $scope.event.id + "/single_team_data_info", {cache: true})
             .then(function (response) {
                 $scope.data_info_headers = response.data;
@@ -347,7 +347,7 @@ app.controller('SingleTeamController', function ($scope, $http, $location, $cook
         $scope.data_info_headers = $sessionStorage.single_team_data_info_headers;
     }
 
-    if ($sessionStorage.single_team_data_headers == undefined && scope.event !== undefined) {
+    if ($sessionStorage.single_team_data_headers == undefined && $scope.event !== undefined) {
         $http.get("/api/headers/" + $scope.event.id + "/single_team_data", {cache: true})
             .then(function (response) {
                 $scope.data_headers = response.data;
@@ -405,7 +405,7 @@ app.controller('MatchPreviewController', function ($scope, $http, $sessionStorag
             });
         });
 
-    if ($sessionStorage.match_single_team_data_headers == undefined && scope.event !== undefined) {
+    if ($sessionStorage.match_single_team_data_headers == undefined && $scope.event !== undefined) {
         $http.get("/api/headers/" + $scope.event.id + "/match_single_team_data", {cache: true})
             .then(function (response) {
                 $scope.data_headers = response.data;
