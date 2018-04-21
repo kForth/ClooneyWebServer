@@ -204,6 +204,7 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
                 .then(function (response) {
                     $sessionStorage.team_images = response.data;
                 });
+            $window.location.reload();
         };
 
         service.getSelectedEventKey = function () {
