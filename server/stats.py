@@ -40,7 +40,7 @@ class StatsServer(object):
         self._add('/event/<event_id>/predictions', self.get_match_predictions)
         self._add('/event/<event>/expressions', self.get_expressions, methods=['GET', 'POST'])
         self._add('/event/<event>/update', self.trigger_event_update, methods=['GET'])
-        self._add('/add_entry', self.add_scouting_entry, methods=["POST"])
+        self._add('/sql/add_entry', self.add_scouting_entry, methods=["POST"])
 
     def update_events(self):
         for event in self.events_to_update:

@@ -11,3 +11,5 @@ server/static/robot_pics/
 upload_robot_pics.sh
 
 credentials.json
+
+clooney.wsgi
