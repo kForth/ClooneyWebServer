@@ -37,12 +37,12 @@
             </thead>
             <tbody>
             <tr ng-repeat="elem in data">
-                <td ng-click="cycleColour(data.indexOf(elem))"
-                    ng-class="{'highlight-green': colours[data.indexOf(elem)] % 4 == 1, 'highlight-red': colours[data.indexOf(elem)] % 4 == 2, 'highlight-blue': colours[data.indexOf(elem)] % 4 == 3}">
+                <td ng-click="cycleColour(elem.team_number.value)"
+                    ng-class="{'highlight-green': colours[elem.team_number.value] % 4 == 1, 'highlight-red': colours[elem.team_number.value] % 4 == 2, 'highlight-blue': colours[elem.team_number.value] % 4 == 3}">
                     <b>{{ $index+1 }}</b>
                 </td>
                 <td ng-repeat="header in headers" class="data-box {{ header.data_class }}"
-                    ng-class="{'highlight-green': colours[data.indexOf(elem)] % 4 == 1, 'highlight-red': colours[data.indexOf(elem)] % 4 == 2, 'highlight-blue': colours[data.indexOf(elem)] % 4 == 3}">
+                    ng-class="{'highlight-green': colours[elem.team_number.value] % 4 == 1, 'highlight-red': colours[elem.team_number.value] % 4 == 2, 'highlight-blue': colours[elem.team_number.value] % 4 == 3}">
                     <a ng-show="['Team Number', 'Team', 'T#'].indexOf(header.title) > -1" href="#/team/{{ getData(elem, header.key) }}" class="team-link"
                        ng-bind="getData(elem, header.key)">
                     </a>
