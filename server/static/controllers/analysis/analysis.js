@@ -49,6 +49,8 @@ app.controller('MatchesController', function ($scope, $cookies, $http, $sce, $lo
         $scope.headers = $sessionStorage.match_headers;
     }
 
+    $scope.$storage = $sessionStorage;
+
     if ($sessionStorage.matches == undefined && $scope.event !== undefined) {
         $http.get('/api/event/' + $scope.event.id + '/matches' + httpSuffix, {cache: true})
             .then(function (response) {
@@ -79,6 +81,7 @@ app.controller('OprsController', function ($scope, $cookies, $http, $sessionStor
     else {
         $scope.headers = $sessionStorage.opr_headers;
     }
+    $scope.$storage = $sessionStorage;
 
     EventDataService.getBestOprs(
         function (data) {
@@ -104,6 +107,8 @@ app.controller('EventOprsController', function ($scope, $cookies, $http, $sessio
         $scope.headers = $sessionStorage.opr_headers;
     }
 
+    $scope.$storage = $sessionStorage;
+
     EventDataService.getEventOprs(
         function (data) {
             $scope.data = data;
@@ -127,6 +132,7 @@ app.controller('RawController', function ($scope, $cookies, $http, $sessionStora
     else {
         $scope.headers = $sessionStorage.raw_headers;
     }
+    $scope.$storage = $sessionStorage;
 
     EventDataService.getEventRaw(
         function (data) {
@@ -152,6 +158,7 @@ app.controller('TeamsController', function ($scope, $cookies, $http, $sessionSto
     else {
         $scope.headers = $sessionStorage.teams_headers;
     }
+    $scope.$storage = $sessionStorage;
 
     EventDataService.getEventTeams(
         function (data) {
@@ -186,6 +193,7 @@ app.controller('StatsController', function ($scope, $cookies, $http, $sessionSto
             $scope.data = data;
             $scope.data_loaded = true;
         });
+    $scope.$storage = $sessionStorage;
 
 });
 

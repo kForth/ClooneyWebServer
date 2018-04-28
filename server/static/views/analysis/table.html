@@ -36,7 +36,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="elem in data">
+            <tr ng-repeat="elem in data" ng-if="$storage.hide_coloured_rows !== true || colours[elem.team_number.value] === undefined || colours[elem.team_number.value] % 4 < 1">
                 <td ng-click="cycleColour(elem.team_number.value)"
                     ng-class="{'highlight-green': colours[elem.team_number.value] % 4 == 1, 'highlight-red': colours[elem.team_number.value] % 4 == 2, 'highlight-blue': colours[elem.team_number.value] % 4 == 3}">
                     <b>{{ $index+1 }}</b>

@@ -56,6 +56,14 @@
         <li class="sidebar-spacer"></li>
         <li class="sidebar-block">
             <div class="row" id="fuzzy-sort-checkbox" uib-dropdown-toggle>
+                <div class="col-xs-8 event-select-label">Hide Coloured Rows</div>
+                <div class="col-xs-4 event-select-event">
+                    <input type="checkbox" ng-model="$storage.hide_coloured_rows">
+                </div>
+            </div>
+        </li>
+        <li class="sidebar-block">
+            <div class="row" id="fuzzy-sort-checkbox" uib-dropdown-toggle>
                 <div class="col-xs-8 event-select-label">Fuzzy Sort</div>
                 <div class="col-xs-4 event-select-event">
                     <input type="checkbox" ng-model="$storage.use_fuzzy_sort" ng-change="updateSort()">
