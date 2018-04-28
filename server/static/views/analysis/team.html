@@ -3,7 +3,7 @@
 <div class="inner-content" ng-class="{'shrink-left-sidebar': leftSidebarVisible && rightSidebarVisible,
                                       'shrink-right-sidebar': !leftSidebarVisible && !rightSidebarVisible,
                                       'shrink-left-right-sidebar': leftSidebarVisible && !rightSidebarVisible}"
-     ng-show="event.name != undefined">
+     ng-show="event.name != undefined" style="height: auto">
     <div class="info-holder">
         <div class="info-block">
             <div class="event-name" ng-cloak>
@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <div class="col-xs-12 col-md-4 info-holder">
+    <div class="col-xs-12 col-md-4 info-holder" style="height: 100%;">
         <div class="info-holder robot-img-container row" ng-cloak>
             <div class="info-block">
                 <div uib-carousel active="active" interval="interval" no-wrap="noWrapSlides">
@@ -43,6 +43,7 @@
                 </tr>
             </table>
         </div>
+
         <div class="info-holder row">
             <table class="table info-block team-data-table" ng-cloak>
                 <tr ng-repeat="header in data_info_headers">
@@ -59,8 +60,25 @@
 
 
     <div class="info-holder col-xs-12 col-md-8">
+        <div class="row" style="margin: 0;">
+            <div class="info-holder col-xs-12 col-sm-6">
+                <b>Cubes Scored</b>
+                <canvas id="cube_chart" class="chart chart-bar" chart-data="cube_chart_data" chart-colors="cube_chart_colors"
+                    chart-labels="cube_chart_labels" chart-series="cube_chart_series" chart-options="cube_chart_options">
+                </canvas>
+            </div>
+
+            <div class="info-holder col-xs-12 col-sm-6">
+                <b>Auto Cubes</b>
+                <canvas id="auto_chart" class="chart chart-bar" chart-data="auto_cube_chart_data" chart-colors="auto_cube_chart_colors"
+                    chart-labels="auto_cube_chart_labels"chart-series="auto_cube_chart_series" chart-options="auto_cube_chart_options">
+                </canvas>
+            </div>
+        </div>
+    </div>
+    <div class="info-holder col-xs-12 col-md-8" style="height: 400px; overflow: scroll">
         <div class="info-table info-block">
-            <table id="table" class="table team-data-table" ng-show="raw_data.length > 0" multi-sort-table ng-cloak>
+            <table id="table" class="table team-data-table" ng-show="raw_data.length > 0" multi-sort-table ng-cloak style="overflow: scroll; height: 400px;">
                 <thead>
                 <tr>
                     <th ng-repeat="header in data_headers" class="data-header clickable {{ header.class }}"

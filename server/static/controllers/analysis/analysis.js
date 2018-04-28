@@ -419,6 +419,108 @@ app.controller('SingleTeamController', function ($scope, $http, $location, $cook
             return elem[key];
         }
     };
+    function genColors(n) {
+        var h, s, l;
+        var colors = [];
+        for (var i = 0; i < 360; i += 360 / n) {
+            h = i / 360;
+            s = 0.40;
+            l = 0.50;
+
+            var r, g, b;
+            if (s == 0) {
+                r = g = b = l; // achromatic
+            }
+            else {
+                var hue2rgb = function hue2rgb(p, q, t) {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1 / 6) return p + (q - p) * 6 * t;
+                    if (t < 1 / 2) return q;
+                    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                    return p;
+                };
+
+                var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                var p = 2 * l - q;
+                r = hue2rgb(p, q, h + 1 / 3);
+                g = hue2rgb(p, q, h);
+                b = hue2rgb(p, q, h - 1 / 3);
+            }
+            var red = ("0" + Math.round(r * 255).toString(16)).slice(-2).toUpperCase();
+            var green = ("0" + Math.round(g * 255).toString(16)).slice(-2).toUpperCase();
+            var blue = ("0" + Math.round(b * 255).toString(16)).slice(-2).toUpperCase();
+            colors.push("#" + red + green + blue);
+        }
+        return colors;
+    }
+
+    function updateCubeChart() {
+        $scope.cube_chart_data = [];
+        $scope.cube_chart_labels = [];
+        cube_chart_keys.forEach(function (e) {
+            $scope.cube_chart_data.push([]);
+        });
+        $scope.raw_data.forEach(function (row) {
+            $scope.cube_chart_labels.push(row['match']);
+            for (var i in cube_chart_keys) {
+                $scope.cube_chart_data[i].push(row[cube_chart_keys[i]]);
+            }
+        });
+    }
+
+    var cube_chart_keys = ['tele_scored_exchange', 'tele_scored_scale', 'tele_scored_own_switch', 'tele_scored_opp_switch'];
+    $scope.cube_chart_series = ['Exchange Cubes', 'Scale Cubes', 'Home Switch Cubes', 'Away Switch Cubes'];
+    $scope.cube_chart_colors = genColors(4);//['#4CAF50', '#69F0AE', '#76FF03', '#B2FF59'];
+    $scope.cube_chart_options = {
+        scales: {
+            yAxes: [{
+                stacked: true,
+                display: true,
+                position: 'left'
+            }],
+            xAxes: [{
+                stacked: true
+            }]
+        }
+    };
+    updateCubeChart();
+
+    function updateAutoCubeChart() {
+        $scope.auto_cube_chart_data = [];
+        $scope.auto_cube_chart_labels = [];
+        auto_cube_chart_keys.forEach(function (e) {
+            $scope.auto_cube_chart_data.push([]);
+        });
+        $scope.raw_data.forEach(function (row) {
+            $scope.auto_cube_chart_labels.push(row['match']);
+            for (var i in auto_cube_chart_keys) {
+                $scope.auto_cube_chart_data[i].push(row[auto_cube_chart_keys[i]]);
+            }
+        });
+    }
+
+    var auto_cube_chart_keys = ['auto_scored_exchange', 'auto_scored_scale', 'auto_scored_switch'];
+    $scope.auto_cube_chart_colors = genColors(4);//['#4CAF50', '#69F0AE', '#B2FF59'];
+    $scope.auto_cube_chart_series = ['Exchange', 'Scale', 'Switch'];
+    $scope.auto_cube_chart_options = {
+        scales: {
+            yAxes: [{
+                stacked: true,
+                display: true,
+                position: 'left',
+                ticks: {
+                    max: 4,
+                    interval: 1
+                }
+            }],
+            xAxes: [{
+                stacked: true
+            }]
+        }
+    };
+    updateAutoCubeChart();
+
 
 });
 
