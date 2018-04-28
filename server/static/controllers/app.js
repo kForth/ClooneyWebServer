@@ -209,11 +209,17 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
 
         service.getSelectedEventKey = function () {
             if ($sessionStorage.selected_event === undefined) return undefined;
-            return $sessionStorage.selected_event.id;
+            return service.getSelectedEvent().id;
         };
 
         service.getSelectedEvent = function () {
-            return $sessionStorage.selected_event;
+            if($sessionStorage.selected_event !== undefined) {
+                return $sessionStorage.selected_event;
+            }
+            return {
+                id: '',
+                name: ''
+            }
         };
 
         service.getEventData = function () {
