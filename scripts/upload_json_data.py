@@ -3,11 +3,11 @@ import json
 import requests
 
 if __name__ == "__main__":
-    entries = json.load(open('/Users/kestin/Documents/2018onto1_fri-12pmto3pm.json'))
+    entries = json.load(open('/Users/kestin/Desktop/data.json'))
     for entry in entries:
         print(entry)
         payload = {
-            'event':      '2018onto1',
+            'event':      '2018dar',
             'team':       int(entry['team_number']),
             'match': entry['match'],
             'pos': entry  ['pos'],
