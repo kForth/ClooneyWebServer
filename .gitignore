@@ -17,3 +17,4 @@ clooney.wsgi
 server/static/yarn.lock
 server/static/yarn-error.log
 server/static/yarn.lock
+server/config.py
