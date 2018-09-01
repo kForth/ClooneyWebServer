@@ -1,0 +1,3 @@
+SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/db.sqlite'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+SECRET_KEY = "D4&u$VDtwe2Ng!q&"

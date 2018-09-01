@@ -14,9 +14,7 @@ from server.sql import SqlServer
 
 app = Flask(__name__, static_folder='../server/static')
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/db.sqlite'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = "D4&u$VDtwe2Ng!q&"
+app.config.from_object('server.config')
 sql_db = SQLAlchemy(app)
 
 
@@ -41,7 +39,7 @@ class ClooneyServer(object):
         self.stats_server = StatsServer(self._add, self.db, self.sql_db, self.tba, "/api", root_path)
         self.info_server = InfoServer(self._add, self.db, self.sql_db, self.tba, "/api", path_prefix=root_path)
         self.sql_server = SqlServer(self._add, self.sql_db, "/api/sql")
-        self.user_server = UsersServer(self._add, self.sql_db, url_prefix="/user")
+        self.user_server = UsersServer(self._add, self.sql_db, app.config['SECRET_KEY'], url_prefix="/user")
 
         self.run = self.app.run
 
