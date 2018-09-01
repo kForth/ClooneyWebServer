@@ -9,7 +9,7 @@ String.prototype.replaceAll = function (search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
-var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angular-md5', 'chart.js', 'ngStorage'])
+var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angular-md5', 'chart.js', 'ngStorage', 'infinite-scroll'])
     .config(function ($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(false).hashPrefix('');
         $routeProvider
@@ -62,8 +62,20 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
                 controller: 'LoginController'
             })
             .when('/logout', {
-                templateUrl: '../../../static/views/account/login.html',
+                templateUrl: '../../../static/views/account/logout.html',
                 controller: 'LogoutController'
+            })
+            .when('/account', {
+                templateUrl: '../../../static/views/account/edit_account.html',
+                controller: 'EditAccountController'
+            })
+            .when('/register', {
+                templateUrl: '../../../static/views/account/register.html',
+                controller: 'AddAccountController'
+            })
+            .when('/accounts', {
+                templateUrl: '../../../static/views/account/accounts.html',
+                controller: 'ManageAccountsController'
             })
             .when('/', {redirectTo: '/event'})
             // .when('/', {
@@ -72,39 +84,27 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             // })
             .otherwise({redirectTo: '/event'});
     })
-    .constant('AUTH_EVENTS', {
-        loginSuccess: 'auth-login-success',
-        loginFailed: 'auth-login-failed',
-        logoutSuccess: 'auth-logout-success',
-        sessionTimeout: 'auth-session-timeout',
-        notAuthenticated: 'auth-not-authenticated',
-        notAuthorized: 'auth-not-authorized'
-    })
-    .constant('USER_ROLES', {
-        all: '*',
-        admin: 'admin',
-        user: 'user',
-        guest: 'guest'
-    })
 
     .controller('MainViewController', function () {
 
     })
 
 
-    .controller('ApplicationController', function ($location, $scope, $cookies, USER_ROLES, AuthService) {
+    .controller('ApplicationController', function ($location, $scope, $cookies, $sessionStorage, AuthService) {
         $scope.event = {
             name: $cookies.get('selected-event-name'),
             key: $cookies.get('selected-event-id')
         };
 
-        $scope.currentUser = null;
-        $scope.userRoles = USER_ROLES;
-        $scope.isAuthorized = AuthService.isAuthorized;
+        AuthService.testCachedUser();
 
-        $scope.setCurrentUser = function (user) {
-            $scope.currentUser = user;
-        };
+        $scope.currentUser = $sessionStorage.user;
+        $scope.$watch(function() {
+            return angular.toJson($sessionStorage);
+        }, function() {
+            $scope.currentUser = $sessionStorage.user;
+        });
+        $scope.logout = AuthService.logout;
     })
     .factory('EventDataService', function ($http, $sessionStorage, $localStorage, $q, $window) {
         function getCurrentDateString() {
@@ -120,7 +120,7 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
             var event_key = service.getSelectedEventKey();
             var name = key.replaceAll("_", " ").toProperCase();
             var headers = {};
-            if ($localStorage[key][event_key] !== undefined) {
+            if ($localStorage[key][event_key] !== undefined && $localStorage[key][event_key].length > 0) {
                 headers = {'If-Modified-Since': $localStorage.last_modified[key][event_key]};
             }
             return $http.get(url, {
@@ -384,61 +384,6 @@ var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'ngCookies', 'angula
         service.clearStorage();
         return service;
     })
-    .factory('AuthService', function ($http, Session, md5, $sessionStorage) {
-        var authService = {};
-        authService.login = function (credentials) {
-            var user_pass = {
-                username: credentials.username,
-                password: md5.createHash(credentials.password)
-            };
-            return $http
-                .post('/user/login', user_pass)
-                .then(function (res) {
-                    return true;
-                })
-                .then(function (res) {
-                    return false;
-                });
-        };
-
-        authService.isAuthorized = function (minUserLevel) {
-            return {
-                'allowed': $sessionStorage.user_info['user-level'] >= minUserLevel,
-                'level': $sessionStorage.user_info['user-level']
-            };
-        };
-
-        return authService;
-    })
-    .service('Session', function () {
-        this.create = function (sessionId, userId, userRole) {
-            this.id = sessionId;
-            this.userId = userId;
-            this.userRole = userRole;
-        };
-        this.destroy = function () {
-            this.id = null;
-            this.userId = null;
-            this.userRole = null;
-        };
-    })
-    .controller("LoginController", function ($rootScope, $scope, $cookies, $location, AUTH_EVENTS, AuthService) {
-        $scope.credentials = {
-            username: '',
-            password: ''
-        };
-        $scope.errors = false;
-        $scope.login = function (credentials) {
-            AuthService.login(credentials).then(function (user) {
-                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-                $scope.setCurrentUser(user);
-                $location.path('/');
-            }, function () {
-                $scope.errors = true;
-                $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-            });
-        };
-    });
 
 
 app.directive('fixedTableHeaders', ['$timeout', function ($timeout) {

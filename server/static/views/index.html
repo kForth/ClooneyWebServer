@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="../../static/css/start_page.css">
 
 </head>
-<body ng-controller="ApplicationController">
+<body ng-controller="ApplicationController" ng-cloak>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
@@ -19,6 +19,20 @@
         </div>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="#/event">Events</a></li>
+
+            <li class="btn-group" uib-dropdown is-open="status.isopen">
+              <a id="single-button" type="button" uib-dropdown-toggle ng-disabled="disabled">
+                {{ currentUser.name || 'Guest' }} <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                <li role="menuitem" ng-if="currentUser.role < 1"><a href="#/login">Login</a></li>
+                <li role="menuitem" ng-if="currentUser.role >= 1"><a ng-click="logout()">Logout</a></li>
+                <li class="divider" ng-if="currentUser.role >= 1"></li>
+                <li role="menuitem" ng-if="currentUser.role >= 1"><a href="#/account">Edit Account</a></li>
+                <li role="menuitem" ng-if="currentUser.role >= 5"><a href="#/register">Add New Account</a></li>
+                <li role="menuitem" ng-if="currentUser.role >= 5"><a href="#/accounts">Manage Accounts</a></li>
+              </ul>
+            </li>
         </ul>
     </div>
 </nav>
@@ -31,10 +45,12 @@
 <script src="../../static/node_modules/angular-route/angular-route.min.js"></script>
 <script src="../../static/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
 <script src="../../static/node_modules/angular-md5/angular-md5.min.js"></script>
+<script src="../../static/node_modules/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
 <script src="../../static/node_modules/chart.js/dist/Chart.js"></script>
 <script src="../../static/node_modules/angular-chart.js/angular-chart.js"></script>
 <script src="../../static/controllers/app.js"></script>
-<script src="../../static/controllers/settings/settings.js"></script>
+<script src="../../static/controllers/account.js"></script>
+<script src="../../static/controllers/settings.js"></script>
 <script src="../../static/controllers/analysis/analysis.js"></script>
 <script src="../../static/controllers/analysis/sidebar.js"></script>
 </body>

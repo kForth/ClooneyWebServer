@@ -1,0 +1,26 @@
+<link rel="stylesheet" type="text/css" href="../../../static/css/account.css">
+
+<div class="info-block col-xs-4 col-xs-offset-4">
+    <div class="info-header">
+        Register
+    </div>
+    <div>
+        <label for="username">Name:</label>
+        <input class="form-control" type="text" ng-class="{'has-error': errors}" id="name"
+               ng-model="credentials.name">
+
+        <label for="username">Username:</label>
+        <input class="form-control" type="text" ng-class="{'has-error': errors}" id="username"
+               ng-model="credentials.username">
+
+        <label for="password">Password:</label>
+        <input class="form-control" type="password" ng-class="{'has-error': errors}" id="password"
+               ng-model="credentials.password">
+
+        <label for="password">Confirm Password:</label>
+        <input class="form-control" type="password" ng-class="{'has-error': errors}" id="password2"
+               ng-model="credentials.password2">
+
+        <button class="btn btn-success login-button" ng-click="login(credentials)">Create Account</button>
+    </div>
+</div>

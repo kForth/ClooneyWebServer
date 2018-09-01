@@ -12,12 +12,13 @@ class Calc(object):
             'print': print,
             'len': len,
             'round': round,
-            'zip': lambda *x: list(zip(*x)),
-            'zip_sum': lambda x: [sum(e) for e in x],
+            'zip': lambda *arg: list(zip(*arg)),
+            'zip_sum': lambda arg: [sum(e) for e in arg],
             'sum': sum,
             'map': map,
             'int': int,
-            'float': float
+            'float': float,
+            'list': list
         }
 
     def add_fields(self, **fields):

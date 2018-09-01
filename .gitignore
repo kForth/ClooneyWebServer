@@ -13,3 +13,4 @@ upload_robot_pics.sh
 credentials.json
 
 clooney.wsgi
+.DS_Store

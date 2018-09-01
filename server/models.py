@@ -182,20 +182,28 @@ class OprEntry(db.Model):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.VARCHAR(255), unique=True)
-    username = db.Column(db.VARCHAR(255))
-    password = db.Column(db.VARCHAR(255))
-    user_level = db.Column(db.INTEGER())
+    name = db.Column(db.VARCHAR(255), unique=True, nullable=False)
+    username = db.Column(db.VARCHAR(255), nullable=False)
+    password = db.Column(db.VARCHAR(255), nullable=False)
+    role = db.Column(db.INTEGER(), default=1, nullable=False)
+    api_key = db.Column(db.VARCHAR(255), nullable=False)
 
-    def __init__(self, email, username, password, user_level):
-        self.email = email
+    def __init__(self, name, username, password, role=1, api_key=""):
+        self.name = name
         self.username = username
         self.password = password
-        self.user_level = user_level
+        self.role = role
+        self.api_key = api_key
+
+    def update_api_key(self, new_key):
+        self.api_key = new_key
+        db.session.commit()
 
     def to_dict(self):
         return {
             'username': self.username,
-            'email': self.email,
-            'user_level': self.user_level
+            'name': self.name,
+            'role': self.role,
+            'api_key': self.api_key
         }
+        
